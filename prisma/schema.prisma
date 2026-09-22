@@ -136,8 +136,9 @@ model ProductImage {
 
 model Attribute {
   id                String             @id @default(uuid())
-  name              String             // e.g. "Wood Finish", "Fabric Color", "Seating Capacity"
-  slug              String             @unique // e.g. "wood-finish", "fabric-color"
+  name              String             // e.g. "Wood Finish", "Fabric Material", "Size"
+  slug              String             @unique // e.g. "wood-finish", "fabric-material"
+  displayType       String?            @default("TEXT") // "COLOR", "IMAGE", or "TEXT"
   values            AttributeValue[]
   productAttributes ProductAttribute[]
   createdAt         DateTime           @default(now())
@@ -153,6 +154,7 @@ model AttributeValue {
   name          String                  // e.g. "Walnut", "Natural White Oak", "Emerald Velvet"
   value         String                  // e.g. "walnut", "natural-oak", "emerald-velvet"
   colorHex      String?                 // e.g. "#5C4033" for visual color swatches
+  image         String?                 // e.g. image URL for fabrics, patterns, wood grains
   variantValues VariantAttributeValue[]
   createdAt     DateTime                @default(now())
   updatedAt     DateTime                @updatedAt

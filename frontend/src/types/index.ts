@@ -55,6 +55,7 @@ export interface AttributeValue {
   name: string;
   value: string;
   colorHex?: string | null;
+  image?: string | null;
   attribute?: Attribute;
 }
 
@@ -62,6 +63,7 @@ export interface Attribute {
   id: string;
   name: string;
   slug: string;
+  displayType?: 'COLOR' | 'IMAGE' | 'TEXT' | string;
   values?: AttributeValue[];
   _count?: {
     productAttributes?: number;

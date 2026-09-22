@@ -12,10 +12,15 @@ export class CreateAttributeValueDto {
   @IsString()
   value?: string;
 
-  @ApiPropertyOptional({ example: '#5C4033', description: 'Hex color code for swatch preview' })
+  @ApiPropertyOptional({ example: '#5C4033', description: 'Hex color code for visual color swatches' })
   @IsOptional()
   @IsString()
   colorHex?: string;
+
+  @ApiPropertyOptional({ example: 'http://localhost:3000/uploads/fabric.webp', description: 'Image swatch URL for fabrics/textures' })
+  @IsOptional()
+  @IsString()
+  image?: string;
 }
 
 export class UpdateAttributeValueDto {
@@ -33,4 +38,10 @@ export class UpdateAttributeValueDto {
   @IsOptional()
   @IsString()
   colorHex?: string;
+
+  @ApiPropertyOptional({ example: 'http://localhost:3000/uploads/fabric.webp' })
+  @IsOptional()
+  @IsString()
+  image?: string;
 }
+

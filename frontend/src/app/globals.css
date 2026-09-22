@@ -70,9 +70,21 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply antialiased scroll-smooth;
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground antialiased;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+  /* Prevent scroll leakage and touch dragging through modal backdrop */
+  body[data-scroll-locked] {
+    overflow: hidden !important;
+    overscroll-behavior: contain !important;
+    touch-action: none !important;
   }
 }
+

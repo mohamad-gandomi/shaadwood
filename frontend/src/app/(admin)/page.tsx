@@ -201,7 +201,7 @@ export default function DashboardPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">WooCommerce Attributes</CardTitle>
+                <CardTitle className="text-base">Product Attributes & Swatches</CardTitle>
                 <CardDescription>Global attributes used for product variants</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -217,12 +217,18 @@ export default function DashboardPage() {
                           key={val.id}
                           className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-muted text-[11px] font-medium"
                         >
-                          {val.colorHex && (
+                          {val.image ? (
+                            <img
+                              src={val.image}
+                              alt={val.name}
+                              className="w-3 h-3 rounded-full object-cover border border-black/10 shrink-0"
+                            />
+                          ) : val.colorHex ? (
                             <span
-                              className="w-2.5 h-2.5 rounded-full border border-black/20"
+                              className="w-2.5 h-2.5 rounded-full border border-black/20 shrink-0"
                               style={{ backgroundColor: val.colorHex }}
                             />
-                          )}
+                          ) : null}
                           <span>{val.name}</span>
                         </div>
                       ))}

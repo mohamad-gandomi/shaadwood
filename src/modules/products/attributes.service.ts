@@ -53,6 +53,7 @@ export class AttributesService {
       data: {
         name: dto.name,
         slug,
+        displayType: dto.displayType || 'TEXT',
       },
       include: { values: true },
     });
@@ -82,6 +83,7 @@ export class AttributesService {
       data: {
         ...(dto.name && { name: dto.name }),
         ...(slug && { slug }),
+        ...(dto.displayType !== undefined && { displayType: dto.displayType }),
       },
       include: { values: true },
     });
@@ -122,6 +124,7 @@ export class AttributesService {
         name: dto.name,
         value,
         colorHex: dto.colorHex,
+        image: dto.image,
       },
     });
   }
@@ -162,6 +165,7 @@ export class AttributesService {
         ...(dto.name && { name: dto.name }),
         value,
         ...(dto.colorHex !== undefined && { colorHex: dto.colorHex }),
+        ...(dto.image !== undefined && { image: dto.image }),
       },
     });
   }

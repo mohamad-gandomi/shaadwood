@@ -114,9 +114,9 @@ export function MediaPickerDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-6">
+      <DialogContent className="max-w-3xl w-[calc(100vw-1.5rem)] sm:w-full max-h-[90dvh] flex flex-col p-3.5 sm:p-6 overflow-x-hidden overscroll-contain">
         <DialogHeader className="pb-3 border-b border-border/60">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pr-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pr-7 sm:pr-6">
             <div>
               <DialogTitle className="text-base flex items-center gap-2">
                 <ImageIcon className="w-4 h-4 text-primary" />
@@ -128,7 +128,7 @@ export function MediaPickerDialog({
             </div>
 
             {/* Quick Upload Action */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 self-start sm:self-auto">
               <Button
                 variant="outline"
                 size="sm"

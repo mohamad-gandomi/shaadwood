@@ -168,14 +168,34 @@ export const api = {
 
   // Attributes & Swatches
   getAttributes: () => fetcher<Attribute[]>('/attributes'),
-  createAttribute: (data: { name: string; slug?: string }) =>
+  createAttribute: (data: { name: string; slug?: string; displayType?: string }) =>
     fetcher<Attribute>('/attributes', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-  addAttributeValue: (attributeId: string, data: { name: string; value?: string; colorHex?: string }) =>
+  updateAttribute: (id: string, data: { name?: string; slug?: string; displayType?: string }) =>
+    fetcher<Attribute>(`/attributes/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteAttribute: (id: string) =>
+    fetcher<any>(`/attributes/${id}`, {
+      method: 'DELETE',
+    }),
+  addAttributeValue: (
+    attributeId: string,
+    data: { name: string; value?: string; colorHex?: string; image?: string },
+  ) =>
     fetcher<any>(`/attributes/${attributeId}/values`, {
       method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateAttributeValue: (
+    valueId: string,
+    data: { name?: string; value?: string; colorHex?: string; image?: string },
+  ) =>
+    fetcher<any>(`/attributes/values/${valueId}`, {
+      method: 'PATCH',
       body: JSON.stringify(data),
     }),
   deleteAttributeValue: (valueId: string) =>

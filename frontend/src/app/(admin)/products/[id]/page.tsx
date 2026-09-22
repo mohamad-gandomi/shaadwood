@@ -1002,12 +1002,18 @@ export default function ProductDetailPage() {
                                   key={val.id}
                                   className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-background border border-border/80 text-muted-foreground"
                                 >
-                                  {val.colorHex && (
+                                  {val.image ? (
+                                    <img
+                                      src={val.image}
+                                      alt={val.name}
+                                      className="w-2.5 h-2.5 rounded-full object-cover border border-black/10 shrink-0"
+                                    />
+                                  ) : val.colorHex ? (
                                     <span
                                       className="w-2 h-2 rounded-full shrink-0"
                                       style={{ backgroundColor: val.colorHex }}
                                     />
-                                  )}
+                                  ) : null}
                                   <span>{val.name}</span>
                                 </span>
                               ))}
@@ -1156,14 +1162,20 @@ export default function ProductDetailPage() {
                                             key={item.id}
                                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-border bg-muted/40 text-xs font-medium text-foreground shadow-2xs"
                                           >
-                                            {item.attributeValue.colorHex && (
+                                            {item.attributeValue.image ? (
+                                              <img
+                                                src={item.attributeValue.image}
+                                                alt={item.attributeValue.name}
+                                                className="w-4 h-4 rounded-md object-cover border border-black/10 shrink-0 shadow-2xs"
+                                              />
+                                            ) : item.attributeValue.colorHex ? (
                                               <span
                                                 className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0 shadow-2xs"
                                                 style={{
                                                   backgroundColor: item.attributeValue.colorHex,
                                                 }}
                                               />
-                                            )}
+                                            ) : null}
                                             <span>{item.attributeValue.name}</span>
                                           </div>
                                         ))
@@ -1280,14 +1292,20 @@ export default function ProductDetailPage() {
                                                   key={item.id}
                                                   className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-border bg-card text-[11px] font-medium shadow-2xs"
                                                 >
-                                                  {item.attributeValue.colorHex && (
-                                                    <span
-                                                      className="w-2.5 h-2.5 rounded-full border border-black/20 shrink-0"
-                                                      style={{
-                                                        backgroundColor: item.attributeValue.colorHex,
-                                                      }}
-                                                    />
-                                                  )}
+                                                   {item.attributeValue.image ? (
+                                                     <img
+                                                       src={item.attributeValue.image}
+                                                       alt={item.attributeValue.name}
+                                                       className="w-3 h-3 rounded-full object-cover border border-black/10 shrink-0"
+                                                     />
+                                                   ) : item.attributeValue.colorHex ? (
+                                                     <span
+                                                       className="w-2.5 h-2.5 rounded-full border border-black/20 shrink-0"
+                                                       style={{
+                                                         backgroundColor: item.attributeValue.colorHex,
+                                                       }}
+                                                     />
+                                                   ) : null}
                                                   <span>{item.attributeValue.name}</span>
                                                 </div>
                                               ))
@@ -1532,7 +1550,7 @@ export default function ProductDetailPage() {
       {/* MODAL 1: ADD NEW VARIATION (From Selected Attributes)      */}
       {/* ========================================================= */}
       <Dialog open={isAddVariantOpen} onOpenChange={setIsAddVariantOpen}>
-        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-xl max-h-[88dvh] overflow-x-hidden overflow-y-auto overscroll-contain">
           <DialogHeader>
             <DialogTitle>Add Variation</DialogTitle>
             <DialogDescription>
@@ -1737,7 +1755,7 @@ export default function ProductDetailPage() {
       {/* ========================================================= */}
       {editingVariant && (
         <Dialog open={!!editingVariant} onOpenChange={() => setEditingVariant(null)}>
-          <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-xl max-h-[88dvh] overflow-x-hidden overflow-y-auto overscroll-contain">
             <DialogHeader>
               <DialogTitle>Edit Variation: {editingVariant.sku}</DialogTitle>
               <DialogDescription>

@@ -11,6 +11,11 @@ export class CreateAttributeDto {
   @IsOptional()
   @IsString()
   slug?: string;
+
+  @ApiPropertyOptional({ example: 'COLOR', description: 'Swatch display type: COLOR, IMAGE, or TEXT', default: 'TEXT' })
+  @IsOptional()
+  @IsString()
+  displayType?: string;
 }
 
 export class UpdateAttributeDto {
@@ -23,4 +28,10 @@ export class UpdateAttributeDto {
   @IsOptional()
   @IsString()
   slug?: string;
+
+  @ApiPropertyOptional({ example: 'COLOR', description: 'Swatch display type: COLOR, IMAGE, or TEXT' })
+  @IsOptional()
+  @IsString()
+  displayType?: string;
 }
+
