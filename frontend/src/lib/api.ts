@@ -18,6 +18,14 @@ export interface UploadMediaOptions {
   maxWidth?: number;
 }
 
+export interface MediaSettings {
+  convertToWebp: boolean;
+  qualityPreset: number;
+  maxWidthOption: number;
+  showOptimizationOptions?: boolean;
+}
+
+
 async function refreshAuthToken(): Promise<string | null> {
   if (typeof window === 'undefined') return null;
   try {
@@ -309,4 +317,13 @@ export const api = {
       return null;
     }
   },
+
+  // System Settings
+  getSetting: <T = any>(key: string) => fetcher<T>(`/settings/${key}`),
+  getAllSettings: () => fetcher<Record<string, any>>('/settings'),
+  updateSetting: <T = any>(key: string, value: any) =>
+    fetcher<T>(`/settings/${key}`, {
+      method: 'PATCH',
+      body: JSON.stringify(value),
+    }),
 };

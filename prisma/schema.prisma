@@ -259,3 +259,17 @@ model Media {
 
   @@map("media")
 }
+
+// ----------------------------------------------------
+// System & Store Settings (Key-Value configuration)
+// ----------------------------------------------------
+
+model SystemSetting {
+  key       String   @id
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_settings")
+}
+

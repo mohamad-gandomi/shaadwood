@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/api';
+import { api, MediaSettings } from '@/lib/api';
 import { MediaItem } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -55,6 +55,19 @@ export function MediaPickerDialog({
   const [convertToWebp, setConvertToWebp] = React.useState(true);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
+  // System Settings query
+  const { data: mediaSettings } = useQuery<MediaSettings>({
+    queryKey: ['system-setting', 'media'],
+    queryFn: () => api.getSetting<MediaSettings>('media'),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  React.useEffect(() => {
+    if (mediaSettings && typeof mediaSettings.convertToWebp === 'boolean') {
+      setConvertToWebp(mediaSettings.convertToWebp);
+    }
+  }, [mediaSettings]);
+
   const {
     data: mediaList = [],
     isLoading,
@@ -67,7 +80,12 @@ export function MediaPickerDialog({
   });
 
   const uploadMutation = useMutation({
-    mutationFn: (file: File) => api.uploadMedia(file, { convertToWebp }),
+    mutationFn: (file: File) =>
+      api.uploadMedia(file, {
+        convertToWebp,
+        quality: mediaSettings?.qualityPreset ?? 80,
+        maxWidth: mediaSettings?.maxWidthOption ?? 2048,
+      }),
     onSuccess: (uploaded) => {
       toast.success(`Uploaded "${uploaded.originalName}" to Media Library`);
       queryClient.invalidateQueries({ queryKey: ['media'] });

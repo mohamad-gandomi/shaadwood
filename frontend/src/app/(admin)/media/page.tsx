@@ -46,7 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { api } from '@/lib/api';
+import { api, MediaSettings } from '@/lib/api';
 import { MediaItem } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -72,11 +72,71 @@ export default function MediaLibraryPage() {
   const [isUploading, setIsUploading] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
+  // Persistent System Settings from PostgreSQL
+  const { data: mediaSettings, isLoading: isLoadingSettings } = useQuery<MediaSettings>({
+    queryKey: ['system-setting', 'media'],
+    queryFn: () => api.getSetting<MediaSettings>('media'),
+    staleTime: 1000 * 60 * 5,
+  });
+
   // WebP Image Optimization Controls
   const [convertToWebp, setConvertToWebp] = React.useState(true);
   const [qualityPreset, setQualityPreset] = React.useState<number>(80);
   const [maxWidthOption, setMaxWidthOption] = React.useState<number>(2048);
   const [showOptimizationOptions, setShowOptimizationOptions] = React.useState(false);
+
+  // Sync state once persistent settings are fetched from DB
+  React.useEffect(() => {
+    if (mediaSettings) {
+      if (typeof mediaSettings.convertToWebp === 'boolean') {
+        setConvertToWebp(mediaSettings.convertToWebp);
+      }
+      if (typeof mediaSettings.qualityPreset === 'number') {
+        setQualityPreset(mediaSettings.qualityPreset);
+      }
+      if (typeof mediaSettings.maxWidthOption === 'number') {
+        setMaxWidthOption(mediaSettings.maxWidthOption);
+      }
+      if (typeof mediaSettings.showOptimizationOptions === 'boolean') {
+        setShowOptimizationOptions(mediaSettings.showOptimizationOptions);
+      }
+    }
+  }, [mediaSettings]);
+
+  // Mutation to persist setting changes to database
+  const updateSettingsMutation = useMutation({
+    mutationFn: (newSettings: Partial<MediaSettings>) =>
+      api.updateSetting<MediaSettings>('media', newSettings),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(['system-setting', 'media'], updated);
+      toast.success('Media optimization settings saved', { duration: 1800 });
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || 'Failed to save settings');
+    },
+  });
+
+  const handleToggleWebp = (checked: boolean) => {
+    setConvertToWebp(checked);
+    updateSettingsMutation.mutate({ convertToWebp: checked });
+  };
+
+  const handleChangeQuality = (val: number) => {
+    setQualityPreset(val);
+    updateSettingsMutation.mutate({ qualityPreset: val });
+  };
+
+  const handleChangeMaxWidth = (val: number) => {
+    setMaxWidthOption(val);
+    updateSettingsMutation.mutate({ maxWidthOption: val });
+  };
+
+  const handleToggleShowOptions = () => {
+    const nextVal = !showOptimizationOptions;
+    setShowOptimizationOptions(nextVal);
+    updateSettingsMutation.mutate({ showOptimizationOptions: nextVal });
+  };
+
 
   // Fetch media from database
   const {
@@ -262,7 +322,7 @@ export default function MediaLibraryPage() {
           </div>
         </div>
 
-        {/* Local WebP Optimization Settings Banner */}
+        {/* Persistent WebP Optimization Settings Banner */}
         <div className="p-3 sm:p-4 rounded-xl border border-border/80 bg-card shadow-xs space-y-2.5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -270,7 +330,7 @@ export default function MediaLibraryPage() {
                 <input
                   type="checkbox"
                   checked={convertToWebp}
-                  onChange={(e) => setConvertToWebp(e.target.checked)}
+                  onChange={(e) => handleToggleWebp(e.target.checked)}
                   className="rounded border-border w-4 h-4 text-primary focus:ring-primary"
                 />
                 <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
@@ -278,14 +338,20 @@ export default function MediaLibraryPage() {
                   Auto-Convert to WebP Format (Recommended)
                 </span>
               </label>
-              <span className="hidden md:inline text-[11px] text-muted-foreground">
-                • 70%–85% smaller file size, faster site speed & zero visible quality loss
-              </span>
+              {updateSettingsMutation.isPending ? (
+                <span className="text-[11px] text-primary font-medium animate-pulse">
+                  Saving to database...
+                </span>
+              ) : (
+                <span className="hidden md:inline text-[11px] text-muted-foreground">
+                  • 70%–85% smaller file size, stored in database & applied store-wide
+                </span>
+              )}
             </div>
 
             <button
               type="button"
-              onClick={() => setShowOptimizationOptions(!showOptimizationOptions)}
+              onClick={handleToggleShowOptions}
               className="text-xs text-primary hover:underline font-medium flex items-center gap-1 self-start sm:self-auto"
             >
               <Sliders className="w-3.5 h-3.5" />
@@ -310,7 +376,7 @@ export default function MediaLibraryPage() {
                     <button
                       key={preset.val}
                       type="button"
-                      onClick={() => setQualityPreset(preset.val)}
+                      onClick={() => handleChangeQuality(preset.val)}
                       className={cn(
                         'py-1 px-2 rounded-md text-[11px] font-medium border transition-colors',
                         qualityPreset === preset.val
@@ -340,7 +406,7 @@ export default function MediaLibraryPage() {
                     <button
                       key={opt.val}
                       type="button"
-                      onClick={() => setMaxWidthOption(opt.val)}
+                      onClick={() => handleChangeMaxWidth(opt.val)}
                       className={cn(
                         'py-1 px-2 rounded-md text-[11px] font-medium border transition-colors',
                         maxWidthOption === opt.val

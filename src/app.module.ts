@@ -8,6 +8,7 @@ import { CategoriesModule } from '@/modules/categories/categories.module';
 import { ProductsModule } from '@/modules/products/products.module';
 import { BlogModule } from '@/modules/blog/blog.module';
 import { UploadModule } from '@/modules/upload/upload.module';
+import { SettingsModule } from '@/modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UploadModule } from '@/modules/upload/upload.module';
     ProductsModule,
     BlogModule,
     UploadModule,
+    SettingsModule,
   ],
 })
 export class AppModule {}
