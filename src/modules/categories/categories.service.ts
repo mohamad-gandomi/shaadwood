@@ -79,6 +79,9 @@ export class CategoriesService {
       data: {
         ...dto,
         slug,
+        parentId: dto.parentId || null,
+        image: dto.image || null,
+        description: dto.description || null,
       },
       include: {
         parent: true,
@@ -92,6 +95,18 @@ export class CategoriesService {
     });
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found`);
+    }
+
+    if (dto.parentId) {
+      if (dto.parentId === id) {
+        throw new ConflictException('A category cannot be its own parent');
+      }
+      const parent = await this.prisma.category.findUnique({
+        where: { id: dto.parentId },
+      });
+      if (!parent) {
+        throw new NotFoundException(`Parent category with ID ${dto.parentId} does not exist`);
+      }
     }
 
     let slug = category.slug;
@@ -115,6 +130,9 @@ export class CategoriesService {
       data: {
         ...dto,
         slug,
+        parentId: dto.parentId !== undefined ? (dto.parentId || null) : undefined,
+        image: dto.image !== undefined ? (dto.image || null) : undefined,
+        description: dto.description !== undefined ? (dto.description || null) : undefined,
       },
     });
   }
