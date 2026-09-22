@@ -6,6 +6,7 @@ import {
   BlogPost,
   BlogCategory,
   User,
+  Address,
   MediaItem,
 } from '@/types';
 
@@ -204,21 +205,94 @@ export const api = {
     }),
 
   // Blog
-  getBlogPosts: () => fetcher<BlogPost[]>('/blog/posts'),
+  getBlogPosts: (params?: { search?: string; status?: string; categoryId?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.search) query.append('search', params.search);
+    if (params?.status) query.append('status', params.status);
+    if (params?.categoryId) query.append('categoryId', params.categoryId);
+    const qs = query.toString();
+    return fetcher<BlogPost[]>(qs ? `/blog/admin/posts?${qs}` : '/blog/admin/posts');
+  },
+  getBlogPost: (idOrSlug: string) => fetcher<BlogPost>(`/blog/posts/${idOrSlug}`),
+  getBlogCategoriesTree: () => fetcher<BlogCategory[]>('/blog/categories/tree'),
   getBlogCategories: () => fetcher<BlogCategory[]>('/blog/categories'),
-  createBlogCategory: (data: { name: string; slug?: string; description?: string }) =>
+  createBlogCategory: (data: {
+    name: string;
+    slug?: string;
+    description?: string;
+    image?: string | null;
+    parentId?: string | null;
+    displayOrder?: number;
+  }) =>
     fetcher<BlogCategory>('/blog/categories', {
       method: 'POST',
       body: JSON.stringify(data),
+    }),
+  updateBlogCategory: (
+    id: string,
+    data: {
+      name?: string;
+      slug?: string;
+      description?: string;
+      image?: string | null;
+      parentId?: string | null;
+      displayOrder?: number;
+    },
+  ) =>
+    fetcher<BlogCategory>(`/blog/categories/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteBlogCategory: (id: string) =>
+    fetcher<any>(`/blog/categories/${id}`, {
+      method: 'DELETE',
     }),
   createBlogPost: (data: any) =>
     fetcher<BlogPost>('/blog/posts', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+  updateBlogPost: (id: string, data: any) =>
+    fetcher<BlogPost>(`/blog/posts/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteBlogPost: (id: string) =>
+    fetcher<any>(`/blog/posts/${id}`, {
+      method: 'DELETE',
+    }),
 
   // Users
   getUsers: () => fetcher<User[]>('/users'),
+  getUser: (id: string) => fetcher<User>(`/users/${id}`),
+  createUser: (data: any) =>
+    fetcher<User>('/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateUser: (id: string, data: any) =>
+    fetcher<User>(`/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteUser: (id: string) =>
+    fetcher<any>(`/users/${id}`, {
+      method: 'DELETE',
+    }),
+  addUserAddress: (userId: string, data: any) =>
+    fetcher<Address>(`/users/${userId}/addresses`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateUserAddress: (userId: string, addressId: string, data: any) =>
+    fetcher<Address>(`/users/${userId}/addresses/${addressId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteUserAddress: (userId: string, addressId: string) =>
+    fetcher<any>(`/users/${userId}/addresses/${addressId}`, {
+      method: 'DELETE',
+    }),
 
   // Media & Assets
   getMedia: (search?: string) =>

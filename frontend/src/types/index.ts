@@ -12,6 +12,7 @@ export interface User {
   role: Role;
   isActive: boolean;
   createdAt: string;
+  updatedAt?: string;
   addresses?: Address[];
   _count?: {
     addresses?: number;
@@ -31,6 +32,8 @@ export interface Address {
   postalCode: string;
   isDefaultShipping: boolean;
   isDefaultBilling: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Category {
@@ -141,8 +144,14 @@ export interface BlogCategory {
   name: string;
   slug: string;
   description?: string | null;
+  image?: string | null;
+  parentId?: string | null;
+  parent?: BlogCategory | null;
+  children?: BlogCategory[];
+  displayOrder?: number;
   _count?: {
     posts?: number;
+    children?: number;
   };
 }
 

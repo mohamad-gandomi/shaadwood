@@ -22,7 +22,7 @@ export function Header({ title }: { title?: string }) {
   });
 
   return (
-    <header className="h-16 border-b border-border/70 bg-card/60 backdrop-blur-sm px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-16 border-b border-border/70 bg-card/85 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between sticky top-0 z-20">
       <div className="flex items-center gap-3">
         {/* Mobile Hamburger Drawer */}
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>

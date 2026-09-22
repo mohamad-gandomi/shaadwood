@@ -12,6 +12,8 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateAddressDto } from './dto/create-address.dto';
+import { UpdateAddressDto } from './dto/update-address.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '@/common/dto/pagination.dto';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
@@ -32,6 +34,13 @@ export class UsersController {
   @ApiOperation({ summary: 'Admin: List all users with pagination' })
   findAll(@Query() pagination: PaginationDto) {
     return this.usersService.findAll(pagination);
+  }
+
+  @Post()
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Create a new user or customer account' })
+  create(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto);
   }
 
   @Get('addresses')
@@ -55,6 +64,16 @@ export class UsersController {
     return this.usersService.deleteAddress(userId, addressId);
   }
 
+  @Patch('addresses/:addressId')
+  @ApiOperation({ summary: 'Customer: Update an address' })
+  updateAddress(
+    @CurrentUser('id') userId: string,
+    @Param('addressId') addressId: string,
+    @Body() dto: UpdateAddressDto,
+  ) {
+    return this.usersService.updateAddress(userId, addressId, dto);
+  }
+
   @Get(':id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Admin: Get user details by ID' })
@@ -67,5 +86,46 @@ export class UsersController {
   @ApiOperation({ summary: 'Admin: Update user role, status or details' })
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Delete user account' })
+  remove(
+    @Param('id') id: string,
+    @CurrentUser('id') currentAdminId: string,
+  ) {
+    return this.usersService.remove(id, currentAdminId);
+  }
+
+  @Post(':id/addresses')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Add an address for a specific user' })
+  addAddressForUser(
+    @Param('id') userId: string,
+    @Body() dto: CreateAddressDto,
+  ) {
+    return this.usersService.addAddress(userId, dto);
+  }
+
+  @Delete(':id/addresses/:addressId')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Delete an address of a specific user' })
+  deleteAddressForUser(
+    @Param('id') userId: string,
+    @Param('addressId') addressId: string,
+  ) {
+    return this.usersService.deleteAddress(userId, addressId);
+  }
+
+  @Patch(':id/addresses/:addressId')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Update an address of a specific user' })
+  updateAddressForUser(
+    @Param('id') userId: string,
+    @Param('addressId') addressId: string,
+    @Body() dto: UpdateAddressDto,
+  ) {
+    return this.usersService.updateAddress(userId, addressId, dto);
   }
 }

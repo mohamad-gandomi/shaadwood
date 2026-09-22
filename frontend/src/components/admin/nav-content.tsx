@@ -101,17 +101,20 @@ export function NavContent({ onItemClick }: NavContentProps) {
     return 'shop';
   }, [pathname]);
 
-  // Single-open accordion state: only one section can be open at a time
-  const [openSection, setOpenSection] = React.useState<AccordionSection>(getSectionFromPath);
+  // Multi-section state: keep all useful sections open by default so sidebar is never blank
+  const [openSections, setOpenSections] = React.useState<Record<AccordionSection, boolean>>({
+    shop: true,
+    media: true,
+    blog: true,
+    tools: true,
+  });
 
-  // Keep accordion in sync when pathname changes
-  React.useEffect(() => {
-    setOpenSection(getSectionFromPath());
-  }, [pathname, getSectionFromPath]);
-
-  // Toggle handler ensuring exclusive single-open behavior
+  // Toggle handler allowing independent accordion expand/collapse
   const handleToggleSection = (section: AccordionSection) => {
-    setOpenSection((prev) => (prev === section ? prev : section));
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
   };
 
   // Optional: fetch media count for live badge
@@ -124,12 +127,20 @@ export function NavContent({ onItemClick }: NavContentProps) {
   const renderNavItems = (items: NavItem[]) => (
     <div className="space-y-1 pt-1 pb-2 pl-1 pr-1">
       {items.map((item) => {
-        const isActive =
-          item.href === '/'
-            ? pathname === '/'
-            : item.href.includes('?')
-            ? pathname === item.href.split('?')[0] && typeof window !== 'undefined' && window.location.search.includes('action=upload')
-            : pathname === item.href || pathname.startsWith(`${item.href}/`);
+        let isActive = false;
+        if (item.href === '/') {
+          isActive = pathname === '/';
+        } else if (item.href.includes('?')) {
+          isActive =
+            pathname === item.href.split('?')[0] &&
+            typeof window !== 'undefined' &&
+            window.location.search.includes('action=upload');
+        } else if (item.href === '/blog') {
+          // Highlight Blog Articles on /blog, /blog/new, /blog/[id], but NOT on /blog/categories
+          isActive = pathname === '/blog' || (pathname.startsWith('/blog/') && !pathname.startsWith('/blog/categories'));
+        } else {
+          isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+        }
         const Icon = item.icon;
 
         return (
@@ -172,10 +183,10 @@ export function NavContent({ onItemClick }: NavContentProps) {
   );
 
   return (
-    <div className="flex flex-col justify-between h-full">
-      <div className="p-3 space-y-2">
+    <div className="flex flex-col min-h-full">
+      <div className="p-3 space-y-2.5 flex-1">
         {/* ======================================================== */}
-        {/* ACCORDION SECTION 1: FURNITURE SHOP                      */}
+        {/* SECTION 1: FURNITURE SHOP                                */}
         {/* ======================================================== */}
         <div className="rounded-xl border border-border/60 bg-card/50 overflow-hidden shadow-2xs">
           <button
@@ -183,7 +194,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
             onClick={() => handleToggleSection('shop')}
             className={cn(
               'w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all text-left select-none',
-              openSection === 'shop'
+              openSections.shop
                 ? 'bg-wood-50/80 text-wood-900 border-b border-border/50'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent/30',
             )}
@@ -199,13 +210,13 @@ export function NavContent({ onItemClick }: NavContentProps) {
               <ChevronDown
                 className={cn(
                   'w-3.5 h-3.5 text-muted-foreground transition-transform duration-200',
-                  openSection === 'shop' && 'rotate-180 text-foreground',
+                  openSections.shop && 'rotate-180 text-foreground',
                 )}
               />
             </div>
           </button>
 
-          {openSection === 'shop' && (
+          {openSections.shop && (
             <div className="animate-in fade-in-50 duration-150">
               {renderNavItems(shopNavItems)}
             </div>
@@ -213,7 +224,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
         </div>
 
         {/* ======================================================== */}
-        {/* ACCORDION SECTION 2: MEDIA & ASSETS                      */}
+        {/* SECTION 2: MEDIA & ASSETS                                */}
         {/* ======================================================== */}
         <div className="rounded-xl border border-border/60 bg-card/50 overflow-hidden shadow-2xs">
           <button
@@ -221,7 +232,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
             onClick={() => handleToggleSection('media')}
             className={cn(
               'w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all text-left select-none',
-              openSection === 'media'
+              openSections.media
                 ? 'bg-blue-50/80 text-blue-900 border-b border-border/50'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent/30',
             )}
@@ -239,13 +250,13 @@ export function NavContent({ onItemClick }: NavContentProps) {
               <ChevronDown
                 className={cn(
                   'w-3.5 h-3.5 text-muted-foreground transition-transform duration-200',
-                  openSection === 'media' && 'rotate-180 text-foreground',
+                  openSections.media && 'rotate-180 text-foreground',
                 )}
               />
             </div>
           </button>
 
-          {openSection === 'media' && (
+          {openSections.media && (
             <div className="animate-in fade-in-50 duration-150">
               {renderNavItems(mediaNavItems)}
             </div>
@@ -253,7 +264,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
         </div>
 
         {/* ======================================================== */}
-        {/* ACCORDION SECTION 3: BLOG & EDITORIAL                    */}
+        {/* SECTION 3: BLOG & EDITORIAL                              */}
         {/* ======================================================== */}
         <div className="rounded-xl border border-border/60 bg-card/50 overflow-hidden shadow-2xs">
           <button
@@ -261,7 +272,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
             onClick={() => handleToggleSection('blog')}
             className={cn(
               'w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all text-left select-none',
-              openSection === 'blog'
+              openSections.blog
                 ? 'bg-emerald-50/80 text-emerald-900 border-b border-border/50'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent/30',
             )}
@@ -277,13 +288,13 @@ export function NavContent({ onItemClick }: NavContentProps) {
               <ChevronDown
                 className={cn(
                   'w-3.5 h-3.5 text-muted-foreground transition-transform duration-200',
-                  openSection === 'blog' && 'rotate-180 text-foreground',
+                  openSections.blog && 'rotate-180 text-foreground',
                 )}
               />
             </div>
           </button>
 
-          {openSection === 'blog' && (
+          {openSections.blog && (
             <div className="animate-in fade-in-50 duration-150">
               {renderNavItems(blogNavItems)}
             </div>
@@ -291,7 +302,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
         </div>
 
         {/* ======================================================== */}
-        {/* ACCORDION SECTION 4: DEVELOPER TOOLS                     */}
+        {/* SECTION 4: DEVELOPER TOOLS                               */}
         {/* ======================================================== */}
         <div className="rounded-xl border border-border/60 bg-card/50 overflow-hidden shadow-2xs">
           <button
@@ -299,7 +310,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
             onClick={() => handleToggleSection('tools')}
             className={cn(
               'w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all text-left select-none',
-              openSection === 'tools'
+              openSections.tools
                 ? 'bg-muted/80 text-foreground border-b border-border/50'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent/30',
             )}
@@ -312,13 +323,13 @@ export function NavContent({ onItemClick }: NavContentProps) {
               <ChevronDown
                 className={cn(
                   'w-3.5 h-3.5 text-muted-foreground transition-transform duration-200',
-                  openSection === 'tools' && 'rotate-180 text-foreground',
+                  openSections.tools && 'rotate-180 text-foreground',
                 )}
               />
             </div>
           </button>
 
-          {openSection === 'tools' && (
+          {openSections.tools && (
             <div className="p-2 space-y-1 animate-in fade-in-50 duration-150">
               <a
                 href="http://localhost:3000/api/docs"
@@ -349,10 +360,11 @@ export function NavContent({ onItemClick }: NavContentProps) {
         </div>
       </div>
 
-      {/* FOOTER INFO */}
-      <div className="p-4 border-t border-border/60 bg-muted/10">
-        <div className="text-[11px] text-muted-foreground text-center">
-          Shaadwood Admin v1.0 • Exclusive Nav
+      {/* FOOTER STATUS */}
+      <div className="p-3 border-t border-border/60 bg-muted/20 mt-auto">
+        <div className="text-[11px] text-muted-foreground text-center font-medium flex items-center justify-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Shaadwood Furniture Admin</span>
         </div>
       </div>
     </div>

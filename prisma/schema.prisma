@@ -211,13 +211,18 @@ model VariantAttributeValue {
 // ----------------------------------------------------
 
 model BlogCategory {
-  id          String     @id @default(uuid())
-  name        String
-  slug        String     @unique
-  description String?
-  posts       BlogPost[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id           String         @id @default(uuid())
+  name         String
+  slug         String         @unique
+  description  String?
+  image        String?
+  parentId     String?
+  parent       BlogCategory?  @relation("BlogCategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children     BlogCategory[] @relation("BlogCategoryHierarchy")
+  displayOrder Int            @default(0)
+  posts        BlogPost[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   @@map("blog_categories")
 }

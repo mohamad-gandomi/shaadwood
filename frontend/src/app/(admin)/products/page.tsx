@@ -2,16 +2,25 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus,
   Search,
   Layers,
   Star,
   Image as ImageIcon,
+  Package,
+  Box,
+  CheckCircle2,
+  Pencil,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { api } from '@/lib/api';
+import { Product } from '@/types';
 import { Header } from '@/components/admin/header';
+import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -24,17 +33,58 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { formatCurrency } from '@/lib/utils';
 
 export default function ProductsPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedType, setSelectedType] = React.useState<'ALL' | 'SIMPLE' | 'VARIABLE'>('ALL');
+  const [deleteProduct, setDeleteProduct] = React.useState<Product | null>(null);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: () => api.getProducts(),
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.deleteProduct(id),
+    onSuccess: () => {
+      toast.success('Product deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      setDeleteProduct(null);
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || 'Failed to delete product');
+    },
+  });
+
+  const stats = React.useMemo(() => {
+    let variableCount = 0;
+    let simpleCount = 0;
+    let publishedCount = 0;
+
+    products.forEach((p) => {
+      if (p.productType === 'VARIABLE') variableCount++;
+      else simpleCount++;
+      if (p.status === 'PUBLISHED') publishedCount++;
+    });
+
+    return {
+      total: products.length,
+      variable: variableCount,
+      simple: simpleCount,
+      published: publishedCount,
+    };
+  }, [products]);
 
   const filteredProducts = products.filter((p) => {
     const matchesSearch =
@@ -51,6 +101,56 @@ export default function ProductsPage() {
       <Header title="Products" />
 
       <div className="px-4 sm:px-8 max-w-7xl mx-auto space-y-6">
+        {/* Metrics KPI Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <Card className="shadow-2xs border-border/80 bg-card/60">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-muted-foreground">Total Products</p>
+                <p className="text-xl font-bold text-foreground">{stats.total}</p>
+              </div>
+              <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                <Package className="w-4 h-4" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-2xs border-border/80 bg-card/60">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-muted-foreground">Variable Items</p>
+                <p className="text-xl font-bold text-wood-700 dark:text-wood-300">{stats.variable}</p>
+              </div>
+              <div className="w-9 h-9 rounded-lg bg-wood-100 dark:bg-wood-950/40 text-wood-700 dark:text-wood-300 flex items-center justify-center">
+                <Layers className="w-4 h-4" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-2xs border-border/80 bg-card/60">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-muted-foreground">Simple Items</p>
+                <p className="text-xl font-bold text-foreground">{stats.simple}</p>
+              </div>
+              <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/30 flex items-center justify-center">
+                <Box className="w-4 h-4" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-2xs border-border/80 bg-card/60">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-muted-foreground">Published</p>
+                <p className="text-xl font-bold text-emerald-600">{stats.published}</p>
+              </div>
+              <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 flex items-center justify-center">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         {/* Controls & Search Toolbar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3 flex-1 max-w-lg">
@@ -103,23 +203,11 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          {/* Top Actions: Media Library link + Add Product Button */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Button
-              variant="outline"
-              onClick={() => router.push('/media')}
-              className="gap-2 shrink-0 h-9"
-              title="Browse and manage all uploaded images and assets"
-            >
-              <ImageIcon className="w-4 h-4 text-primary" />
-              <span>Media Library</span>
-            </Button>
-
-            <Button onClick={() => router.push('/products/new')} className="gap-2 shrink-0 h-9">
-              <Plus className="w-4 h-4" />
-              <span>Add Product</span>
-            </Button>
-          </div>
+          {/* Top Actions: Add Product Button */}
+          <Button onClick={() => router.push('/products/new')} className="gap-2 shrink-0 h-9 font-semibold shadow-xs">
+            <Plus className="w-4 h-4" />
+            <span>Add Product</span>
+          </Button>
         </div>
 
         {/* 1. MOBILE VIEW: Responsive Cards (No scroll tables) */}
@@ -222,23 +310,53 @@ export default function ProductsPage() {
                     </div>
                   </div>
 
-                  {/* Card Footer: Status & Featured indicator */}
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className={`w-2 h-2 rounded-full ${
-                          product.status === 'PUBLISHED' ? 'bg-emerald-500' : 'bg-amber-400'
-                        }`}
-                      />
-                      <span>{product.status}</span>
+                  {/* Card Footer: Status & Featured indicator + Action Buttons */}
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1 border-t border-border/40">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            product.status === 'PUBLISHED' ? 'bg-emerald-500' : 'bg-amber-400'
+                          }`}
+                        />
+                        <span>{product.status}</span>
+                      </div>
+
+                      {product.featured && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.2 rounded-full">
+                          <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-600" />
+                          Featured
+                        </span>
+                      )}
                     </div>
 
-                    {product.featured && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.2 rounded-full">
-                        <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-600" />
-                        Featured
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/products/${product.id}`);
+                        }}
+                        title="Edit product"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleteProduct(product);
+                        }}
+                        title="Delete product"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               );
@@ -246,7 +364,7 @@ export default function ProductsPage() {
           )}
         </div>
 
-        {/* 2. DESKTOP VIEW: Clean Table Without Actions/Details Column */}
+        {/* 2. DESKTOP VIEW: Table With Actions */}
         <Card className="hidden md:block overflow-hidden">
           <CardContent className="p-0">
             <Table>
@@ -258,18 +376,19 @@ export default function ProductsPage() {
                   <TableHead>Price</TableHead>
                   <TableHead>Stock</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
                       Loading products...
                     </TableCell>
                   </TableRow>
                 ) : filteredProducts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
                       No matching products found.
                     </TableCell>
                   </TableRow>
@@ -386,6 +505,37 @@ export default function ProductsPage() {
                             <span>{product.status}</span>
                           </div>
                         </TableCell>
+
+                        {/* Actions */}
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/products/${product.id}`);
+                              }}
+                              title="Edit product"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </Button>
+
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteProduct(product);
+                              }}
+                              title="Delete product"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     );
                   })
@@ -395,6 +545,44 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={Boolean(deleteProduct)} onOpenChange={(open) => !open && setDeleteProduct(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <div className="w-10 h-10 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mb-2">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <DialogTitle>Delete Product</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to permanently delete{' '}
+              <strong className="text-foreground">{deleteProduct?.name}</strong>? This action cannot be
+              undone and will remove all variants, pricing, and associations.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteProduct(null)}
+              disabled={deleteMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <HoldToDeleteButton
+              onTrigger={() => {
+                if (deleteProduct) {
+                  deleteMutation.mutate(deleteProduct.id);
+                }
+              }}
+              isPending={deleteMutation.isPending}
+              label="Delete Product"
+              pendingLabel="Deleting Product..."
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

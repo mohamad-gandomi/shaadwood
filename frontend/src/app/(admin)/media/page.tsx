@@ -23,9 +23,11 @@ import {
   Sparkles,
   ChevronDown,
   Sliders,
+  AlertTriangle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Header } from '@/components/admin/header';
+import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -65,6 +67,7 @@ export default function MediaLibraryPage() {
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   const [selectedMime, setSelectedMime] = React.useState<string>('all');
   const [inspectItem, setInspectItem] = React.useState<MediaItem | null>(null);
+  const [deleteConfirmMedia, setDeleteConfirmMedia] = React.useState<MediaItem | null>(null);
   const [editAltText, setEditAltText] = React.useState('');
   const [editCaption, setEditCaption] = React.useState('');
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
@@ -212,6 +215,7 @@ export default function MediaLibraryPage() {
       queryClient.invalidateQueries({ queryKey: ['media'] });
       queryClient.invalidateQueries({ queryKey: ['media-count'] });
       queryClient.invalidateQueries({ queryKey: ['media-storage-stats'] });
+      setDeleteConfirmMedia(null);
       setInspectItem(null);
     },
     onError: (err: Error) => {
@@ -649,14 +653,12 @@ export default function MediaLibraryPage() {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (confirm(`Delete asset "${item.originalName}" permanently?`)) {
-                            deleteMutation.mutate(item.id);
-                          }
+                          setDeleteConfirmMedia(item);
                         }}
                         className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                         title="Delete asset"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </Button>
                     </div>
                   </div>
@@ -775,11 +777,7 @@ export default function MediaLibraryPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => {
-                              if (confirm(`Delete asset "${item.originalName}" permanently?`)) {
-                                deleteMutation.mutate(item.id);
-                              }
-                            }}
+                            onClick={() => setDeleteConfirmMedia(item)}
                             className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                             title="Delete asset"
                           >
@@ -919,13 +917,8 @@ export default function MediaLibraryPage() {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  if (confirm(`Delete asset "${inspectItem.originalName}" permanently?`)) {
-                    deleteMutation.mutate(inspectItem.id);
-                  }
-                }}
-                disabled={deleteMutation.isPending}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 text-xs h-9 gap-1.5"
+                onClick={() => setDeleteConfirmMedia(inspectItem)}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30 text-xs h-9 gap-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Asset</span>
@@ -960,6 +953,69 @@ export default function MediaLibraryPage() {
                 </Button>
               )}
             </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* WARNING MODAL: DELETE MEDIA ASSET */}
+      <Dialog
+        open={Boolean(deleteConfirmMedia)}
+        onOpenChange={(open) => !open && setDeleteConfirmMedia(null)}
+      >
+        <DialogContent className="sm:max-w-md w-[calc(100vw-1.5rem)]">
+          <DialogHeader className="pr-6">
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
+              Delete Media Asset?
+            </DialogTitle>
+            <DialogDescription className="space-y-3 pt-2 text-xs sm:text-sm">
+              <p>
+                Are you sure you want to permanently delete{' '}
+                <strong className="text-foreground">&quot;{deleteConfirmMedia?.originalName}&quot;</strong>?
+              </p>
+              {deleteConfirmMedia && (
+                <div className="flex items-center gap-3 p-3 rounded-xl border border-destructive/20 bg-destructive/5 text-xs">
+                  <div className="w-12 h-12 rounded-lg bg-muted border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                    <img
+                      src={deleteConfirmMedia.url}
+                      alt={deleteConfirmMedia.altText || deleteConfirmMedia.originalName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="min-w-0 space-y-0.5">
+                    <p className="font-semibold text-foreground truncate">{deleteConfirmMedia.originalName}</p>
+                    <p className="text-muted-foreground font-mono text-[11px]">
+                      {formatBytes(deleteConfirmMedia.size)} • {deleteConfirmMedia.mimeType}
+                    </p>
+                  </div>
+                </div>
+              )}
+              <p className="text-destructive/90 font-medium text-xs">
+                This action is irreversible. The asset file will be permanently deleted from server disk and database.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="pt-3 flex flex-col-reverse sm:flex-row gap-2 sm:gap-0 w-full min-w-0">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => setDeleteConfirmMedia(null)}
+              disabled={deleteMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <HoldToDeleteButton
+              className="w-full sm:w-auto font-semibold"
+              onTrigger={() => {
+                if (deleteConfirmMedia) {
+                  deleteMutation.mutate(deleteConfirmMedia.id);
+                }
+              }}
+              isPending={deleteMutation.isPending}
+              label="Delete Asset"
+              pendingLabel="Deleting..."
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>

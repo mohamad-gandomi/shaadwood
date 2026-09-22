@@ -13,6 +13,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BlogService } from './blog.service';
 import { CreateBlogPostDto, UpdateBlogPostDto } from './dto/create-blog-post.dto';
 import { CreateBlogCategoryDto } from './dto/create-blog-category.dto';
+import { UpdateBlogCategoryDto } from './dto/update-blog-category.dto';
 import { FilterBlogPostsDto } from './dto/filter-blog-posts.dto';
 import { Public } from '@/common/decorators/public.decorator';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -25,6 +26,13 @@ import { Role } from '@/common/enums/role.enum';
 @Controller('blog')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
+
+  @Public()
+  @Get('categories/tree')
+  @ApiOperation({ summary: 'Public: Get hierarchical tree of blog categories' })
+  findCategoryTree() {
+    return this.blogService.findCategoryTree();
+  }
 
   @Public()
   @Get('categories')
@@ -40,6 +48,33 @@ export class BlogController {
   @ApiOperation({ summary: 'Admin: Create a blog category' })
   createCategory(@Body() dto: CreateBlogCategoryDto) {
     return this.blogService.createCategory(dto);
+  }
+
+  @Patch('categories/:id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Update a blog category' })
+  updateCategory(@Param('id') id: string, @Body() dto: UpdateBlogCategoryDto) {
+    return this.blogService.updateCategory(id, dto);
+  }
+
+  @Delete('categories/:id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Delete a blog category' })
+  deleteCategory(@Param('id') id: string) {
+    return this.blogService.deleteCategory(id);
+  }
+
+  @Get('admin/posts')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Admin: Get all blog posts including drafts' })
+  findAllAdminPosts(@Query() filters: any) {
+    return this.blogService.findAllAdminPosts(filters);
   }
 
   @Public()

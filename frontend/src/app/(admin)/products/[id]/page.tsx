@@ -33,6 +33,7 @@ import { api } from '@/lib/api';
 import { Product, ProductVariant, Attribute, MediaItem } from '@/types';
 import { Header } from '@/components/admin/header';
 import { MediaPickerDialog } from '@/components/admin/media-picker-dialog';
+import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -1948,16 +1949,19 @@ export default function ProductDetailPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancel
-            </Button>
             <Button
-              variant="destructive"
-              onClick={() => deleteMutation.mutate()}
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? 'Deleting...' : 'Confirm Delete'}
+              Cancel
             </Button>
+            <HoldToDeleteButton
+              onTrigger={() => deleteMutation.mutate()}
+              isPending={deleteMutation.isPending}
+              label="Delete Product"
+              pendingLabel="Deleting Product..."
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>

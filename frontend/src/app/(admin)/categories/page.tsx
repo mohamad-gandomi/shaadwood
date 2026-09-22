@@ -36,6 +36,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { MediaPickerDialog } from '@/components/admin/media-picker-dialog';
+import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
 import { cn } from '@/lib/utils';
 
 export default function CategoriesPage() {
@@ -474,7 +475,7 @@ export default function CategoriesPage() {
                           return (
                             <div
                               key={sub.id}
-                              className="flex flex-col xs:flex-row xs:items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-lg bg-muted/40 hover:bg-muted/70 transition-colors border border-border/40"
+                              className="flex md:flex-row xs:flex-row xs:items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-lg bg-muted/40 hover:bg-muted/70 transition-colors border border-border/40"
                             >
                               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                                 <CornerDownRight className="w-3.5 h-3.5 text-wood-600 dark:text-wood-400 shrink-0" />
@@ -797,15 +798,13 @@ export default function CategoriesPage() {
             >
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              className="w-full sm:w-auto gap-1.5 font-semibold"
-              onClick={() => deleteConfirmCat && deleteMutation.mutate(deleteConfirmCat.id)}
-              disabled={deleteMutation.isPending}
-            >
-              <Trash2 className="w-4 h-4 shrink-0" />
-              {deleteMutation.isPending ? 'Deleting...' : 'Confirm Delete'}
-            </Button>
+            <HoldToDeleteButton
+              className="w-full sm:w-auto font-semibold"
+              onTrigger={() => deleteConfirmCat && deleteMutation.mutate(deleteConfirmCat.id)}
+              isPending={deleteMutation.isPending}
+              label="Confirm Delete"
+              pendingLabel="Deleting..."
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>

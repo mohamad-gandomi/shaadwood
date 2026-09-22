@@ -37,6 +37,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { MediaPickerDialog } from '@/components/admin/media-picker-dialog';
+import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
 import { cn } from '@/lib/utils';
 
 const FURNITURE_COLOR_PRESETS = [
@@ -1061,15 +1062,13 @@ export default function AttributesPage() {
             >
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              className="w-full sm:w-auto gap-1.5 font-semibold"
-              onClick={() => deleteConfirmTerm && deleteValueMutation.mutate(deleteConfirmTerm.termId)}
-              disabled={deleteValueMutation.isPending}
-            >
-              <Trash2 className="w-4 h-4 shrink-0" />
-              {deleteValueMutation.isPending ? 'Removing...' : 'Confirm Remove'}
-            </Button>
+            <HoldToDeleteButton
+              className="w-full sm:w-auto font-semibold"
+              onTrigger={() => deleteConfirmTerm && deleteValueMutation.mutate(deleteConfirmTerm.termId)}
+              isPending={deleteValueMutation.isPending}
+              label="Remove Option"
+              pendingLabel="Removing..."
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1106,15 +1105,13 @@ export default function AttributesPage() {
             >
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              className="w-full sm:w-auto gap-1.5 font-semibold"
-              onClick={() => deleteConfirmAttr && deleteAttrMutation.mutate(deleteConfirmAttr.id)}
-              disabled={deleteAttrMutation.isPending}
-            >
-              <Trash2 className="w-4 h-4 shrink-0" />
-              {deleteAttrMutation.isPending ? 'Deleting...' : 'Confirm Delete'}
-            </Button>
+            <HoldToDeleteButton
+              className="w-full sm:w-auto font-semibold"
+              onTrigger={() => deleteConfirmAttr && deleteAttrMutation.mutate(deleteConfirmAttr.id)}
+              isPending={deleteAttrMutation.isPending}
+              label="Delete Attribute"
+              pendingLabel="Deleting..."
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>
