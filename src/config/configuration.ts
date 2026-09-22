@@ -1,0 +1,17 @@
+export default () => ({
+  port: parseInt(process.env.PORT || '3000', 10),
+  nodeEnv: process.env.NODE_ENV || 'development',
+  apiPrefix: process.env.API_PREFIX || 'api/v1',
+  corsOrigin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+  database: {
+    url: process.env.DATABASE_URL,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'shaadwood_super_secret_jwt_key_furniture_store_2026',
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  },
+  upload: {
+    dir: process.env.UPLOAD_DIR || './uploads',
+    maxSizeMb: parseInt(process.env.MAX_FILE_SIZE_MB || '5', 10),
+  },
+});
