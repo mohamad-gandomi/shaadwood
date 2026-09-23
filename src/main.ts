@@ -14,7 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
-  const port = configService.get<number>('port', 3000);
+  const port = configService.get<number>('port', 4000);
   const apiPrefix = configService.get<string>('apiPrefix', 'api/v1');
   const corsOrigin = configService.get<string | string[]>('corsOrigin', '*');
 

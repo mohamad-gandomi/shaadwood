@@ -9,6 +9,10 @@ import { ProductsModule } from '@/modules/products/products.module';
 import { BlogModule } from '@/modules/blog/blog.module';
 import { UploadModule } from '@/modules/upload/upload.module';
 import { SettingsModule } from '@/modules/settings/settings.module';
+import { CouponsModule } from '@/modules/coupons/coupons.module';
+import { ShippingModule } from '@/modules/shipping/shipping.module';
+import { PaymentsModule } from '@/modules/payments/payments.module';
+import { OrdersModule } from '@/modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { SettingsModule } from '@/modules/settings/settings.module';
     BlogModule,
     UploadModule,
     SettingsModule,
+    CouponsModule,
+    ShippingModule,
+    PaymentsModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}

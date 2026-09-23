@@ -19,9 +19,11 @@ import {
   Layers,
   ChevronDown,
   ShoppingBag,
+  Tag,
+  Server,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { api } from '@/lib/api';
+import { api, API_BASE } from '@/lib/api';
 
 export interface NavItem {
   title: string;
@@ -36,6 +38,16 @@ export const shopNavItems: NavItem[] = [
     title: 'Overview',
     href: '/',
     icon: LayoutDashboard,
+  },
+  {
+    title: 'Orders',
+    href: '/orders',
+    icon: ShoppingBag,
+  },
+  {
+    title: 'Coupons & Promos',
+    href: '/coupons',
+    icon: Tag,
   },
   {
     title: 'Products',
@@ -117,7 +129,17 @@ export function NavContent({ onItemClick }: NavContentProps) {
     }));
   };
 
-  // Optional: fetch media count for live badge
+  // Query backend categories tree to verify live connection status
+  const { isSuccess, isError } = useQuery({
+    queryKey: ['backend-health'],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/categories`);
+      return res.ok;
+    },
+    refetchInterval: 10000,
+  });
+
+  // Media count for live badge
   const { data: mediaItems } = useQuery({
     queryKey: ['media-count'],
     queryFn: () => api.getMedia(),
@@ -330,9 +352,30 @@ export function NavContent({ onItemClick }: NavContentProps) {
           </button>
 
           {openSections.tools && (
-            <div className="p-2 space-y-1 animate-in fade-in-50 duration-150">
+            <div className="p-2 space-y-1.5 animate-in fade-in-50 duration-150">
+              {/* Backend API Connectivity Status */}
+              <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-border/60 bg-background/70 text-xs">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Server className="w-3.5 h-3.5 shrink-0" />
+                  <span className="font-medium">NestJS API</span>
+                </div>
+                {isSuccess ? (
+                  <span className="flex items-center gap-1.5 text-emerald-600 font-semibold text-[11px]">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    Connected
+                  </span>
+                ) : isError ? (
+                  <span className="flex items-center gap-1.5 text-destructive font-semibold text-[11px]">
+                    <span className="w-2 h-2 rounded-full bg-destructive shrink-0" />
+                    Offline
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground text-[11px]">Checking...</span>
+                )}
+              </div>
+
               <a
-                href="http://localhost:3000/api/docs"
+                href={process.env.NEXT_PUBLIC_SWAGGER_URL || 'http://localhost:4000/api/docs'}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-between px-3 py-2 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"

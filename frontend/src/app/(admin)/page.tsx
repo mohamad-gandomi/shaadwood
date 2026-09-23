@@ -14,6 +14,9 @@ import {
   Layers,
   Palette,
   Package,
+  ShoppingBag,
+  CreditCard,
+  TrendingUp,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Header } from '@/components/admin/header';
@@ -55,6 +58,11 @@ export default function DashboardPage() {
   const { data: users = [] } = useQuery({
     queryKey: ['users'],
     queryFn: () => api.getUsers(),
+  });
+
+  const { data: orderStats } = useQuery({
+    queryKey: ['order-stats'],
+    queryFn: () => api.getOrderStats(),
   });
 
   // Derived statistics
@@ -99,7 +107,21 @@ export default function DashboardPage() {
         {/* KPI Metrics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <KpiCard
-            title="Total Products"
+            title="Total Revenue"
+            value={formatCurrency(orderStats?.totalRevenue || 0)}
+            subtitle={`${orderStats?.totalOrders || 0} Orders · Avg: ${formatCurrency(orderStats?.averageOrderValue || 0)}`}
+            icon={CreditCard}
+            iconColor="text-emerald-700"
+          />
+          <KpiCard
+            title="Orders to Fulfill"
+            value={orderStats?.pendingCount || 0}
+            subtitle={`${orderStats?.processingCount || 0} in Workshop Assembly`}
+            icon={ShoppingBag}
+            iconColor="text-amber-700"
+          />
+          <KpiCard
+            title="Catalog Products"
             value={productsLoading ? '...' : products.length}
             subtitle={`${variableCount} Variable · ${simpleCount} Simple`}
             icon={Armchair}
@@ -110,20 +132,6 @@ export default function DashboardPage() {
             subtitle="Generated SKU combinations"
             icon={Layers}
             iconColor="text-wood-600"
-          />
-          <KpiCard
-            title="Furniture Categories"
-            value={categoriesLoading ? '...' : categories.length}
-            subtitle="Hierarchical trees"
-            icon={FolderTree}
-            iconColor="text-amber-700"
-          />
-          <KpiCard
-            title="Blog Articles"
-            value={blogPosts.length}
-            subtitle="Design guides & care tips"
-            icon={BookOpen}
-            iconColor="text-emerald-700"
           />
         </div>
 
@@ -244,6 +252,96 @@ export default function DashboardPage() {
             </Card>
           </div>
         </div>
+
+        {/* Recent Orders Section */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <div>
+              <CardTitle className="text-base flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-primary" />
+                Recent Orders & Production Status
+              </CardTitle>
+              <CardDescription>Latest customer orders across all payment gateways</CardDescription>
+            </div>
+            <Link href="/orders">
+              <Button variant="ghost" size="sm" className="text-xs gap-1 text-primary hover:text-primary">
+                View All Orders <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="p-0 overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[120px]">Order #</TableHead>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Items</TableHead>
+                  <TableHead>Carrier & Method</TableHead>
+                  <TableHead>Gateway</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {!orderStats?.recentOrders || orderStats.recentOrders.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-6 text-muted-foreground text-xs">
+                      No orders placed yet.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  orderStats.recentOrders.map((ord) => (
+                    <TableRow key={ord.id} className="hover:bg-muted/40 transition-colors">
+                      <TableCell className="font-semibold text-primary font-mono text-xs">
+                        <Link href={`/orders/${ord.id}`} className="hover:underline">
+                          {ord.orderNumber}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="text-xs">
+                        <div className="font-medium text-foreground">{ord.customerName}</div>
+                        <div className="text-muted-foreground text-[11px]">{ord.customerEmail}</div>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        {ord.items?.length || 0} item{(ord.items?.length || 0) > 1 ? 's' : ''}
+                      </TableCell>
+                      <TableCell className="text-xs text-foreground font-medium">
+                        {ord.shippingCarrier || ord.shippingMethod || 'Standard'}
+                      </TableCell>
+                      <TableCell className="text-xs">
+                        <span className="font-medium text-foreground">
+                          {ord.paymentMethod?.toUpperCase().includes('ZARINPAL')
+                            ? 'زرین‌پال'
+                            : ord.paymentMethod}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right font-bold text-foreground text-xs">
+                        {formatCurrency(ord.totalAmount)}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge
+                          variant="outline"
+                          className={
+                            ord.status === 'DELIVERED'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-300 text-[10px]'
+                              : ord.status === 'PROCESSING'
+                              ? 'bg-blue-50 text-blue-700 border-blue-300 text-[10px]'
+                              : ord.status === 'SHIPPED'
+                              ? 'bg-purple-50 text-purple-700 border-purple-300 text-[10px]'
+                              : ord.status === 'CANCELLED'
+                              ? 'bg-zinc-100 text-zinc-600 border-zinc-300 text-[10px]'
+                              : 'bg-amber-50 text-amber-700 border-amber-300 text-[10px]'
+                          }
+                        >
+                          {ord.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

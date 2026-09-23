@@ -104,7 +104,8 @@ export class UploadService {
       }
     }
 
-    const relativeUrl = `http://localhost:3000/uploads/${finalFilename}`;
+    const port = this.configService.get<number>('port', 4000);
+    const relativeUrl = `http://localhost:${port}/uploads/${finalFilename}`;
 
     // If converted (e.g. to WebP), update the original name extension (e.g. front.jpg -> front.webp)
     const baseName = file.originalname.replace(/\.[^/.]+$/, '');

@@ -63,9 +63,9 @@ copy .env.example .env
 
 > **Note:** The default `.env` is already configured to work seamlessly with the included Docker PostgreSQL container:
 > ```env
-> PORT=3000
+> PORT=4000
 > API_PREFIX=api/v1
-> CORS_ORIGIN=http://localhost:3000,http://localhost:3001
+> CORS_ORIGIN=http://localhost:4000,http://localhost:4001
 > DATABASE_URL="postgresql://shaadwood_user:shaadwood_password@localhost:5432/shaadwood_db?schema=public"
 > JWT_SECRET="replace_with_a_secure_random_key"
 > JWT_EXPIRES_IN="7d"
@@ -112,8 +112,8 @@ pnpm dev:backend
 ```
 *(Or: `pnpm start:dev`)*
 
-- **Backend API**: `http://localhost:3000/api/v1`
-- **Swagger Interactive API Documentation**: `http://localhost:3000/api/docs`
+- **Backend API**: `http://localhost:4000/api/v1`
+- **Swagger Interactive API Documentation**: `http://localhost:4000/api/docs`
 
 ---
 
@@ -126,14 +126,14 @@ pnpm dev:frontend
 ```
 *(Or: `pnpm --dir frontend dev`)*
 
-- **Admin Dashboard**: `http://localhost:3001`
-- **Admin Login Portal**: `http://localhost:3001/login`
+- **Admin Dashboard**: `http://localhost:4001`
+- **Admin Login Portal**: `http://localhost:4001/login`
 
 ---
 
 ## 🔑 Default Credentials
 
-### 1. Admin Dashboard Portal (`http://localhost:3001/login`)
+### 1. Admin Dashboard Portal (`http://localhost:4001/login`)
 | Role | Email | Password |
 | :--- | :--- | :--- |
 | **Administrator** | `admin@shaadwood.com` | `Admin@123456` |
@@ -158,16 +158,16 @@ pnpm dev:frontend
 
 | Service / Page | URL | Purpose |
 | :--- | :--- | :--- |
-| **Admin Overview** | `http://localhost:3001/` | KPI metrics, stock alerts, sales analytics |
-| **Products List** | `http://localhost:3001/products` | Tabular & mobile card views, media counts, filters |
-| **Product Detail & Variations** | `http://localhost:3001/products/:id` | Specs, variable attributes matrix, image gallery |
-| **Add New Product** | `http://localhost:3001/products/new` | Multi-step creation with Media Library integration |
-| **Attributes & Swatches** | `http://localhost:3001/attributes` | Wood finishes, fabrics, joinery types, color swatches |
-| **Product Categories** | `http://localhost:3001/categories` | Hierarchical furniture category tree management |
-| **Media Library** | `http://localhost:3001/media` | Upload, inspect, edit alt text, copy CDN/local URLs |
-| **Customer Users** | `http://localhost:3001/users` | User accounts, shipping addresses, roles |
-| **Blog Articles** | `http://localhost:3001/blog` | Editorial and care guide CMS |
-| **Swagger OpenAPI Docs** | `http://localhost:3000/api/docs` | Interactive REST endpoint explorer and tester |
+| **Admin Overview** | `http://localhost:4001/` | KPI metrics, stock alerts, sales analytics |
+| **Products List** | `http://localhost:4001/products` | Tabular & mobile card views, media counts, filters |
+| **Product Detail & Variations** | `http://localhost:4001/products/:id` | Specs, variable attributes matrix, image gallery |
+| **Add New Product** | `http://localhost:4001/products/new` | Multi-step creation with Media Library integration |
+| **Attributes & Swatches** | `http://localhost:4001/attributes` | Wood finishes, fabrics, joinery types, color swatches |
+| **Product Categories** | `http://localhost:4001/categories` | Hierarchical furniture category tree management |
+| **Media Library** | `http://localhost:4001/media` | Upload, inspect, edit alt text, copy CDN/local URLs |
+| **Customer Users** | `http://localhost:4001/users` | User accounts, shipping addresses, roles |
+| **Blog Articles** | `http://localhost:4001/blog` | Editorial and care guide CMS |
+| **Swagger OpenAPI Docs** | `http://localhost:4000/api/docs` | Interactive REST endpoint explorer and tester |
 | **Prisma Studio** | `http://localhost:5555` | Visual database browser (`pnpm prisma:studio`) |
 
 ---
@@ -222,8 +222,8 @@ shaadwood/
 
 | Command | Action |
 | :--- | :--- |
-| `pnpm dev:backend` | Start NestJS backend with live watch on port `3000` |
-| `pnpm dev:frontend` | Start Next.js admin frontend on port `3001` |
+| `pnpm dev:backend` | Start NestJS backend with live watch on port `4000` |
+| `pnpm dev:frontend` | Start Next.js admin frontend on port `4001` |
 | `pnpm docker:up` | Launch PostgreSQL & pgAdmin in Docker containers |
 | `pnpm docker:down` | Stop Docker containers |
 | `pnpm db:setup` | Generate Prisma client, push schema, and seed data |
@@ -244,7 +244,7 @@ shaadwood/
 
 **Cause**: When the database is re-seeded, user UUIDs are regenerated. If your browser still holds an older cached JWT token in `localStorage`, the user ID in the token won't match the new database.
 
-**Fix**: The API client includes self-healing auto-recovery that automatically clears invalid tokens and fetches a fresh token. Alternatively, click **Sign Out** in the top header or visit `http://localhost:3001/login` and log in again.
+**Fix**: The API client includes self-healing auto-recovery that automatically clears invalid tokens and fetches a fresh token. Alternatively, click **Sign Out** in the top header or visit `http://localhost:4001/login` and log in again.
 </details>
 
 <details>
@@ -256,10 +256,10 @@ shaadwood/
 </details>
 
 <details>
-<summary><b>Q: Port already in use (EADDRINUSE 3000 / 3001 / 5432).</b></summary>
+<summary><b>Q: Port already in use (EADDRINUSE 4000 / 4001 / 5432).</b></summary>
 
 **Fix**: Ensure no previous instances of NestJS, Next.js, or local PostgreSQL are occupying those ports. You can inspect or terminate lingering processes via Task Manager or PowerShell:
 ```powershell
-Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process
+Get-Process -Id (Get-NetTCPConnection -LocalPort 4000).OwningProcess | Stop-Process
 ```
 </details>

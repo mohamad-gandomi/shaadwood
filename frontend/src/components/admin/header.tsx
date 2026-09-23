@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Server, Menu, Armchair, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { Menu, Armchair, LogOut, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { NavContent } from './nav-content';
@@ -11,19 +11,9 @@ import { api } from '@/lib/api';
 export function Header({ title }: { title?: string }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  // Query backend categories tree to verify live connection status
-  const { isSuccess, isError } = useQuery({
-    queryKey: ['backend-health'],
-    queryFn: async () => {
-      const res = await fetch('http://localhost:3000/api/v1/categories');
-      return res.ok;
-    },
-    refetchInterval: 10000,
-  });
-
   return (
-    <header className="h-16 border-b border-border/70 bg-card/85 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between sticky top-0 z-20">
-      <div className="flex items-center gap-3">
+    <header className="h-16 border-b border-border/70 bg-card/85 backdrop-blur-md px-3 sm:px-8 flex items-center justify-between sticky top-0 z-20">
+      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
         {/* Mobile Hamburger Drawer */}
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
@@ -56,33 +46,27 @@ export function Header({ title }: { title?: string }) {
           </SheetContent>
         </Sheet>
 
-        <h1 className="text-base sm:text-lg md:text-xl font-bold text-foreground tracking-tight truncate">
+        {/* Page Title with Strict Max-Width Limit in Mobile to prevent header overflow */}
+        <h1 className="text-sm sm:text-base md:text-xl font-bold text-foreground tracking-tight truncate max-w-[130px] xs:max-w-[170px] sm:max-w-[260px] md:max-w-none">
           {title || 'Dashboard Overview'}
         </h1>
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-4">
-        {/* Backend Connectivity Status */}
-        <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full border border-border/60 bg-background/80 text-xs shadow-2xs">
-          <Server className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-          <span className="text-muted-foreground font-medium hidden sm:inline">NestJS API:</span>
-          {isSuccess ? (
-            <span className="flex items-center gap-1.5 text-emerald-600 font-semibold text-[11px] sm:text-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              Connected
-            </span>
-          ) : isError ? (
-            <span className="flex items-center gap-1.5 text-destructive font-semibold text-[11px] sm:text-xs">
-              <span className="w-2 h-2 rounded-full bg-destructive shrink-0" />
-              Offline
-            </span>
-          ) : (
-            <span className="text-muted-foreground text-[11px] sm:text-xs">Checking...</span>
-          )}
-        </div>
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Sleek Customer Storefront Link */}
+        <Link
+          href="/"
+          target="_blank"
+          className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border border-border/60 bg-background/80 hover:bg-accent/60 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors shadow-2xs"
+          title="Open Customer Storefront"
+        >
+          <Armchair className="w-3.5 h-3.5 text-primary shrink-0" />
+          <span className="hidden sm:inline">Storefront</span>
+          <ExternalLink className="w-3 h-3 opacity-60 hidden sm:inline" />
+        </Link>
 
         {/* Current Admin User */}
-        <div className="flex items-center gap-2 pl-2 border-l border-border/60">
+        <div className="flex items-center gap-1.5 sm:gap-2 pl-2 border-l border-border/60">
           <div className="w-8 h-8 rounded-full bg-wood-200 text-wood-900 font-bold flex items-center justify-center text-xs border border-wood-300 shrink-0">
             SA
           </div>

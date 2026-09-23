@@ -8,9 +8,15 @@ import {
   User,
   Address,
   MediaItem,
+  Order,
+  OrderStats,
+  Coupon,
+  OrderTransaction,
+  ShippingMethodOption,
+  PaymentGatewayOption,
 } from '@/types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 export interface UploadMediaOptions {
   altText?: string;
@@ -420,4 +426,99 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(value),
     }),
+
+  // Orders Management
+  getOrders: (params?: { status?: string; paymentStatus?: string; search?: string; page?: number; limit?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.status && params.status !== 'ALL') query.append('status', params.status);
+    if (params?.paymentStatus && params.paymentStatus !== 'ALL') query.append('paymentStatus', params.paymentStatus);
+    if (params?.search) query.append('search', params.search);
+    if (params?.page) query.append('page', String(params.page));
+    if (params?.limit) query.append('limit', String(params.limit));
+    return fetcher<Order[]>(
+      `/orders${query.toString() ? `?${query.toString()}` : ''}`
+    );
+  },
+
+  getOrder: (id: string) => fetcher<Order>(`/orders/${id}`),
+
+  getOrderStats: () => fetcher<OrderStats>('/orders/stats'),
+
+  createOrder: (data: any) =>
+    fetcher<Order>('/orders', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateOrderStatus: (id: string, status: string, note?: string) =>
+    fetcher<Order>(`/orders/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, note }),
+    }),
+
+  updateOrder: (id: string, data: any) =>
+    fetcher<Order>(`/orders/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
+  deleteOrder: (id: string) =>
+    fetcher<Order>(`/orders/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Coupons
+  getCoupons: () => fetcher<Coupon[]>('/coupons'),
+
+  getCoupon: (id: string) => fetcher<Coupon>(`/coupons/${id}`),
+
+  createCoupon: (data: any) =>
+    fetcher<Coupon>('/coupons', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  updateCoupon: (id: string, data: any) =>
+    fetcher<Coupon>(`/coupons/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
+  deleteCoupon: (id: string) =>
+    fetcher<Coupon>(`/coupons/${id}`, {
+      method: 'DELETE',
+    }),
+
+  validateCoupon: (code: string, cartSubtotal: number) =>
+    fetcher<{
+      valid: boolean;
+      coupon: { id: string; code: string; discountType: string; discountValue: number };
+      cartSubtotal: number;
+      discountAmount: number;
+      discountedTotal: number;
+    }>('/coupons/validate', {
+      method: 'POST',
+      body: JSON.stringify({ code, cartSubtotal }),
+    }),
+
+  // Shipping Methods
+  getShippingMethods: () => fetcher<ShippingMethodOption[]>('/shipping/methods'),
+
+  // Payments & Multi-Gateway
+  getPaymentGateways: () => fetcher<PaymentGatewayOption[]>('/payments/gateways'),
+
+  initiatePayment: (data: { orderId: string; gateway: string; callbackUrl?: string }) =>
+    fetcher<{
+      success: boolean;
+      gateway: string;
+      transactionId: string;
+      paymentUrl: string;
+      isOffline?: boolean;
+    }>('/payments/initiate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  getOrderTransactions: (orderId: string) =>
+    fetcher<OrderTransaction[]>(`/payments/transactions/${orderId}`),
 };

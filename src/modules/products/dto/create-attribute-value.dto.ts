@@ -17,7 +17,7 @@ export class CreateAttributeValueDto {
   @IsString()
   colorHex?: string;
 
-  @ApiPropertyOptional({ example: 'http://localhost:3000/uploads/fabric.webp', description: 'Image swatch URL for fabrics/textures' })
+  @ApiPropertyOptional({ example: 'http://localhost:4000/uploads/fabric.webp', description: 'Image swatch URL for fabrics/textures' })
   @IsOptional()
   @IsString()
   image?: string;
@@ -39,7 +39,7 @@ export class UpdateAttributeValueDto {
   @IsString()
   colorHex?: string;
 
-  @ApiPropertyOptional({ example: 'http://localhost:3000/uploads/fabric.webp' })
+  @ApiPropertyOptional({ example: 'http://localhost:4000/uploads/fabric.webp' })
   @IsOptional()
   @IsString()
   image?: string;
