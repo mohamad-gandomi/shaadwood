@@ -35,11 +35,6 @@ export interface NavItem {
 
 export const shopNavItems: NavItem[] = [
   {
-    title: 'Overview',
-    href: '/',
-    icon: LayoutDashboard,
-  },
-  {
     title: 'Orders',
     href: '/orders',
     icon: ShoppingBag,
@@ -207,6 +202,40 @@ export function NavContent({ onItemClick }: NavContentProps) {
   return (
     <div className="flex flex-col min-h-full">
       <div className="p-3 space-y-2.5 flex-1">
+        {/* ======================================================== */}
+        {/* TOP-LEVEL: DASHBOARD                                    */}
+        {/* ======================================================== */}
+        <Link
+          href="/"
+          onClick={onItemClick}
+          className={cn(
+            'flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border group shadow-2xs',
+            pathname === '/'
+              ? 'bg-primary text-primary-foreground border-primary shadow-xs'
+              : 'bg-card/70 text-muted-foreground hover:text-foreground hover:bg-accent/60 border-border/60',
+          )}
+        >
+          <div className="flex items-center gap-2.5">
+            <LayoutDashboard
+              className={cn(
+                'w-4 h-4 shrink-0 transition-colors',
+                pathname === '/' ? 'text-primary-foreground' : 'text-primary group-hover:text-primary',
+              )}
+            />
+            <span>Dashboard</span>
+          </div>
+          <span
+            className={cn(
+              'text-[10px] font-mono px-1.5 py-0.5 rounded tracking-wide font-medium',
+              pathname === '/'
+                ? 'bg-primary-foreground/20 text-primary-foreground'
+                : 'text-muted-foreground bg-muted/60',
+            )}
+          >
+            Live
+          </span>
+        </Link>
+
         {/* ======================================================== */}
         {/* SECTION 1: FURNITURE SHOP                                */}
         {/* ======================================================== */}
