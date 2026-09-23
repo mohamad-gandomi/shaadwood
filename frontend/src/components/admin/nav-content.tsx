@@ -206,11 +206,11 @@ export function NavContent({ onItemClick }: NavContentProps) {
         {/* TOP-LEVEL: DASHBOARD                                    */}
         {/* ======================================================== */}
         <Link
-          href="/"
+          href="/admin"
           onClick={onItemClick}
           className={cn(
             'flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border group shadow-2xs',
-            pathname === '/'
+            pathname === '/admin'
               ? 'bg-primary text-primary-foreground border-primary shadow-xs'
               : 'bg-card/70 text-muted-foreground hover:text-foreground hover:bg-accent/60 border-border/60',
           )}
@@ -219,7 +219,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
             <LayoutDashboard
               className={cn(
                 'w-4 h-4 shrink-0 transition-colors',
-                pathname === '/' ? 'text-primary-foreground' : 'text-primary group-hover:text-primary',
+                pathname === '/admin' ? 'text-primary-foreground' : 'text-primary group-hover:text-primary',
               )}
             />
             <span>Dashboard</span>
@@ -227,7 +227,7 @@ export function NavContent({ onItemClick }: NavContentProps) {
           <span
             className={cn(
               'text-[10px] font-mono px-1.5 py-0.5 rounded tracking-wide font-medium',
-              pathname === '/'
+              pathname === '/admin'
                 ? 'bg-primary-foreground/20 text-primary-foreground'
                 : 'text-muted-foreground bg-muted/60',
             )}

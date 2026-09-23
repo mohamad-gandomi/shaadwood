@@ -88,6 +88,15 @@
   }
 }
 
+/* Hide scrollbar utility for clean carousel styling */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Editorial Article Markdown Renderer Styles (Matches Frontend Visitor View) */
 .article-rendered-content {
   color: hsl(var(--foreground));
