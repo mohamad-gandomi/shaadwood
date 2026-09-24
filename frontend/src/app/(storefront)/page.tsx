@@ -2,32 +2,23 @@
 
 import * as React from 'react';
 import { HeroSlider } from '@/components/storefront/hero-slider';
-import { TrustBadges } from '@/components/storefront/trust-badges';
+import { ProductCategories } from '@/components/storefront/product-categories';
 import { ProductCarousel } from '@/components/storefront/product-carousel';
-import { FeaturedSpotlight } from '@/components/storefront/featured-spotlight';
-import { EditorialBanners } from '@/components/storefront/editorial-banners';
-import { MaterialStoryGrid } from '@/components/storefront/material-story-grid';
+import { ImageCTA } from '@/components/storefront/image-cta';
+import { TrustBadges } from '@/components/storefront/trust-badges';
+import { ArticlesSection } from '@/components/storefront/articles-section';
+import { AboutSection } from '@/components/storefront/about-section';
 
 export default function StorefrontHomePage() {
   return (
     <div className="space-y-0">
-      {/* 1. Big Atmospheric Hero Slider */}
       <HeroSlider />
-
-      {/* 2. Zen Craftsmanship Pillars */}
-      <TrustBadges />
-
-      {/* 3. Live Backend Product Carousel */}
+      <ProductCategories />
       <ProductCarousel />
-
-      {/* 4. Signature Featured Piece Spotlight */}
-      <FeaturedSpotlight />
-
-      {/* 5. Editorial Atmospheric Banners */}
-      <EditorialBanners />
-
-      {/* 6. Material, Timber & Workshop Story */}
-      <MaterialStoryGrid />
+      <ImageCTA />
+      <TrustBadges />
+      <ArticlesSection />
+      <AboutSection />
     </div>
   );
 }

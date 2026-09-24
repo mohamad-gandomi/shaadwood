@@ -219,6 +219,15 @@ export const api = {
     const qs = query.toString();
     return fetcher<BlogPost[]>(qs ? `/blog/admin/posts?${qs}` : '/blog/admin/posts');
   },
+  getPublicBlogPosts: (params?: { search?: string; categorySlug?: string; limit?: number; page?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.search) query.append('search', params.search);
+    if (params?.categorySlug) query.append('categorySlug', params.categorySlug);
+    if (params?.limit) query.append('limit', String(params.limit));
+    if (params?.page) query.append('page', String(params.page));
+    const qs = query.toString();
+    return fetcher<BlogPost[]>(qs ? `/blog/posts?${qs}` : '/blog/posts');
+  },
   getBlogPost: (idOrSlug: string) => fetcher<BlogPost>(`/blog/posts/${idOrSlug}`),
   getBlogCategoriesTree: () => fetcher<BlogCategory[]>('/blog/categories/tree'),
   getBlogCategories: () => fetcher<BlogCategory[]>('/blog/categories'),

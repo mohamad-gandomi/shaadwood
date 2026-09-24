@@ -24,7 +24,7 @@ const SLIDES: HeroSlide[] = [
     title: 'Rest in Bedroom',
     subtitle: 'Handcrafted in solid walnut & certified white oak. The essence of quiet natural living.',
     ctaText: 'Explore Bedroom',
-    ctaHref: '#bedroom',
+    ctaHref: '#categories',
   },
   {
     id: 'living',
@@ -33,7 +33,7 @@ const SLIDES: HeroSlide[] = [
     title: 'Organic Harmony',
     subtitle: 'Low-profile timber framing, oatmeal linen textures, and traditional mortise & tenon joinery.',
     ctaText: 'Discover Living Space',
-    ctaHref: '#living',
+    ctaHref: '#categories',
   },
   {
     id: 'credenza',

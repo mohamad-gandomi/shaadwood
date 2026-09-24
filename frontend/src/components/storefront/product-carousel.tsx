@@ -87,13 +87,13 @@ export function ProductCarousel() {
         {/* Carousel Stream */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-5 sm:gap-6 overflow-x-auto pb-6 pt-2 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 pt-2 scrollbar-none snap-x snap-mandatory -mx-4 px-[7.5vw] scroll-px-[7.5vw] sm:mx-0 sm:px-0 sm:scroll-px-0"
         >
           {isLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="w-72 sm:w-80 shrink-0 rounded-2xl bg-white p-4 border border-border/60 space-y-4 animate-pulse"
+                className="w-[85vw] max-w-xs sm:w-80 shrink-0 snap-center sm:snap-start rounded-2xl bg-white p-4 border border-border/60 space-y-4 animate-pulse"
               >
                 <div className="aspect-[4/3] bg-zen-100 rounded-xl" />
                 <div className="h-4 bg-zen-200 rounded w-3/4" />
@@ -113,7 +113,7 @@ export function ProductCarousel() {
               return (
                 <div
                   key={product.id}
-                  className="w-72 sm:w-80 shrink-0 snap-start group rounded-2xl bg-white border border-border/60 overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                  className="w-[85vw] max-w-xs sm:w-80 shrink-0 snap-center sm:snap-start group rounded-2xl bg-white border border-border/60 overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
                 >
                   {/* Image Stage */}
                   <div className="relative aspect-[4/3] bg-zen-100/60 overflow-hidden">
