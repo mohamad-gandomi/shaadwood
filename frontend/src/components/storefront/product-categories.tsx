@@ -126,7 +126,7 @@ export function ProductCategories() {
               <Link
                 key={category.id}
                 id={anchorId}
-                href="#collections"
+                href={`/shop?categorySlug=${category.slug}`}
                 className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-zen-100 border border-border/60 shadow-2xs hover:shadow-lg transition-all duration-500 block focus:outline-hidden focus-visible:ring-2 focus-visible:ring-shaad-800 scroll-mt-24"
               >
                 {/* Image Stage */}

@@ -162,9 +162,11 @@ export function ProductCarousel() {
                   {/* Content Details */}
                   <div className="p-4 sm:p-5 space-y-2">
                     <div className="space-y-0.5">
-                      <h3 className="font-semibold text-sm sm:text-base text-foreground font-serif group-hover:text-shaad-800 transition-colors truncate">
-                        {product.name}
-                      </h3>
+                      <Link href={`/shop/${product.slug}`} className="block">
+                        <h3 className="font-semibold text-sm sm:text-base text-foreground font-serif group-hover:text-shaad-800 transition-colors truncate">
+                          {product.name}
+                        </h3>
+                      </Link>
                       <p className="text-xs text-muted-foreground truncate">
                         {product.shortDescription || '100% Solid Kiln-Dried Hardwood'}
                       </p>

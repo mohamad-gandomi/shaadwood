@@ -32,19 +32,19 @@ export function StorefrontNavbar() {
 
   // Concise essential desktop links - exactly 3 to prevent any logo collision
   const desktopNavLinks = [
-    { label: 'Living', href: '#living' },
-    { label: 'Bedroom', href: '#bedroom' },
-    { label: 'Dining', href: '#dining' },
+    { label: 'Catalog', href: '/shop' },
+    { label: 'Living', href: '/shop?categorySlug=living-room' },
+    { label: 'Dining', href: '/shop?categorySlug=dining-room' },
   ];
 
   // Mobile drawer links
   const mobileNavLinks = [
-    { label: 'Living Collection', href: '#living' },
-    { label: 'Bedroom Sanctuary', href: '#bedroom' },
-    { label: 'Dining Tables', href: '#dining' },
-    { label: 'Signature Pieces', href: '#collections' },
-    { label: 'Craft & Joinery', href: '#craft' },
-    { label: 'Studio Journal', href: '/blog' },
+    { label: 'Full Studio Catalog', href: '/shop' },
+    { label: 'Living Collection', href: '/shop?categorySlug=living-room' },
+    { label: 'Dining Room', href: '/shop?categorySlug=dining-room' },
+    { label: 'Bedroom Sanctuary', href: '/shop?categorySlug=bedroom' },
+    { label: 'Signature Pieces', href: '/#collections' },
+    { label: 'Studio Journal', href: '/#articles' },
   ];
 
   return (

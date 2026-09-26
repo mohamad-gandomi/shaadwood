@@ -72,28 +72,28 @@ export function StorefrontFooter() {
             </h5>
             <ul className="space-y-2 text-muted-foreground">
               <li>
-                <Link href="#bedroom" className="hover:text-shaad-800 transition-colors">
+                <Link href="/shop?categorySlug=bedroom" className="hover:text-shaad-800 transition-colors">
                   Bedroom Platform Beds
                 </Link>
               </li>
               <li>
-                <Link href="#living" className="hover:text-shaad-800 transition-colors">
+                <Link href="/shop?categorySlug=living-room" className="hover:text-shaad-800 transition-colors">
                   Living Sofas & Armchairs
                 </Link>
               </li>
               <li>
-                <Link href="#living" className="hover:text-shaad-800 transition-colors">
+                <Link href="/shop?categorySlug=coffee-tables" className="hover:text-shaad-800 transition-colors">
                   Organic Coffee Tables
                 </Link>
               </li>
               <li>
-                <Link href="#collections" className="hover:text-shaad-800 transition-colors">
+                <Link href="/shop?categorySlug=dining-room" className="hover:text-shaad-800 transition-colors">
                   Dining Tables & Benches
                 </Link>
               </li>
               <li>
-                <Link href="#collections" className="hover:text-shaad-800 transition-colors">
-                  Credenzas & Bookshelves
+                <Link href="/shop" className="hover:text-shaad-800 transition-colors">
+                  Full Studio Catalog
                 </Link>
               </li>
             </ul>

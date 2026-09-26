@@ -109,12 +109,31 @@ async function fetcher<T>(endpoint: string, options?: RequestInit, isRetry = fal
 
 export const api = {
   // Products
-  getProducts: (params?: { categorySlug?: string; search?: string; status?: string }) => {
+  getProducts: (params?: {
+    categorySlug?: string;
+    categoryId?: string;
+    search?: string;
+    status?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    featured?: boolean;
+    sortBy?: string;
+    page?: number;
+    limit?: number;
+  }) => {
     const query = new URLSearchParams();
     if (params?.categorySlug) query.append('categorySlug', params.categorySlug);
+    if (params?.categoryId) query.append('categoryId', params.categoryId);
     if (params?.search) query.append('search', params.search);
     if (params?.status) query.append('status', params.status);
-    return fetcher<Product[]>(`/products${query.toString() ? `?${query.toString()}` : ''}`);
+    if (params?.minPrice !== undefined && params.minPrice !== null) query.append('minPrice', String(params.minPrice));
+    if (params?.maxPrice !== undefined && params.maxPrice !== null) query.append('maxPrice', String(params.maxPrice));
+    if (params?.featured !== undefined) query.append('featured', String(params.featured));
+    if (params?.sortBy) query.append('sortBy', params.sortBy);
+    if (params?.page) query.append('page', String(params.page));
+    if (params?.limit) query.append('limit', String(params.limit));
+    const qs = query.toString();
+    return fetcher<Product[]>(qs ? `/products?${qs}` : '/products');
   },
 
   getProduct: (idOrSlug: string) => fetcher<Product>(`/products/${idOrSlug}`),
