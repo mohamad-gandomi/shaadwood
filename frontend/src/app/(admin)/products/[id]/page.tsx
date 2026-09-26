@@ -27,6 +27,7 @@ import {
   CheckSquare,
   Square,
   Wand2,
+  TreePine,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
@@ -34,6 +35,7 @@ import { Product, ProductVariant, Attribute, MediaItem } from '@/types';
 import { Header } from '@/components/admin/header';
 import { MediaPickerDialog } from '@/components/admin/media-picker-dialog';
 import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
+import { ProductSpecificationsTab, SpecificationItem } from '@/components/admin/product-specifications-tab';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -100,6 +102,7 @@ export default function ProductDetailPage() {
     status: 'PUBLISHED' as 'PUBLISHED' | 'DRAFT' | 'ARCHIVED',
     categoryId: '',
     images: [] as Array<{ url: string; altText?: string | null; isPrimary: boolean; displayOrder: number }>,
+    specifications: [] as SpecificationItem[],
   });
 
   // State for adding a new variant (maps attributeId -> attributeValueId)
@@ -162,6 +165,7 @@ export default function ProductDetailPage() {
           isPrimary: img.isPrimary,
           displayOrder: img.displayOrder,
         })) || [],
+        specifications: (product.specifications as SpecificationItem[]) || [],
       });
 
       // Sync active attributes for this product
@@ -357,6 +361,7 @@ export default function ProductDetailPage() {
       status: formData.status,
       categoryId: formData.categoryId || null,
       images: formData.images,
+      specifications: formData.specifications,
     });
   };
 
@@ -514,10 +519,20 @@ export default function ProductDetailPage() {
 
         {/* Segmented Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full h-auto p-1.5 bg-muted/80 rounded-xl border border-border gap-1">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-5 w-full h-auto p-1.5 bg-muted/80 rounded-xl border border-border gap-1">
             <TabsTrigger value="overview" className="gap-2 py-2 text-xs font-semibold rounded-lg">
               <Info className="w-3.5 h-3.5 shrink-0" />
-              <span>Overview & Specs</span>
+              <span>Overview</span>
+            </TabsTrigger>
+
+            <TabsTrigger value="specifications" className="gap-2 py-2 text-xs font-semibold rounded-lg">
+              <TreePine className="w-3.5 h-3.5 shrink-0 text-amber-700" />
+              <span>Specifications</span>
+              {formData.specifications && formData.specifications.length > 0 && (
+                <span className="text-[10px] px-1.5 py-0.2 bg-amber-200 text-amber-900 rounded-full font-bold">
+                  {formData.specifications.length}
+                </span>
+              )}
             </TabsTrigger>
 
             <TabsTrigger value="pricing" className="gap-2 py-2 text-xs font-semibold rounded-lg">
@@ -537,7 +552,7 @@ export default function ProductDetailPage() {
 
             <TabsTrigger value="media" className="gap-2 py-2 text-xs font-semibold rounded-lg">
               <ImageIcon className="w-3.5 h-3.5 shrink-0 text-blue-600" />
-              <span>Media Gallery ({formData.images.length})</span>
+              <span>Media ({formData.images.length})</span>
             </TabsTrigger>
           </TabsList>
 
@@ -1543,6 +1558,20 @@ export default function ProductDetailPage() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* ========================================================= */}
+          {/* TAB 5: ARTISANAL SPECIFICATIONS REPEATER                  */}
+          {/* ========================================================= */}
+          <TabsContent value="specifications" className="space-y-6 m-0">
+            <ProductSpecificationsTab
+              specifications={formData.specifications || []}
+              onChange={(newSpecs) => setFormData({ ...formData, specifications: newSpecs })}
+              productName={formData.name}
+              defaultDimensions={formData.dimensions}
+              defaultWeight={formData.weight}
+              onNavigateToOverview={() => setActiveTab('overview')}
+            />
           </TabsContent>
         </Tabs>
       </div>

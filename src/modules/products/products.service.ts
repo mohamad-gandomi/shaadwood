@@ -42,12 +42,50 @@ export class ProductsService {
       where.featured = featured;
     }
 
-    if (categoryId) {
-      where.categoryId = categoryId;
-    }
-
     if (categorySlug) {
-      where.category = { slug: categorySlug };
+      const cat = await this.prisma.category.findUnique({
+        where: { slug: categorySlug },
+        include: {
+          children: {
+            select: {
+              id: true,
+              children: { select: { id: true } },
+            },
+          },
+        },
+      });
+      if (cat) {
+        const allIds = [
+          cat.id,
+          ...cat.children.map((c) => c.id),
+          ...cat.children.flatMap((c) => c.children.map((gc) => gc.id)),
+        ];
+        where.categoryId = { in: allIds };
+      } else {
+        where.category = { slug: categorySlug };
+      }
+    } else if (categoryId) {
+      const cat = await this.prisma.category.findUnique({
+        where: { id: categoryId },
+        include: {
+          children: {
+            select: {
+              id: true,
+              children: { select: { id: true } },
+            },
+          },
+        },
+      });
+      if (cat) {
+        const allIds = [
+          cat.id,
+          ...cat.children.map((c) => c.id),
+          ...cat.children.flatMap((c) => c.children.map((gc) => gc.id)),
+        ];
+        where.categoryId = { in: allIds };
+      } else {
+        where.categoryId = categoryId;
+      }
     }
 
     if (search) {

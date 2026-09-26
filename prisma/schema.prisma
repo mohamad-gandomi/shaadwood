@@ -139,6 +139,7 @@ model Product {
   manageStock      Boolean            @default(true)
   dimensions       String?            // e.g., "200x90x75 cm" (LxWxH)
   weight           Decimal?           @db.Decimal(10, 2) // weight in kg
+  specifications   Json?              // Repeater key-value list: [{ label: string, value: string }]
   featured         Boolean            @default(false)
   status           ProductStatus      @default(PUBLISHED)
   categoryId       String?

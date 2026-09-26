@@ -125,6 +125,7 @@ export interface Product {
   manageStock: boolean;
   dimensions?: string | null;
   weight?: string | number | null;
+  specifications?: Array<{ label: string; value: string }> | null;
   featured: boolean;
   status: ProductStatus;
   categoryId?: string | null;

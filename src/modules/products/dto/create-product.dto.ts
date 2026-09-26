@@ -146,4 +146,12 @@ export class CreateProductDto {
   @ValidateNested({ each: true })
   @Type(() => CreateVariantDto)
   variants?: CreateVariantDto[];
+
+  @ApiPropertyOptional({
+    example: [{ label: 'Timber Origin', value: 'Sustainably Harvested European White Oak' }],
+    description: 'Repeater key-value list of artisanal specifications',
+  })
+  @IsOptional()
+  @IsArray()
+  specifications?: Array<{ label: string; value: string }>;
 }
