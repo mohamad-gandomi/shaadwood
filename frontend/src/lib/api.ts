@@ -11,6 +11,7 @@ import {
   Order,
   OrderStats,
   Coupon,
+  ValidatedCoupon,
   OrderTransaction,
   ShippingMethodOption,
   PaymentGatewayOption,
@@ -45,9 +46,6 @@ async function refreshAuthToken(): Promise<string | null> {
       const data = await res.json();
       if (data?.data?.accessToken) {
         localStorage.setItem('shaadwood_token', data.data.accessToken);
-        if (data?.data?.user) {
-          localStorage.setItem('shaadwood_user', JSON.stringify(data.data.user));
-        }
         return data.data.accessToken;
       }
     }
@@ -520,10 +518,11 @@ export const api = {
   validateCoupon: (code: string, cartSubtotal: number) =>
     fetcher<{
       valid: boolean;
-      coupon: { id: string; code: string; discountType: string; discountValue: number };
+      coupon?: ValidatedCoupon;
       cartSubtotal: number;
       discountAmount: number;
       discountedTotal: number;
+      message?: string;
     }>('/coupons/validate', {
       method: 'POST',
       body: JSON.stringify({ code, cartSubtotal }),
@@ -531,6 +530,21 @@ export const api = {
 
   // Shipping Methods
   getShippingMethods: () => fetcher<ShippingMethodOption[]>('/shipping/methods'),
+  getAdminShippingMethods: () => fetcher<ShippingMethodOption[]>('/shipping/admin'),
+  createShippingMethod: (data: Partial<ShippingMethodOption>) =>
+    fetcher<ShippingMethodOption>('/shipping', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateShippingMethod: (id: string, data: Partial<ShippingMethodOption>) =>
+    fetcher<ShippingMethodOption>(`/shipping/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteShippingMethod: (id: string) =>
+    fetcher<{ success: boolean }>(`/shipping/${id}`, {
+      method: 'DELETE',
+    }),
 
   // Payments & Multi-Gateway
   getPaymentGateways: () => fetcher<PaymentGatewayOption[]>('/payments/gateways'),

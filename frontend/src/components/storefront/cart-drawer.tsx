@@ -9,14 +9,9 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
 
-const FREE_SHIPPING_THRESHOLD = 1500;
-
 export function CartDrawer() {
   const { items, isDrawerOpen, setIsDrawerOpen, removeItem, updateQuantity, totalPrice, totalCount } =
     useCart();
-
-  const progressPercent = Math.min(100, Math.round((totalPrice / FREE_SHIPPING_THRESHOLD) * 100));
-  const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice);
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
@@ -36,27 +31,6 @@ export function CartDrawer() {
                   {totalCount} handcrafted {totalCount === 1 ? 'piece' : 'pieces'} selected
                 </SheetDescription>
               </div>
-            </div>
-          </div>
-
-          {/* White-Glove Shipping Progress */}
-          <div className="mt-4 pt-3 border-t border-border/40">
-            <div className="flex items-center justify-between text-xs mb-1.5 font-medium">
-              <span className="flex items-center gap-1.5 text-shaad-800">
-                <Truck className="w-3.5 h-3.5" />
-                {remainingForFreeShipping === 0 ? (
-                  <span className="font-semibold text-emerald-700">Free White-Glove Delivery unlocked!</span>
-                ) : (
-                  <span>Add {formatCurrency(remainingForFreeShipping)} for Free White-Glove Delivery</span>
-                )}
-              </span>
-              <span className="font-mono text-[11px] text-muted-foreground">{progressPercent}%</span>
-            </div>
-            <div className="h-1.5 w-full bg-border/60 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-shaad-800 transition-all duration-300 rounded-full"
-                style={{ width: `${progressPercent}%` }}
-              />
             </div>
           </div>
         </SheetHeader>
@@ -160,31 +134,40 @@ export function CartDrawer() {
                 <span className="font-mono text-foreground font-semibold">{formatCurrency(totalPrice)}</span>
               </div>
               <div className="flex items-center justify-between text-muted-foreground">
-                <span>White-Glove Delivery</span>
-                <span className="font-mono text-foreground font-medium">
-                  {remainingForFreeShipping === 0 ? 'FREE' : formatCurrency(75)}
-                </span>
+                <span>Shipping</span>
+                <span className="font-mono text-muted-foreground text-[11px]">Calculated at checkout</span>
               </div>
               <div className="flex items-center justify-between pt-2 border-t border-border/50 text-sm font-bold text-foreground">
-                <span>Estimated Total</span>
+                <span>Cart Total</span>
                 <span className="font-mono text-shaad-800">
-                  {formatCurrency(totalPrice + (remainingForFreeShipping === 0 ? 0 : 75))}
+                  {formatCurrency(totalPrice)}
                 </span>
               </div>
             </div>
 
-            <Button
-              className="w-full bg-shaad-800 hover:bg-shaad-900 text-white font-medium py-5 text-xs tracking-wider uppercase gap-2 shadow-sm"
-              onClick={() => {
-                setIsDrawerOpen(false);
-                toast.success('Directing to Shaadwood Secure Checkout', {
-                  description: 'Payment options include Iranian Shaparak (Zarinpal) and International Cards.',
-                });
-              }}
-            >
-              <span>Proceed to Checkout</span>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <div className="space-y-2">
+              <Button
+                asChild
+                className="w-full bg-shaad-800 hover:bg-shaad-900 text-white font-medium py-5 text-xs tracking-wider uppercase gap-2 shadow-sm"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                <Link href="/checkout">
+                  <span>Proceed to Checkout</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                className="w-full py-4 text-xs font-medium text-foreground hover:bg-zen-100 border-border"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                <Link href="/cart">
+                  <span>View Detailed Cart</span>
+                </Link>
+              </Button>
+            </div>
 
             <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
               <ShieldCheck className="w-3.5 h-3.5 text-shaad-700" />

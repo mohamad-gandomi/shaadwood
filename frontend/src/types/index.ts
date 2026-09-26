@@ -251,6 +251,13 @@ export interface Coupon {
   };
 }
 
+export interface ValidatedCoupon {
+  id: string;
+  code: string;
+  discountType: string;
+  discountValue: number;
+}
+
 export interface OrderItem {
   id: string;
   orderId: string;
@@ -368,11 +375,15 @@ export interface OrderStats {
 export interface ShippingMethodOption {
   id: string;
   name: string;
+  type?: string;
   carrier: string;
   price: number;
   currency: string;
   estimatedDays: string;
   description: string;
+  isDefault?: boolean;
+  isActive?: boolean;
+  displayOrder?: number;
   supportsTracking: boolean;
 }
 

@@ -21,6 +21,7 @@ import {
   ShoppingBag,
   Tag,
   Server,
+  Truck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { api, API_BASE } from '@/lib/api';
@@ -38,6 +39,11 @@ export const shopNavItems: NavItem[] = [
     title: 'Orders',
     href: '/orders',
     icon: ShoppingBag,
+  },
+  {
+    title: 'Shipping Methods',
+    href: '/shipping',
+    icon: Truck,
   },
   {
     title: 'Coupons & Promos',

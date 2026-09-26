@@ -73,9 +73,10 @@ export class CreateOrderDto {
   @IsNotEmpty()
   customerName: string;
 
-  @ApiProperty({ example: 'customer@shaadwood.com' })
+  @ApiPropertyOptional({ example: 'customer@shaadwood.com' })
+  @IsOptional()
   @IsEmail()
-  customerEmail: string;
+  customerEmail?: string;
 
   @ApiPropertyOptional({ example: '+1 555-0245' })
   @IsOptional()

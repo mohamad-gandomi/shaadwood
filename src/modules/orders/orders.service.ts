@@ -9,7 +9,8 @@ import { ShippingService } from '@/modules/shipping/shipping.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { FilterOrdersDto } from './dto/filter-orders.dto';
-import { OrderStatus, PaymentStatus, TransactionStatus } from '@prisma/client';
+import { OrderStatus, PaymentStatus, TransactionStatus, Role } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class OrdersService {
@@ -167,13 +168,86 @@ export class OrdersService {
       throw new BadRequestException('Order must contain at least one item');
     }
 
-    // Resolve or find user by email if not logged in
+    // Resolve or auto-register guest customer by phone or email
     let resolvedUserId = userId;
-    if (!resolvedUserId && dto.customerEmail) {
-      const user = await this.prisma.user.findUnique({
-        where: { email: dto.customerEmail.toLowerCase() },
-      });
-      if (user) resolvedUserId = user.id;
+    if (!resolvedUserId) {
+      const cleanPhone = dto.customerPhone?.trim() || null;
+      const cleanEmail = dto.customerEmail?.toLowerCase()?.trim() || null;
+
+      // 1. Try finding existing user by phone
+      if (cleanPhone) {
+        const userByPhone = await this.prisma.user.findFirst({
+          where: { phone: cleanPhone },
+        });
+        if (userByPhone) resolvedUserId = userByPhone.id;
+      }
+
+      // 2. Try finding existing user by email
+      if (!resolvedUserId && cleanEmail) {
+        const userByEmail = await this.prisma.user.findUnique({
+          where: { email: cleanEmail },
+        });
+        if (userByEmail) resolvedUserId = userByEmail.id;
+      }
+
+      // 3. Auto-create guest user if not registered yet
+      if (!resolvedUserId && (cleanPhone || cleanEmail)) {
+        const nameParts = (dto.customerName || 'Customer').trim().split(/\s+/);
+        const firstName = nameParts[0] || 'Customer';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        const effectiveEmail = cleanEmail
+          ? cleanEmail
+          : cleanPhone
+          ? `${cleanPhone.replace(/\D/g, '')}@guest.shaadwood.com`
+          : `guest-${Date.now()}@guest.shaadwood.com`;
+
+        const salt = await bcrypt.genSalt(10);
+        const dummyPasswordHash = await bcrypt.hash(`Guest@${Date.now()}`, salt);
+
+        try {
+          const newUser = await this.prisma.user.create({
+            data: {
+              email: effectiveEmail,
+              phone: cleanPhone,
+              firstName,
+              lastName,
+              passwordHash: dummyPasswordHash,
+              role: Role.CUSTOMER,
+            },
+          });
+          resolvedUserId = newUser.id;
+
+          // If shipping address was provided, save address for this new user
+          if (dto.shippingAddress) {
+            await this.prisma.address.create({
+              data: {
+                userId: newUser.id,
+                title: 'Primary Delivery Address',
+                recipientName: dto.shippingAddress.recipientName || dto.customerName,
+                phone: dto.shippingAddress.phone || cleanPhone || '',
+                street: dto.shippingAddress.street,
+                city: dto.shippingAddress.city,
+                province: dto.shippingAddress.province,
+                postalCode: dto.shippingAddress.postalCode,
+                isDefaultShipping: true,
+                isDefaultBilling: true,
+              },
+            });
+          }
+        } catch {
+          // If collision or unique constraint on email, fallback lookup
+          const fallbackUser = await this.prisma.user.findFirst({
+            where: {
+              OR: [
+                ...(cleanPhone ? [{ phone: cleanPhone }] : []),
+                { email: effectiveEmail },
+              ],
+            },
+          });
+          if (fallbackUser) resolvedUserId = fallbackUser.id;
+        }
+      }
     }
 
     // Validate and snapshot line items
@@ -306,7 +380,8 @@ export class OrdersService {
     let carrierName = dto.shippingCarrier || 'Chapar / Old Dominion';
 
     if (dto.shippingMethod) {
-      const matchingMethod = this.shippingService.findAll().find(
+      const allMethods = await this.shippingService.findAll();
+      const matchingMethod = allMethods.find(
         (m) => m.name.toLowerCase() === dto.shippingMethod?.toLowerCase() || m.id === dto.shippingMethod,
       );
       if (matchingMethod) {
@@ -330,7 +405,11 @@ export class OrdersService {
         orderNumber,
         userId: resolvedUserId || null,
         customerName: dto.customerName,
-        customerEmail: dto.customerEmail.toLowerCase(),
+        customerEmail:
+          dto.customerEmail?.toLowerCase()?.trim() ||
+          (dto.customerPhone
+            ? `${dto.customerPhone.replace(/\D/g, '')}@guest.shaadwood.com`
+            : `guest-${Date.now()}@guest.shaadwood.com`),
         customerPhone: dto.customerPhone || null,
         status: OrderStatus.PENDING,
         paymentStatus: PaymentStatus.PENDING,
