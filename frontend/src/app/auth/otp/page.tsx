@@ -89,8 +89,12 @@ function OtpPageContent() {
         toast.success(`Welcome back,${name}!`);
       }
 
-      // Smooth transition to redirect target
-      router.push(redirectUrl);
+      // Smooth transition to target: Admin directly to dashboard, customer to redirect target
+      if (res.user.role === 'ADMIN' && (!searchParams.get('redirect') || searchParams.get('redirect') === '/shop')) {
+        router.push('/admin');
+      } else {
+        router.push(redirectUrl);
+      }
     } catch (err: any) {
       const msg = err.message || 'Invalid or expired verification code';
       setError(msg);

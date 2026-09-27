@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronRight, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/context/cart-context';
 import { api } from '@/lib/api';
-import { ShippingMethodOption, PaymentGatewayOption } from '@/types';
+import { ShippingMethodOption, PaymentGatewayOption, Address } from '@/types';
 import { CheckoutContactForm, CheckoutContactData } from '@/components/storefront/checkout/checkout-contact-form';
 import { CheckoutShippingForm, CheckoutShippingData } from '@/components/storefront/checkout/checkout-shipping-form';
 import { CheckoutShippingMethod } from '@/components/storefront/checkout/checkout-shipping-method';
@@ -61,6 +61,7 @@ export default function CheckoutPage() {
   // Form Errors & Submitting
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [savedAddresses, setSavedAddresses] = React.useState<Address[]>([]);
 
   // Load Shipping Methods & Gateways & Prefill ONLY if logged in customer
   React.useEffect(() => {
@@ -78,6 +79,28 @@ export default function CheckoutPage() {
         recipientName: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
         phone: user.phone || '',
       }));
+
+      // Fetch saved delivery addresses for 1-click fill
+      api
+        .getMyAddresses()
+        .then((addrs) => {
+          if (addrs && addrs.length > 0) {
+            setSavedAddresses(addrs);
+            const defaultAddr = addrs.find((a) => a.isDefaultShipping) || addrs[0];
+            if (defaultAddr) {
+              setShipping((prev) => ({
+                ...prev,
+                recipientName: defaultAddr.recipientName,
+                phone: defaultAddr.phone,
+                province: defaultAddr.province,
+                city: defaultAddr.city,
+                street: defaultAddr.street,
+                postalCode: defaultAddr.postalCode,
+              }));
+            }
+          }
+        })
+        .catch(() => {});
     }
 
     // Fetch Shipping Methods from database
@@ -341,7 +364,12 @@ export default function CheckoutPage() {
             <CheckoutContactForm data={contact} onChange={setContact} errors={errors} />
 
             {/* Step 2: Shipping Destination */}
-            <CheckoutShippingForm data={shipping} onChange={setShipping} errors={errors} />
+            <CheckoutShippingForm
+              data={shipping}
+              onChange={setShipping}
+              errors={errors}
+              savedAddresses={savedAddresses}
+            />
 
             {/* Step 3: Shipping Method Selection */}
             {shippingMethods.length > 0 && (

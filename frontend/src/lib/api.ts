@@ -34,36 +34,13 @@ export interface MediaSettings {
 }
 
 
-async function refreshAuthToken(): Promise<string | null> {
+function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@shaadwood.com', password: 'Admin@123456' }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data?.data?.accessToken) {
-        localStorage.setItem('shaadwood_token', data.data.accessToken);
-        return data.data.accessToken;
-      }
-    }
-  } catch {
-    // no-op
-  }
-  return null;
+  return localStorage.getItem('shaadwood_token');
 }
 
-async function getAuthToken(): Promise<string | null> {
-  if (typeof window === 'undefined') return null;
-  let token = localStorage.getItem('shaadwood_token');
-  if (token) return token;
-  return refreshAuthToken();
-}
-
-async function fetcher<T>(endpoint: string, options?: RequestInit, isRetry = false): Promise<T> {
-  const token = await getAuthToken();
+async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const token = getAuthToken();
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -77,14 +54,13 @@ async function fetcher<T>(endpoint: string, options?: RequestInit, isRetry = fal
     cache: 'no-store',
   });
 
-  // Handle 401 Unauthorized (e.g. stale token after database reset)
-  if (response.status === 401 && !isRetry) {
+  // Handle 401 Unauthorized: clear invalid auth
+  if (response.status === 401) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('shaadwood_token');
-    }
-    const freshToken = await refreshAuthToken();
-    if (freshToken) {
-      return fetcher<T>(endpoint, options, true);
+      localStorage.removeItem('shaadwood_user');
+      document.cookie = 'shaadwood_role=; path=/; max-age=0; SameSite=Lax';
+      window.dispatchEvent(new Event('shaadwood_auth_changed'));
     }
   }
 
@@ -382,14 +358,12 @@ export const api = {
       body: formData,
     });
 
-    // On 401 Unauthorized (e.g. stale token after database reset), clear token, re-login and retry
-    if (response.status === 401 && !isRetry) {
+    if (response.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('shaadwood_token');
-      }
-      const freshToken = await refreshAuthToken();
-      if (freshToken) {
-        return api.uploadMedia(file, options, true);
+        localStorage.removeItem('shaadwood_user');
+        document.cookie = 'shaadwood_role=; path=/; max-age=0; SameSite=Lax';
+        window.dispatchEvent(new Event('shaadwood_auth_changed'));
       }
     }
 
@@ -437,6 +411,10 @@ export const api = {
       localStorage.setItem('shaadwood_token', data.data.accessToken);
       if (data?.data?.user) {
         localStorage.setItem('shaadwood_user', JSON.stringify(data.data.user));
+        if (typeof document !== 'undefined') {
+          const role = data.data.user.role || 'CUSTOMER';
+          document.cookie = `shaadwood_role=${role}; path=/; max-age=604800; SameSite=Lax`;
+        }
       }
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('shaadwood_auth_changed'));
@@ -480,6 +458,10 @@ export const api = {
       localStorage.setItem('shaadwood_token', data.data.accessToken);
       if (data?.data?.user) {
         localStorage.setItem('shaadwood_user', JSON.stringify(data.data.user));
+        if (typeof document !== 'undefined') {
+          const role = data.data.user.role || 'CUSTOMER';
+          document.cookie = `shaadwood_role=${role}; path=/; max-age=604800; SameSite=Lax`;
+        }
       }
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('shaadwood_auth_changed'));
@@ -501,6 +483,9 @@ export const api = {
     });
     if (updated && typeof window !== 'undefined') {
       localStorage.setItem('shaadwood_user', JSON.stringify(updated));
+      if (typeof document !== 'undefined' && updated.role) {
+        document.cookie = `shaadwood_role=${updated.role}; path=/; max-age=604800; SameSite=Lax`;
+      }
       window.dispatchEvent(new Event('shaadwood_auth_changed'));
     }
     return updated;
@@ -529,6 +514,9 @@ export const api = {
     });
     if (res?.user && typeof window !== 'undefined') {
       localStorage.setItem('shaadwood_user', JSON.stringify(res.user));
+      if (typeof document !== 'undefined' && res.user.role) {
+        document.cookie = `shaadwood_role=${res.user.role}; path=/; max-age=604800; SameSite=Lax`;
+      }
       window.dispatchEvent(new Event('shaadwood_auth_changed'));
     }
     return res;
@@ -540,6 +528,7 @@ export const api = {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('shaadwood_token');
       localStorage.removeItem('shaadwood_user');
+      document.cookie = 'shaadwood_role=; path=/; max-age=0; SameSite=Lax';
       window.dispatchEvent(new Event('shaadwood_auth_changed'));
       window.location.href = '/auth/otp';
     }
@@ -550,7 +539,13 @@ export const api = {
     const raw = localStorage.getItem('shaadwood_user');
     if (!raw) return null;
     try {
-      return JSON.parse(raw);
+      const user = JSON.parse(raw) as User;
+      if (typeof document !== 'undefined' && user?.role) {
+        if (!document.cookie.includes('shaadwood_role=')) {
+          document.cookie = `shaadwood_role=${user.role}; path=/; max-age=604800; SameSite=Lax`;
+        }
+      }
+      return user;
     } catch {
       return null;
     }

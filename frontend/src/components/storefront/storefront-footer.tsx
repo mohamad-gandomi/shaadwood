@@ -133,16 +133,25 @@ export function StorefrontFooter() {
             </h5>
             <ul className="space-y-2 text-muted-foreground">
               <li>
+                <Link href="/account" className="hover:text-shaad-800 transition-colors">
+                  My Orders & Profile
+                </Link>
+              </li>
+              <li>
+                <Link href="/auth/otp" className="hover:text-shaad-800 transition-colors">
+                  SMS OTP Login / Register
+                </Link>
+              </li>
+              <li>
+                <Link href="/cart" className="hover:text-shaad-800 transition-colors">
+                  Shopping Cart
+                </Link>
+              </li>
+              <li>
                 <span className="text-muted-foreground">White-Glove Delivery Info</span>
               </li>
               <li>
                 <span className="text-muted-foreground">25-Year Solid Wood Warranty</span>
-              </li>
-              <li>
-                <span className="text-muted-foreground">Solid Wood Care & Oiling</span>
-              </li>
-              <li>
-                <span className="text-muted-foreground">Custom Commission Inquiries</span>
               </li>
             </ul>
           </div>
@@ -157,15 +166,6 @@ export function StorefrontFooter() {
               concierge@shaadwood.com<br />
               +1 555-0199
             </p>
-            <div className="pt-2">
-              <Link
-                href="/admin"
-                className="inline-flex items-center gap-1.5 text-[11px] text-shaad-800 hover:text-shaad-900 font-medium"
-              >
-                <span>Admin Operations Portal</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
           </div>
         </div>
 

@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { MapPin, Building, Truck, FileText, Phone, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Address } from '@/types';
+import { SavedAddressSelector } from './saved-address-selector';
 
 export interface CheckoutShippingData {
   recipientName: string;
@@ -19,9 +21,27 @@ interface CheckoutShippingFormProps {
   data: CheckoutShippingData;
   onChange: (data: CheckoutShippingData) => void;
   errors: Record<string, string>;
+  savedAddresses?: Address[];
 }
 
-export function CheckoutShippingForm({ data, onChange, errors }: CheckoutShippingFormProps) {
+export function CheckoutShippingForm({
+  data,
+  onChange,
+  errors,
+  savedAddresses,
+}: CheckoutShippingFormProps) {
+  const handleSelectSavedAddress = (addr: Address) => {
+    onChange({
+      ...data,
+      recipientName: addr.recipientName,
+      phone: addr.phone,
+      province: addr.province,
+      city: addr.city,
+      street: addr.street,
+      postalCode: addr.postalCode,
+    });
+  };
+
   return (
     <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-5">
       <div className="flex items-center justify-between border-b border-border/60 pb-3">
@@ -39,8 +59,17 @@ export function CheckoutShippingForm({ data, onChange, errors }: CheckoutShippin
         </span>
       </div>
 
+      {/* 1-Click Saved Addresses Picker if available */}
+      {savedAddresses && savedAddresses.length > 0 && (
+        <SavedAddressSelector
+          addresses={savedAddresses}
+          currentShipping={data}
+          onSelectAddress={handleSelectSavedAddress}
+        />
+      )}
+
       <div className="space-y-4">
-        {/* Recipient details if different */}
+        {/* Recipient details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-1.5">

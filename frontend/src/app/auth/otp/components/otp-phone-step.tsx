@@ -82,10 +82,17 @@ export function OtpPhoneStep({
         <div className="flex flex-wrap gap-2 pt-0.5">
           <button
             type="button"
+            onClick={() => handleQuickDemo('09355396804')}
+            className="px-2 py-1 rounded-md bg-shaad-900 text-white hover:bg-black transition-colors font-mono text-[10px] font-semibold"
+          >
+            09355396804 (Shaad Admin)
+          </button>
+          <button
+            type="button"
             onClick={() => handleQuickDemo('09129876543')}
             className="px-2 py-1 rounded-md bg-white border border-border/70 hover:border-shaad-700 hover:text-shaad-800 transition-colors font-mono text-[10px]"
           >
-            09129876543 (Phase 2 Guest: Kourosh Rad)
+            09129876543 (Phase 2 Guest)
           </button>
           <button
             type="button"

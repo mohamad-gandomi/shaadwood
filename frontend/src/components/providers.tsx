@@ -17,6 +17,23 @@ export function Providers({ children }: { children: React.ReactNode }) {
       }),
   );
 
+  React.useEffect(() => {
+    // Synchronize shaadwood_role cookie with client auth session
+    try {
+      const raw = localStorage.getItem('shaadwood_user');
+      if (raw) {
+        const u = JSON.parse(raw);
+        if (u?.role) {
+          document.cookie = `shaadwood_role=${u.role}; path=/; max-age=604800; SameSite=Lax`;
+          return;
+        }
+      }
+      document.cookie = 'shaadwood_role=; path=/; max-age=0; SameSite=Lax';
+    } catch {
+      // no-op
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {children}
