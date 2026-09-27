@@ -115,6 +115,37 @@ export class OrdersService {
     return order;
   }
 
+  async findByUserId(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { phone: true, email: true },
+    });
+
+    const conditions: any[] = [{ userId }];
+    if (user?.phone) {
+      conditions.push({ customerPhone: user.phone });
+    }
+    if (user?.email) {
+      conditions.push({ customerEmail: user.email });
+    }
+
+    return this.prisma.order.findMany({
+      where: {
+        OR: conditions,
+      },
+      include: {
+        items: true,
+        timeline: {
+          orderBy: { createdAt: 'desc' },
+        },
+        transactions: {
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async getStats() {
     const [allOrders, paidOrders, totalCount, statusCounts] = await Promise.all([
       this.prisma.order.findMany({

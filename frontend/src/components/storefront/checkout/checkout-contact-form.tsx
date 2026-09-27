@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Phone, User, Mail, Sparkles, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import { Phone, User, Mail, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 export interface CheckoutContactData {
@@ -29,13 +30,19 @@ export function CheckoutContactForm({ data, onChange, errors }: CheckoutContactF
             Contact & Verification Details
           </h3>
         </div>
-        <span className="text-[11px] text-muted-foreground font-mono">Guest / Instant Access</span>
+        <Link
+          href="/auth/otp?redirect=/checkout"
+          className="text-xs font-semibold text-shaad-800 hover:text-shaad-900 hover:underline flex items-center gap-1 transition-colors"
+        >
+          <span>Sign In with SMS OTP</span>
+          <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       {/* Guest registration benefit banner */}
       <div className="p-3.5 rounded-2xl bg-shaad-50/80 border border-shaad-200/80 text-shaad-900 text-xs flex items-start gap-2.5">
         <Sparkles className="w-4 h-4 text-shaad-700 mt-0.5 shrink-0" />
-        <div>
+        <div className="flex-1">
           <span className="font-semibold block">Seamless Guest Purchasing</span>
           <span className="text-shaad-800/90 text-[11px] leading-relaxed">
             No password needed. We create your customer profile automatically using your phone number so you can track your pieces via SMS OTP anytime.

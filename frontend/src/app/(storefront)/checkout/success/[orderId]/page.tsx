@@ -348,10 +348,18 @@ export default function OrderSuccessPage() {
             <span>Continue Exploring Collection</span>
           </Link>
 
+          <Link
+            href="/account"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl border border-shaad-300 bg-shaad-50/70 hover:bg-shaad-100/70 text-shaad-900 text-xs font-mono transition-colors flex items-center justify-center gap-2"
+          >
+            <PackageCheck className="w-4 h-4 text-shaad-800" />
+            <span>View All My Orders</span>
+          </Link>
+
           <button
             type="button"
             onClick={() => window.print()}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl border border-border/80 hover:bg-white text-muted-foreground hover:text-foreground text-xs font-mono transition-colors flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl border border-border/80 hover:bg-white text-muted-foreground hover:text-foreground text-xs font-mono transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>Print Official Receipt</span>

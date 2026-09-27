@@ -456,4 +456,21 @@ model ShippingMethod {
   @@map("shipping_methods")
 }
 
+// ----------------------------------------------------
+// OTP Phone Authentication & SMS Verification
+// ----------------------------------------------------
+
+model OtpVerification {
+  id        String   @id @default(uuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@map("otp_verifications")
+}
+
 

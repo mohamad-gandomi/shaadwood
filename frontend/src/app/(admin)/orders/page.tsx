@@ -396,7 +396,7 @@ export default function OrdersPage() {
                   <TableHead>Customer</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Items</TableHead>
-                  <TableHead>Shipping & Carrier</TableHead>
+                  <TableHead>Shipping</TableHead>
                   <TableHead>Payment</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead className="text-center">Status</TableHead>

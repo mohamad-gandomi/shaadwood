@@ -45,6 +45,14 @@ export class OrdersController {
     return this.ordersService.findAll(filters);
   }
 
+  @Get('my-orders')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Customer: Get orders belonging to current user' })
+  getMyOrders(@CurrentUser('id') userId: string) {
+    return this.ordersService.findByUserId(userId);
+  }
+
   @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Public/Admin: Get order details, item breakdown, and timeline' })

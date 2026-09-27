@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Menu, ShoppingBag, User, LogOut, Layers, ExternalLink, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Menu, ShoppingBag, User, LogOut, Layers, ExternalLink, ShieldCheck, ChevronRight, PackageCheck } from 'lucide-react';
 import { useCart } from '@/context/cart-context';
 import { api } from '@/lib/api';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -20,9 +20,16 @@ export function StorefrontNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState<any>(null);
 
-  // Check login state on mount
+  // Check login state on mount & react to auth changes
   React.useEffect(() => {
-    setCurrentUser(api.getCurrentUser());
+    const updateUser = () => setCurrentUser(api.getCurrentUser());
+    updateUser();
+    window.addEventListener('shaadwood_auth_changed', updateUser);
+    window.addEventListener('storage', updateUser);
+    return () => {
+      window.removeEventListener('shaadwood_auth_changed', updateUser);
+      window.removeEventListener('storage', updateUser);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -94,11 +101,22 @@ export function StorefrontNavbar() {
 
                   {/* Auth Link in Mobile Drawer */}
                   {currentUser ? (
-                    <div className="pt-4 space-y-2">
+                    <div className="pt-4 space-y-2 border-t border-border/40 mt-3">
                       <div className="text-xs font-semibold text-foreground">
                         {currentUser.firstName} {currentUser.lastName}
                       </div>
-                      <div className="text-[11px] text-muted-foreground">{currentUser.email}</div>
+                      <div className="text-[11px] text-muted-foreground">{currentUser.phone || currentUser.email}</div>
+                      <Link
+                        href="/account"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between py-2 text-xs font-semibold text-shaad-800"
+                      >
+                        <span className="flex items-center gap-2">
+                          <PackageCheck className="w-4 h-4 text-shaad-700" />
+                          My Orders & Account
+                        </span>
+                        <ChevronRight className="w-4 h-4" />
+                      </Link>
                       {currentUser.role === 'ADMIN' && (
                         <Link
                           href="/admin"
@@ -119,7 +137,7 @@ export function StorefrontNavbar() {
                     </div>
                   ) : (
                     <Link
-                      href="/login"
+                      href="/auth/otp"
                       onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center justify-between py-3 text-xs font-semibold text-shaad-800 hover:text-shaad-900 transition-colors pt-4"
                     >
@@ -198,9 +216,16 @@ export function StorefrontNavbar() {
                   <div className="text-xs font-semibold text-foreground">
                     {currentUser.firstName} {currentUser.lastName}
                   </div>
-                  <div className="text-[11px] text-muted-foreground truncate">{currentUser.email}</div>
+                  <div className="text-[11px] text-muted-foreground truncate">{currentUser.phone || currentUser.email}</div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link href="/account" className="flex items-center gap-2 py-2 cursor-pointer font-medium text-foreground">
+                    <PackageCheck className="w-3.5 h-3.5 text-shaad-800" />
+                    <span>My Orders & Profile</span>
+                  </Link>
+                </DropdownMenuItem>
 
                 {currentUser.role === 'ADMIN' && (
                   <DropdownMenuItem asChild>
@@ -222,9 +247,9 @@ export function StorefrontNavbar() {
             </DropdownMenu>
           ) : (
             <Link
-              href="/login"
+              href="/auth/otp"
               className="p-2 text-foreground/80 hover:text-shaad-800 transition-colors rounded-full hover:bg-zen-100"
-              title="Sign In / Register"
+              title="Sign In with SMS OTP"
               aria-label="Sign In or Register"
             >
               <User className="w-5 h-5 stroke-[1.75]" />

@@ -326,6 +326,23 @@ export const api = {
       method: 'DELETE',
     }),
 
+  // Customer Self-Service Addresses
+  getMyAddresses: () => fetcher<Address[]>('/users/addresses'),
+  addMyAddress: (data: Partial<Address>) =>
+    fetcher<Address>('/users/addresses', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  updateMyAddress: (addressId: string, data: Partial<Address>) =>
+    fetcher<Address>(`/users/addresses/${addressId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+  deleteMyAddress: (addressId: string) =>
+    fetcher<any>(`/users/addresses/${addressId}`, {
+      method: 'DELETE',
+    }),
+
   // Media & Assets
   getMedia: (search?: string) =>
     fetcher<MediaItem[]>(search ? `/upload?search=${encodeURIComponent(search)}` : '/upload'),
@@ -421,15 +438,110 @@ export const api = {
       if (data?.data?.user) {
         localStorage.setItem('shaadwood_user', JSON.stringify(data.data.user));
       }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('shaadwood_auth_changed'));
+      }
     }
     return data.data;
   },
+
+  sendOtp: async (phone: string) => {
+    const res = await fetch(`${API_BASE}/auth/otp/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Failed to send verification code');
+    }
+    const data = await res.json();
+    return data.data as {
+      success: boolean;
+      message: string;
+      phone: string;
+      expiresIn: number;
+      devCode?: string;
+    };
+  },
+
+  verifyOtp: async (phone: string, code: string) => {
+    const res = await fetch(`${API_BASE}/auth/otp/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, code }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Invalid verification code');
+    }
+    const data = await res.json();
+    if (data?.data?.accessToken) {
+      localStorage.setItem('shaadwood_token', data.data.accessToken);
+      if (data?.data?.user) {
+        localStorage.setItem('shaadwood_user', JSON.stringify(data.data.user));
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('shaadwood_auth_changed'));
+      }
+    }
+    return data.data as {
+      user: User;
+      accessToken: string;
+      isNewUser: boolean;
+    };
+  },
+
+  getProfile: () => fetcher<User>('/auth/me'),
+
+  updateProfile: async (data: { firstName?: string; lastName?: string; email?: string }) => {
+    const updated = await fetcher<User>('/auth/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+    if (updated && typeof window !== 'undefined') {
+      localStorage.setItem('shaadwood_user', JSON.stringify(updated));
+      window.dispatchEvent(new Event('shaadwood_auth_changed'));
+    }
+    return updated;
+  },
+
+  sendPhoneChangeOtp: (newPhone: string) =>
+    fetcher<{
+      success: boolean;
+      message: string;
+      phone: string;
+      expiresIn: number;
+      devCode?: string;
+    }>('/auth/phone/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ newPhone }),
+    }),
+
+  verifyPhoneChange: async (newPhone: string, code: string) => {
+    const res = await fetcher<{
+      success: boolean;
+      message: string;
+      user: User;
+    }>('/auth/phone/verify-change', {
+      method: 'POST',
+      body: JSON.stringify({ newPhone, code }),
+    });
+    if (res?.user && typeof window !== 'undefined') {
+      localStorage.setItem('shaadwood_user', JSON.stringify(res.user));
+      window.dispatchEvent(new Event('shaadwood_auth_changed'));
+    }
+    return res;
+  },
+
+  getMyOrders: () => fetcher<Order[]>('/orders/my-orders'),
 
   logout: () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('shaadwood_token');
       localStorage.removeItem('shaadwood_user');
-      window.location.href = '/login';
+      window.dispatchEvent(new Event('shaadwood_auth_changed'));
+      window.location.href = '/auth/otp';
     }
   },
 
