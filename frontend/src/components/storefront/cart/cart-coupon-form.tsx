@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Tag, Check, X, AlertCircle } from 'lucide-react';
+import { Tag, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { api } from '@/lib/api';
@@ -40,40 +40,40 @@ export function CartCouponForm({
       if (res && res.valid) {
         onApplyCoupon(res.coupon, res.discountAmount);
         setCode('');
-        toast.success(`Coupon "${res.coupon.code}" applied! You saved ${formatCurrency(res.discountAmount)}.`);
+        toast.success(`کد تخفیف «${res.coupon.code}» اعمال شد! مبلغ ${formatCurrency(res.discountAmount)} از سفارش کسر گردید.`);
       } else {
-        setErrorMsg('Invalid or expired coupon code');
+        setErrorMsg('کد تخفیف واردشده نامعتبر یا منقضی شده است.');
       }
     } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to apply coupon');
+      setErrorMsg(err.message || 'خطا در اعتبارسنجی کد تخفیف');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-white border border-border/60 shadow-2xs">
+    <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-white border border-border/60 shadow-2xs text-right">
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         <Tag className="w-3.5 h-3.5 text-shaad-800" />
-        <span>Studio Atelier Privilege Code</span>
+        <span>کد تخفیف و امتیاز اختصاصی کارگاه</span>
       </div>
 
       {appliedCoupon ? (
         <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-200">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
               <Check className="w-3 h-3" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-xs text-emerald-900 uppercase">
+                <span className="font-sans font-bold text-xs text-emerald-900 uppercase">
                   {appliedCoupon.code}
                 </span>
-                <span className="text-[11px] text-emerald-700">
+                <span className="text-[11px] text-emerald-700 font-sans">
                   (-{formatCurrency(discountAmount)})
                 </span>
               </div>
-              <p className="text-[10px] text-emerald-700">Privilege applied to order</p>
+              <p className="text-[10px] text-emerald-700">تخفیف اختصاصی روی سفارش شما اعمال شد</p>
             </div>
           </div>
 
@@ -84,8 +84,8 @@ export function CartCouponForm({
             onClick={onRemoveCoupon}
             className="h-7 px-2 text-xs text-emerald-900 hover:text-destructive hover:bg-emerald-100"
           >
-            <X className="w-3.5 h-3.5 mr-1" />
-            Remove
+            <X className="w-3.5 h-3.5 ml-1" />
+            حذف
           </Button>
         </div>
       ) : (
@@ -97,24 +97,19 @@ export function CartCouponForm({
                 setCode(e.target.value.toUpperCase());
                 if (errorMsg) setErrorMsg(null);
               }}
-              placeholder="Enter promo code (e.g. WOODCRAFT15)"
-              className="h-10 text-xs uppercase font-mono bg-zen-50 border-border/70"
+              placeholder="کد تخفیف را وارد کنید (مثلاً SHAADWOOD)..."
+              className="h-10 text-xs font-sans rounded-xl bg-zen-50 border-border/70 text-right focus-visible:ring-shaad-800"
             />
             <Button
               type="submit"
               disabled={loading || !code.trim()}
-              className="h-10 px-4 text-xs font-semibold bg-shaad-800 hover:bg-shaad-900 text-white shrink-0"
+              className="bg-shaad-800 hover:bg-shaad-900 text-white text-xs px-5 h-10 rounded-xl shrink-0 font-medium disabled:opacity-50"
             >
-              {loading ? 'Checking...' : 'Apply'}
+              {loading ? 'بررسی...' : 'اعمال کد'}
             </Button>
           </div>
 
-          {errorMsg && (
-            <p className="text-xs text-destructive flex items-center gap-1.5 pt-1">
-              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-              <span>{errorMsg}</span>
-            </p>
-          )}
+          {errorMsg && <p className="text-[11px] text-destructive">{errorMsg}</p>}
         </form>
       )}
     </div>

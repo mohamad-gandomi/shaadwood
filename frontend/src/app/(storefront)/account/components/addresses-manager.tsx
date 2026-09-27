@@ -5,12 +5,7 @@ import { Plus, MapPin, Loader2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
 import { HoldToDeleteButton } from '@/components/admin/hold-to-delete-button';
 import { api } from '@/lib/api';
@@ -55,14 +50,12 @@ export function AddressesManager() {
   const handleSaveAddress = async (data: Partial<Address>) => {
     if (editingAddress) {
       const updated = await api.updateMyAddress(editingAddress.id, data);
-      setAddresses((prev) =>
-        prev.map((a) => (a.id === editingAddress.id ? updated : a))
-      );
-      toast.success('Address updated successfully');
+      setAddresses((prev) => prev.map((a) => (a.id === editingAddress.id ? updated : a)));
+      toast.success('نشانی با موفقیت به‌روزرسانی شد');
     } else {
       const created = await api.addMyAddress(data);
       setAddresses((prev) => [created, ...prev]);
-      toast.success('New delivery address added');
+      toast.success('نشانی جدید تحویل با موفقیت ثبت شد');
     }
     fetchAddresses();
   };
@@ -73,10 +66,10 @@ export function AddressesManager() {
     try {
       await api.deleteMyAddress(deleteTarget.id);
       setAddresses((prev) => prev.filter((a) => a.id !== deleteTarget.id));
-      toast.success(`Address "${deleteTarget.title}" removed successfully`);
+      toast.success(`نشانی «${deleteTarget.title}» حذف شد`);
       setDeleteTarget(null);
     } catch (err: any) {
-      toast.error(err.message || 'Failed to remove address');
+      toast.error(err.message || 'خطا در حذف نشانی');
     } finally {
       setIsDeleting(false);
     }
@@ -85,121 +78,69 @@ export function AddressesManager() {
   const handleSetDefault = async (addr: Address) => {
     try {
       await api.updateMyAddress(addr.id, { isDefaultShipping: true });
-      toast.success(`"${addr.title}" set as default delivery address`);
+      toast.success(`«${addr.title}» به‌عنوان نشانی پیش‌فرض تنظیم شد`);
       fetchAddresses();
-    } catch (err: any) {
-      toast.error('Failed to set default address');
+    } catch {
+      toast.error('خطا در تنظیم نشانی پیش‌فرض');
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Header with Add Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-4">
         <div>
-          <h3 className="font-serif font-bold text-lg text-foreground">
-            Saved Delivery Destinations
-          </h3>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Manage your residential and studio delivery addresses for instant checkout.
-          </p>
+          <h3 className="font-serif font-bold text-lg text-foreground">نشانی‌های ثبت‌شده تحویل</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">نشانی‌های منزل یا پروژه خود را جهت ثبت و تحویل بی‌درنگ مبلمان مدیریت کنید.</p>
         </div>
-
-        <Button
-          type="button"
-          onClick={handleOpenAdd}
-          className="rounded-xl bg-shaad-800 hover:bg-shaad-900 text-white text-xs font-semibold gap-1.5 shadow-sm self-start sm:self-auto cursor-pointer"
-        >
+        <Button type="button" onClick={handleOpenAdd} className="rounded-xl bg-shaad-800 hover:bg-shaad-900 text-white text-xs font-semibold gap-1.5 shadow-sm self-start sm:self-auto cursor-pointer">
           <Plus className="w-4 h-4" />
-          <span>Add New Address</span>
+          <span>افزودن نشانی جدید</span>
         </Button>
       </div>
 
-      {/* Content State */}
       {isLoading ? (
         <div className="p-12 rounded-3xl bg-white border border-border/70 flex flex-col items-center justify-center text-muted-foreground gap-3">
           <Loader2 className="w-6 h-6 animate-spin text-shaad-800" />
-          <span className="text-xs font-mono">Loading saved destinations...</span>
+          <span className="text-xs font-sans">در حال دریافت نشانی‌های ذخیره‌شده...</span>
         </div>
       ) : addresses.length === 0 ? (
         <div className="p-10 rounded-3xl bg-white border border-border/70 text-center space-y-3">
           <div className="w-12 h-12 rounded-full bg-zen-100 flex items-center justify-center text-muted-foreground mx-auto">
             <MapPin className="w-6 h-6" />
           </div>
-          <h4 className="font-serif font-bold text-base text-foreground">
-            No Addresses Saved Yet
-          </h4>
-          <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-            Save your home or project site address to enjoy 1-click checkout for bespoke commissions.
-          </p>
-          <Button
-            type="button"
-            onClick={handleOpenAdd}
-            variant="outline"
-            className="rounded-xl text-xs gap-1.5 cursor-pointer mt-2"
-          >
+          <h4 className="font-serif font-bold text-base text-foreground">هنوز نشانی تحویلی ثبت نکرده‌اید</h4>
+          <p className="text-xs text-muted-foreground max-w-sm mx-auto">نشانی فضای خود را اضافه کنید تا در سفارش‌های بعدی فرایند ثبت بی‌درنگ انجام پذیرد.</p>
+          <Button type="button" onClick={handleOpenAdd} variant="outline" className="rounded-xl text-xs gap-1.5 cursor-pointer mt-2">
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Delivery Address</span>
+            <span>افزودن نشانی تحویل</span>
           </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {addresses.map((address) => (
-            <AddressCard
-              key={address.id}
-              address={address}
-              onEdit={handleOpenEdit}
-              onDelete={(addr) => setDeleteTarget(addr)}
-              onSetDefault={handleSetDefault}
-            />
+            <AddressCard key={address.id} address={address} onEdit={handleOpenEdit} onDelete={(addr) => setDeleteTarget(addr)} onSetDefault={handleSetDefault} />
           ))}
         </div>
       )}
 
-      {/* Add / Edit Dialog */}
-      <AddressDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        addressToEdit={editingAddress}
-        onSave={handleSaveAddress}
-      />
+      <AddressDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} addressToEdit={editingAddress} onSave={handleSaveAddress} />
 
-      {/* Confirm Delete Address Modal with Hold to Remove */}
-      <Dialog
-        open={!!deleteTarget}
-        onOpenChange={(open) => {
-          if (!open && !isDeleting) setDeleteTarget(null);
-        }}
-      >
-        <DialogContent className="sm:max-w-md w-[calc(100vw-1.5rem)] bg-white rounded-3xl p-6">
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => { if (!open && !isDeleting) setDeleteTarget(null); }}>
+        <DialogContent className="sm:max-w-md w-[calc(100vw-1.5rem)] bg-white rounded-3xl p-6 text-right">
           <DialogHeader className="space-y-1">
             <DialogTitle className="flex items-center gap-2 text-destructive font-serif text-lg font-bold">
               <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
-              <span>Remove Saved Address?</span>
+              <span>حذف نشانی ذخیره‌شده؟</span>
             </DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm pt-1 leading-relaxed text-muted-foreground">
-              Are you sure you want to remove &quot;{deleteTarget?.title}&quot; ({deleteTarget?.street}, {deleteTarget?.city}) from your account? This action cannot be undone.
+            <DialogDescription className="text-right text-xs sm:text-sm pt-1 leading-relaxed text-muted-foreground">
+              آیا از حذف نشانی «{deleteTarget?.title}» ({deleteTarget?.street}، {deleteTarget?.city}) از حساب خود اطمینان دارید؟ این عملیات غیرقابل بازگشت است.
             </DialogDescription>
           </DialogHeader>
-
           <DialogFooter className="pt-4 flex flex-col-reverse sm:flex-row gap-2 sm:gap-2 justify-end w-full">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full sm:w-auto rounded-xl text-xs"
-              onClick={() => setDeleteTarget(null)}
-              disabled={isDeleting}
-            >
-              Cancel
+            <Button type="button" variant="outline" className="w-full sm:w-auto rounded-xl text-xs" onClick={() => setDeleteTarget(null)} disabled={isDeleting}>
+              انصراف
             </Button>
-            <HoldToDeleteButton
-              className="w-full sm:w-auto font-semibold rounded-xl text-xs"
-              onTrigger={handleConfirmDelete}
-              isPending={isDeleting}
-              label="Hold to Remove Address"
-              holdingLabel="Keep Holding to Confirm..."
-              pendingLabel="Removing..."
-            />
+            <HoldToDeleteButton className="w-full sm:w-auto font-semibold rounded-xl text-xs" onTrigger={handleConfirmDelete} isPending={isDeleting} label="نگه‌دارید برای حذف نشانی" holdingLabel="همچنان نگه‌دارید..." pendingLabel="در حال حذف..." />
           </DialogFooter>
         </DialogContent>
       </Dialog>

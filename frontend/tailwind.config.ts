@@ -95,8 +95,10 @@ const config: Config = {
         '103': '1.03',
       },
       fontFamily: {
-        serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
-        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        sans: ['var(--font-ravi)', 'Ravi', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        serif: ['var(--font-ravi)', 'Ravi', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+        mono: ['var(--font-ravi)', 'Ravi', 'system-ui', 'monospace'],
+        ravi: ['var(--font-ravi)', 'Ravi', 'sans-serif'],
       },
     },
   },

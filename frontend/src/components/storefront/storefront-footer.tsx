@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -15,33 +15,33 @@ export function StorefrontFooter() {
     e.preventDefault();
     if (email.trim()) {
       setSubscribed(true);
-      toast.success('Welcome to the Shaadwood Collector Circle', {
-        description: 'You will receive seasonal studio dispatches and private previews.',
+      toast.success('به حلقه دوستداران شادوود خوش آمدید', {
+        description: 'گزیده‌های فصلی و دسترسی زودهنگام به آثار جدید کارگاه برای شما ارسال خواهد شد.',
       });
       setEmail('');
     }
   };
 
   return (
-    <footer className="bg-zen-100/80 text-foreground pt-14 sm:pt-20 pb-10 border-t border-border/70">
+    <footer className="bg-zen-100/80 text-foreground pt-14 sm:pt-20 pb-10 border-t border-border/70 text-right">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Newsletter & Brand Statement */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pb-10 border-b border-border/60">
           <div className="lg:col-span-6 space-y-2.5">
             <span className="font-serif text-2xl sm:text-3xl font-bold tracking-[0.2em] text-shaad-900 block">
-              SHAADWOOD
+              شادوود
             </span>
             <p className="text-xs sm:text-sm text-muted-foreground font-light max-w-md leading-relaxed">
-              Handcrafted in solid walnut, oak, and teak. Heirloom furniture built for generations of slow, deliberate living.
+              طراحی و ساخت دست‌ساز مبلمان از چوب طبیعی گردو، بلوط و راش. آثاری ماندگار و اصیل برای نسلی که به آرامش، طبیعت و کیفیت پایدار اهمیت می‌دهد.
             </p>
           </div>
 
           <div className="lg:col-span-6 space-y-2.5">
             <h4 className="font-serif font-semibold text-sm sm:text-base text-foreground">
-              Join the Collector&apos;s Circle
+              عضویت در حلقه دوستداران شادوود
             </h4>
             <p className="text-xs text-muted-foreground font-light">
-              Receive timber harvest dispatches, private studio previews, and interior design essays.
+              دریافت گزیده‌های فصلی، مقالات دیزاین و دسترسی زودهنگام به آثار جدید کارگاه.
             </p>
             <form onSubmit={handleSubscribe} className="flex gap-2 max-w-md">
               <Input
@@ -49,81 +49,81 @@ export function StorefrontFooter() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address..."
-                className="bg-white border-border/80 text-xs h-10 rounded-xl focus-visible:ring-shaad-800"
+                placeholder="آدرس ایمیل خود را وارد کنید..."
+                className="bg-white border-border/80 text-xs h-10 rounded-xl focus-visible:ring-shaad-800 text-right"
               />
               <Button type="submit" className="bg-shaad-800 hover:bg-shaad-900 text-white text-xs px-5 h-10 rounded-xl shrink-0 font-medium">
-                {subscribed ? <CheckCircle2 className="w-4 h-4 text-emerald-300" /> : <ArrowRight className="w-4 h-4" />}
+                {subscribed ? <CheckCircle2 className="w-4 h-4 text-emerald-300" /> : <ArrowLeft className="w-4 h-4" />}
               </Button>
             </form>
           </div>
         </div>
 
-        {/* Footer Navigation Columns covering all storefront pages */}
+        {/* Footer Navigation Columns */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs">
           <div className="space-y-2.5">
-            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900">Furniture Collections</h5>
+            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900 font-serif">مجموعه‌های مبلمان</h5>
             <ul className="space-y-2 text-muted-foreground">
-              <li><Link href="/shop" className="hover:text-shaad-800 transition-colors">Full Studio Catalog</Link></li>
-              <li><Link href="/shop?categorySlug=living-room" className="hover:text-shaad-800 transition-colors">Living Sofas &amp; Armchairs</Link></li>
-              <li><Link href="/shop?categorySlug=dining-room" className="hover:text-shaad-800 transition-colors">Dining Tables &amp; Benches</Link></li>
-              <li><Link href="/shop?categorySlug=bedroom" className="hover:text-shaad-800 transition-colors">Bedroom Platform Beds</Link></li>
-              <li><Link href="/shop?categorySlug=coffee-tables" className="hover:text-shaad-800 transition-colors">Organic Coffee Tables</Link></li>
+              <li><Link href="/shop" className="hover:text-shaad-800 transition-colors">کاتالوگ جامع آثار</Link></li>
+              <li><Link href="/shop?categorySlug=living-room" className="hover:text-shaad-800 transition-colors">کاناپه‌ها و صندلی‌های راحتی</Link></li>
+              <li><Link href="/shop?categorySlug=dining-room" className="hover:text-shaad-800 transition-colors">میزهای ناهارخوری و نیمکت</Link></li>
+              <li><Link href="/shop?categorySlug=bedroom" className="hover:text-shaad-800 transition-colors">تخت‌خواب و سرویس خواب</Link></li>
+              <li><Link href="/shop?categorySlug=coffee-tables" className="hover:text-shaad-800 transition-colors">میزهای جلو مبلی و عسلی</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
-            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900">Artisan Craft &amp; Journal</h5>
+            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900 font-serif">هنر نجاری و مجله</h5>
             <ul className="space-y-2 text-muted-foreground">
-              <li><Link href="/about" className="hover:text-shaad-800 transition-colors">About Our Atelier</Link></li>
-              <li><Link href="/about" className="hover:text-shaad-800 transition-colors">Mortise &amp; Tenon Joinery</Link></li>
-              <li><Link href="/blog" className="hover:text-shaad-800 transition-colors">Studio Workshop Journal</Link></li>
-              <li><Link href="/blog?category=woodcraft-and-design-guides" className="hover:text-shaad-800 transition-colors">Woodcraft &amp; Design Guides</Link></li>
-              <li><Link href="/blog?category=timber-care" className="hover:text-shaad-800 transition-colors">Timber Care &amp; Natural Oils</Link></li>
+              <li><Link href="/about" className="hover:text-shaad-800 transition-colors">درباره آتلیه شادوود</Link></li>
+              <li><Link href="/about" className="hover:text-shaad-800 transition-colors">اتصالات اصیل فاق و زبانه</Link></li>
+              <li><Link href="/blog" className="hover:text-shaad-800 transition-colors">یادداشت‌های کارگاه</Link></li>
+              <li><Link href="/blog?category=woodcraft-and-design-guides" className="hover:text-shaad-800 transition-colors">راهنمای طراحی و دیزاین</Link></li>
+              <li><Link href="/blog?category=timber-care" className="hover:text-shaad-800 transition-colors">نگهداری چوب و روغن‌های گیاهی</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
-            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900">Client Concierge</h5>
+            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900 font-serif">خدمات و سفارش‌ها</h5>
             <ul className="space-y-2 text-muted-foreground">
-              <li><Link href="/account" className="hover:text-shaad-800 transition-colors">My Orders &amp; Profile</Link></li>
-              <li><Link href="/auth/otp" className="hover:text-shaad-800 transition-colors">SMS OTP Login / Register</Link></li>
-              <li><Link href="/cart" className="hover:text-shaad-800 transition-colors">Shopping Cart</Link></li>
-              <li><Link href="/contact" className="hover:text-shaad-800 transition-colors">White-Glove Delivery Info</Link></li>
-              <li><Link href="/about" className="hover:text-shaad-800 transition-colors">25-Year Wood Warranty</Link></li>
+              <li><Link href="/account" className="hover:text-shaad-800 transition-colors">پیگیری سفارش‌ها و پروفایل</Link></li>
+              <li><Link href="/auth/otp" className="hover:text-shaad-800 transition-colors">ورود با رمز یکبارمصرف</Link></li>
+              <li><Link href="/cart" className="hover:text-shaad-800 transition-colors">سبد خرید آثار</Link></li>
+              <li><Link href="/contact" className="hover:text-shaad-800 transition-colors">ارسال و چیدمان اختصاصی</Link></li>
+              <li><Link href="/about" className="hover:text-shaad-800 transition-colors">ضمانت ۲۵ ساله ساختار چوب</Link></li>
             </ul>
           </div>
 
           <div className="space-y-2.5">
-            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900">Workshop &amp; Studio</h5>
+            <h5 className="font-semibold uppercase tracking-wider text-[11px] text-shaad-900 font-serif">شوروم و کارگاه</h5>
             <p className="text-muted-foreground leading-relaxed">
-              550 NW 13th Avenue<br />
-              Portland, Oregon 97209<br />
+              تهران، خیابان ولیعصر<br />
+              بالاتر از پارک ساعی، پلاک ۱۲۴۰<br />
               concierge@shaadwood.com<br />
-              +1 555-0199
+              ۰۲۱-۸۸۷۷۶۶۵۵
             </p>
             <div className="pt-0.5">
               <Link href="/contact" className="inline-flex items-center gap-1.5 text-[11px] text-shaad-800 hover:text-shaad-900 font-semibold">
-                <span>Studio Hours &amp; Directions</span>
-                <ArrowRight className="w-3 h-3" />
+                <span>ساعات کاری و نقشه شوروم</span>
+                <ArrowLeft className="w-3 h-3" />
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Bottom Rights & Quick Root Navigation covering all pages */}
+        {/* Bottom Rights & Quick Root Navigation */}
         <div className="pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Shaadwood Woodcraft Studio Inc. All rights reserved.</p>
+          <p>تمامی حقوق مادی و معنوی برای کارگاه نجاری و مبلمان شادوود محفوظ است. ۱۴۰۵ ©</p>
           <div className="flex flex-wrap items-center justify-center gap-3 text-[11px]">
-            <Link href="/shop" className="hover:text-shaad-800 transition-colors">Catalog</Link>
+            <Link href="/shop" className="hover:text-shaad-800 transition-colors">کاتالوگ</Link>
             <span>&middot;</span>
-            <Link href="/blog" className="hover:text-shaad-800 transition-colors">Journal</Link>
+            <Link href="/blog" className="hover:text-shaad-800 transition-colors">مجله</Link>
             <span>&middot;</span>
-            <Link href="/about" className="hover:text-shaad-800 transition-colors">About Us</Link>
+            <Link href="/about" className="hover:text-shaad-800 transition-colors">درباره ما</Link>
             <span>&middot;</span>
-            <Link href="/contact" className="hover:text-shaad-800 transition-colors">Contact</Link>
+            <Link href="/contact" className="hover:text-shaad-800 transition-colors">تماس و نقشه</Link>
             <span>&middot;</span>
-            <Link href="/account" className="hover:text-shaad-800 transition-colors">Account</Link>
+            <Link href="/account" className="hover:text-shaad-800 transition-colors">حساب کاربری</Link>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Clock, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { calculateReadingTime, formatBlogDate } from '@/lib/reading-time';
 
@@ -25,9 +25,9 @@ export function BlogFeaturedCard({ post }: BlogFeaturedCardProps) {
             decoding="async"
             className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
           />
-          <div className="absolute top-4 left-4">
-            <span className="px-3 py-1 rounded-full text-[11px] font-mono tracking-wider uppercase font-semibold bg-white/90 backdrop-blur-xs text-shaad-900 border border-white/80 shadow-2xs">
-              {post.category?.name || 'Featured Essay'}
+          <div className="absolute top-4 right-4">
+            <span className="px-3 py-1 rounded-full text-[11px] font-sans tracking-wider uppercase font-semibold bg-white/90 backdrop-blur-xs text-shaad-900 border border-white/80 shadow-2xs">
+              {post.category?.name || 'مقاله برگزیده'}
             </span>
           </div>
         </div>
@@ -36,13 +36,13 @@ export function BlogFeaturedCard({ post }: BlogFeaturedCardProps) {
         <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6">
           <div className="space-y-3">
             {/* Meta Tags */}
-            <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono">
-              <span className="flex items-center gap-1">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground font-sans">
+              <span className="flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-shaad-700" />
                 <time dateTime={post.publishedAt || post.createdAt}>{formattedDate}</time>
               </span>
               <span>&middot;</span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-shaad-700" />
                 <span>{readingTime}</span>
               </span>
@@ -67,10 +67,10 @@ export function BlogFeaturedCard({ post }: BlogFeaturedCardProps) {
           <div className="pt-2">
             <Link
               href={`/blog/${post.slug}`}
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-shaad-800 group-hover:text-shaad-900 transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-shaad-800 group-hover:text-shaad-900 transition-colors"
             >
-              <span>Read Full Article</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <span>مطالعه مقاله کامل</span>
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>

@@ -39,19 +39,19 @@ export function ShopActiveFilters({
   if (!hasActiveFilters) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pt-4">
-      <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mr-1">
-        Active Filters:
+    <div className="flex flex-wrap items-center gap-2 pt-4 text-right">
+      <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider ml-1">
+        فیلترهای فعال:
       </span>
 
       {categorySlug !== 'ALL' && (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200">
-          <span>Collection: {categoryName || categorySlug}</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200">
+          <span>مجموعه: {categoryName || categorySlug}</span>
           <button
             type="button"
             onClick={onClearCategory}
             className="hover:opacity-75 transition-opacity"
-            aria-label="Remove category filter"
+            aria-label="حذف فیلتر دسته‌بندی"
           >
             <X className="w-3 h-3" />
           </button>
@@ -59,13 +59,13 @@ export function ShopActiveFilters({
       )}
 
       {Boolean(searchQuery) && (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200">
-          <span>Search: &ldquo;{searchQuery}&rdquo;</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200">
+          <span>جستجو: «{searchQuery}»</span>
           <button
             type="button"
             onClick={onClearSearch}
             className="hover:opacity-75 transition-opacity"
-            aria-label="Remove search filter"
+            aria-label="حذف فیلتر جستجو"
           >
             <X className="w-3 h-3" />
           </button>
@@ -73,15 +73,15 @@ export function ShopActiveFilters({
       )}
 
       {(Boolean(minPrice) || Boolean(maxPrice)) && (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200 font-mono">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200 font-sans">
           <span>
-            ${minPrice || '0'} – ${maxPrice || '∞'}
+            {minPrice ? Number(minPrice).toLocaleString('fa-IR') : '۰'} تا {maxPrice ? Number(maxPrice).toLocaleString('fa-IR') : 'بی‌نهایت'} تومان
           </span>
           <button
             type="button"
             onClick={onClearPrice}
             className="hover:opacity-75 transition-opacity"
-            aria-label="Remove price filter"
+            aria-label="حذف فیلتر قیمت"
           >
             <X className="w-3 h-3" />
           </button>
@@ -89,13 +89,13 @@ export function ShopActiveFilters({
       )}
 
       {inStockOnly && (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200">
-          <span>In-Stock Only</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-shaad-50 text-shaad-900 border border-shaad-200">
+          <span>فقط آثار آماده تحویل</span>
           <button
             type="button"
             onClick={onClearInStock}
             className="hover:opacity-75 transition-opacity"
-            aria-label="Remove in-stock filter"
+            aria-label="حذف فیلتر موجودی"
           >
             <X className="w-3 h-3" />
           </button>
@@ -105,9 +105,9 @@ export function ShopActiveFilters({
       <button
         type="button"
         onClick={onClearAll}
-        className="text-xs text-shaad-800 hover:text-shaad-900 font-medium underline underline-offset-4 ml-1"
+        className="text-xs text-muted-foreground hover:text-shaad-900 font-medium underline underline-offset-4 mr-2"
       >
-        Clear All
+        حذف همه فیلترها
       </button>
     </div>
   );

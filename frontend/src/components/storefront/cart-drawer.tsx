@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ShoppingBag, X, Plus, Minus, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
+import { ShoppingBag, X, Plus, Minus, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useCart } from '@/context/cart-context';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
-import { toast } from 'sonner';
 
 export function CartDrawer() {
   const { items, isDrawerOpen, setIsDrawerOpen, removeItem, updateQuantity, totalPrice, totalCount } =
@@ -15,20 +14,20 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col bg-zen-50 border-l border-border/70">
+      <SheetContent side="left" className="w-full sm:max-w-md p-0 flex flex-col bg-zen-50 border-r border-border/70 text-right">
         {/* Header */}
-        <SheetHeader className="p-6 border-b border-border/60 bg-white/70 backdrop-blur-sm">
+        <SheetHeader className="p-6 border-b border-border/60 bg-white/70 backdrop-blur-sm text-right">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-shaad-800 text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-shaad-800 text-white flex items-center justify-center shrink-0">
                 <ShoppingBag className="w-4 h-4" />
               </div>
-              <div>
+              <div className='text-right'>
                 <SheetTitle className="text-base font-semibold tracking-tight text-foreground font-serif">
-                  Studio Cart
+                  سبد خرید آثار
                 </SheetTitle>
                 <SheetDescription className="text-xs text-muted-foreground">
-                  {totalCount} handcrafted {totalCount === 1 ? 'piece' : 'pieces'} selected
+                  {totalCount} اثر دست‌ساز انتخاب شده است
                 </SheetDescription>
               </div>
             </div>
@@ -43,9 +42,9 @@ export function CartDrawer() {
                 <ShoppingBag className="w-7 h-7 stroke-[1.5]" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-base font-medium text-foreground font-serif">Your cart is empty</h4>
-                <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                  Explore our handcrafted solid wood catalog to curate your sanctuary.
+                <h4 className="text-base font-medium text-foreground font-serif">سبد خرید شما خالی است</h4>
+                <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                  کاتالوگ آثار دست‌ساز تمام‌چوب شادوود را برای گزینش سازه‌های دلخواه خود مرور کنید.
                 </p>
               </div>
               <Button
@@ -54,7 +53,7 @@ export function CartDrawer() {
                 onClick={() => setIsDrawerOpen(false)}
                 className="border-shaad-800 text-shaad-800 hover:bg-shaad-50 text-xs mt-2"
               >
-                Browse Collections
+                مشاهده مجموعه‌ها
               </Button>
             </div>
           ) : (
@@ -69,7 +68,7 @@ export function CartDrawer() {
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground/60 text-[10px]">
-                      Solid Wood
+                      چوب ماسیو
                     </div>
                   )}
                 </div>
@@ -80,42 +79,41 @@ export function CartDrawer() {
                     <div>
                       <h4 className="font-medium text-xs text-foreground truncate">{item.name}</h4>
                       {item.finish && (
-                        <p className="text-[11px] text-muted-foreground font-mono mt-0.5">{item.finish}</p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">{item.finish}</p>
                       )}
                     </div>
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="text-muted-foreground/60 hover:text-red-600 transition-colors p-1 -mr-1"
-                      aria-label="Remove item"
+                      className="text-muted-foreground/60 hover:text-red-600 transition-colors p-1 -ml-1"
+                      aria-label="حذف اثر از سبد"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   <div className="flex items-center justify-between pt-2">
-                    {/* Quantity controls */}
                     <div className="flex items-center gap-2 border border-border/70 rounded-md px-2 py-0.5 bg-zen-50">
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, -1)}
                         className="text-muted-foreground hover:text-foreground p-0.5"
-                        aria-label="Decrease quantity"
+                        aria-label="کاهش تعداد"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
-                      <span className="text-xs font-mono font-medium px-1">{item.quantity}</span>
+                      <span className="text-xs font-sans font-medium px-1">{item.quantity}</span>
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, 1)}
                         className="text-muted-foreground hover:text-foreground p-0.5"
-                        aria-label="Increase quantity"
+                        aria-label="افزایش تعداد"
                       >
                         <Plus className="w-3 h-3" />
                       </button>
                     </div>
 
-                    <div className="font-bold text-xs font-mono text-foreground">
+                    <div className="font-bold text-xs text-foreground font-sans">
                       {formatCurrency(item.price * item.quantity)}
                     </div>
                   </div>
@@ -130,16 +128,16 @@ export function CartDrawer() {
           <div className="p-6 border-t border-border/60 bg-white/80 backdrop-blur-sm space-y-4">
             <div className="space-y-1.5 text-xs">
               <div className="flex items-center justify-between text-muted-foreground">
-                <span>Subtotal</span>
-                <span className="font-mono text-foreground font-semibold">{formatCurrency(totalPrice)}</span>
+                <span>مجموع سفارش</span>
+                <span className="text-foreground font-semibold font-sans">{formatCurrency(totalPrice)}</span>
               </div>
               <div className="flex items-center justify-between text-muted-foreground">
-                <span>Shipping</span>
-                <span className="font-mono text-muted-foreground text-[11px]">Calculated at checkout</span>
+                <span>ارسال اختصاصی</span>
+                <span className="text-muted-foreground text-[11px]">محاسبه در مرحله نهایی</span>
               </div>
               <div className="flex items-center justify-between pt-2 border-t border-border/50 text-sm font-bold text-foreground">
-                <span>Cart Total</span>
-                <span className="font-mono text-shaad-800">
+                <span>مبلغ نهایی سفارش</span>
+                <span className="text-shaad-800 font-sans">
                   {formatCurrency(totalPrice)}
                 </span>
               </div>
@@ -152,8 +150,8 @@ export function CartDrawer() {
                 onClick={() => setIsDrawerOpen(false)}
               >
                 <Link href="/checkout">
-                  <span>Proceed to Checkout</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>تکمیل خرید و ثبت سفارش</span>
+                  <ArrowLeft className="w-4 h-4" />
                 </Link>
               </Button>
 
@@ -164,14 +162,14 @@ export function CartDrawer() {
                 onClick={() => setIsDrawerOpen(false)}
               >
                 <Link href="/cart">
-                  <span>View Detailed Cart</span>
+                  <span>مشاهده جزئیات سبد خرید</span>
                 </Link>
               </Button>
             </div>
 
             <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
-              <ShieldCheck className="w-3.5 h-3.5 text-shaad-700" />
-              <span>25-Year Solid Wood Heirloom Craftsmanship Warranty</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-shaad-700 shrink-0" />
+              <span>ضمانت ۲۵ ساله ساختار چوب طبیعی شادوود</span>
             </div>
           </div>
         )}

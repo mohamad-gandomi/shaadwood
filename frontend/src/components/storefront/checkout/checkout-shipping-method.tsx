@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Truck, CheckCircle2, ShieldCheck, Clock, Store } from 'lucide-react';
+import { Truck, CheckCircle2, Clock, Store } from 'lucide-react';
 import { ShippingMethodOption } from '@/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface CheckoutShippingMethodProps {
   methods: ShippingMethodOption[];
@@ -16,17 +17,17 @@ export function CheckoutShippingMethod({
   onSelect,
 }: CheckoutShippingMethodProps) {
   return (
-    <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-4">
+    <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-4 text-right">
       <div className="flex items-center justify-between border-b border-border/60 pb-3">
         <div className="flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-shaad-800 text-white text-xs font-mono font-bold flex items-center justify-center">
-            3
+          <span className="w-6 h-6 rounded-full bg-shaad-800 text-white text-xs font-sans font-bold flex items-center justify-center">
+            ۳
           </span>
           <h3 className="font-serif font-bold text-base text-foreground">
-            Shipping & Delivery Method
+            شیوه ارسال و باربری مبلمان
           </h3>
         </div>
-        <span className="text-[11px] text-muted-foreground font-mono">Specialized Logistics</span>
+        <span className="text-[11px] text-muted-foreground font-sans">ناوگان اختصاصی کارگاه</span>
       </div>
 
       <div className="space-y-3">
@@ -58,16 +59,16 @@ export function CheckoutShippingMethod({
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm text-foreground">{method.name}</span>
                     {method.id === 'white-glove-freight' && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-shaad-100 text-shaad-900 border border-shaad-200">
-                        Signature
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-shaad-100 text-shaad-900 border border-shaad-200">
+                        ویژه شادوود
                       </span>
                     )}
                   </div>
-                  <span className="font-mono font-bold text-sm text-foreground">
+                  <span className="font-sans font-bold text-sm text-foreground">
                     {method.price === 0 ? (
-                      <span className="text-emerald-700">Free</span>
+                      <span className="text-emerald-700">رایگان</span>
                     ) : (
-                      `$${method.price.toFixed(2)}`
+                      formatCurrency(method.price)
                     )}
                   </span>
                 </div>
@@ -76,7 +77,7 @@ export function CheckoutShippingMethod({
                   {method.description}
                 </p>
 
-                <div className="flex items-center gap-4 mt-2.5 text-[11px] text-muted-foreground font-mono">
+                <div className="flex items-center gap-4 mt-2.5 text-[11px] text-muted-foreground font-sans">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-shaad-700" />
                     {method.estimatedDays}

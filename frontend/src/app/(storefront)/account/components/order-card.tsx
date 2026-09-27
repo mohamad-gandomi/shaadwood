@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Package, Truck, Clock, CheckCircle2, ChevronRight, ExternalLink } from 'lucide-react';
+import { Package, Truck, Clock, CheckCircle2, ExternalLink } from 'lucide-react';
 import { Order } from '@/types';
+import { formatCurrency, formatDate } from '@/lib/utils';
 
 interface OrderCardProps {
   order: Order;
@@ -16,44 +17,38 @@ export function OrderCard({ order }: OrderCardProps) {
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
             <CheckCircle2 className="w-3 h-3" />
-            Delivered
+            تحویل داده شده
           </span>
         );
       case 'SHIPPED':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
             <Truck className="w-3 h-3" />
-            In Transit / Shipped
+            در حال ارسال با باربری
           </span>
         );
       case 'PROCESSING':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
             <Clock className="w-3 h-3" />
-            Crafting & Processing
+            در حال ساخت و آماده‌سازی
           </span>
         );
       case 'CANCELLED':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200">
-            Cancelled
+            لغو شده
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-zen-100 text-foreground/80 border border-border">
             <Clock className="w-3 h-3" />
-            Order Received
+            سفارش ثبت شد
           </span>
         );
     }
   };
-
-  const formattedDate = new Date(order.createdAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
 
   return (
     <div className="p-5 sm:p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-4 hover:border-shaad-300 transition-colors">
@@ -65,15 +60,15 @@ export function OrderCard({ order }: OrderCardProps) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono font-bold text-sm text-foreground">
+              <span className="font-sans font-bold text-sm text-foreground">
                 {order.orderNumber}
               </span>
-              <span className="text-[11px] text-muted-foreground font-mono">
-                &middot; {formattedDate}
+              <span className="text-[11px] text-muted-foreground font-sans">
+                &middot; {formatDate(order.createdAt)}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground block">
-              {order.shippingMethod || 'Standard Delivery'} &middot; {order.shippingCarrier || 'Freight Carrier'}
+            <span className="text-xs text-muted-foreground block font-sans">
+              {order.shippingMethod || 'ارسال اختصاصی'} &middot; {order.shippingCarrier || 'باربری شادوود'}
             </span>
           </div>
         </div>
@@ -83,7 +78,7 @@ export function OrderCard({ order }: OrderCardProps) {
           <Link
             href={`/checkout/success/${order.id}`}
             className="p-1.5 rounded-lg text-muted-foreground hover:text-shaad-800 hover:bg-zen-100 transition-colors"
-            title="View Commission Receipt"
+            title="مشاهده فاکتور و جزئیات سفارش"
           >
             <ExternalLink className="w-4 h-4" />
           </Link>
@@ -103,8 +98,8 @@ export function OrderCard({ order }: OrderCardProps) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground font-mono text-[10px]">
-                    WOOD
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground font-sans text-[10px]">
+                    چوب
                   </div>
                 )}
               </div>
@@ -112,14 +107,14 @@ export function OrderCard({ order }: OrderCardProps) {
                 <span className="font-medium text-foreground block truncate">
                   {item.productName}
                 </span>
-                <span className="text-[11px] text-muted-foreground font-mono">
-                  Qty: {item.quantity} &times; ${Number(item.unitPrice).toLocaleString()}
+                <span className="text-[11px] text-muted-foreground font-sans">
+                  تعداد: {item.quantity} &times; {formatCurrency(item.unitPrice)}
                 </span>
               </div>
             </div>
 
-            <span className="font-mono font-semibold text-foreground shrink-0">
-              ${Number(item.totalPrice).toLocaleString()}
+            <span className="font-sans font-semibold text-foreground shrink-0">
+              {formatCurrency(item.totalPrice)}
             </span>
           </div>
         ))}
@@ -129,21 +124,21 @@ export function OrderCard({ order }: OrderCardProps) {
       <div className="pt-3 border-t border-border/50 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
           {order.trackingNumber ? (
-            <span className="inline-flex items-center gap-1.5 font-mono text-shaad-800 bg-shaad-50 px-2.5 py-1 rounded-lg border border-shaad-200">
+            <span className="inline-flex items-center gap-1.5 font-sans text-shaad-800 bg-shaad-50 px-2.5 py-1 rounded-lg border border-shaad-200">
               <Truck className="w-3.5 h-3.5" />
-              <span>Tracking: {order.trackingNumber}</span>
+              <span>کد پیگیری: {order.trackingNumber}</span>
             </span>
           ) : (
-            <span className="text-muted-foreground text-[11px]">
-              Tracking will update once freight carrier is assigned.
+            <span className="text-muted-foreground text-[11px] font-sans">
+              پس از تحویل سازه به ناوگان باربری، شناسه رهگیری در این بخش قرار می‌گیرد.
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 font-mono">
-          <span className="text-muted-foreground text-xs">Total:</span>
+        <div className="flex items-center gap-2 font-sans">
+          <span className="text-muted-foreground text-xs">مبلغ نهایی:</span>
           <span className="font-bold text-base text-foreground">
-            ${Number(order.totalAmount).toLocaleString()}
+            {formatCurrency(order.totalAmount)}
           </span>
         </div>
       </div>

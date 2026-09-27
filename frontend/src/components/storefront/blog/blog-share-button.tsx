@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Share2, Check, Copy } from 'lucide-react';
+import { Share2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BlogShareButtonProps {
@@ -30,10 +30,10 @@ export function BlogShareButton({ title }: BlogShareButtonProps) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      toast.success('Article link copied to clipboard');
+      toast.success('پیوند مقاله در کلیپ‌بورد کپی شد');
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      toast.error('Unable to copy link to clipboard');
+      toast.error('امکان کپی پیوند در حافظه وجود ندارد');
     }
   };
 
@@ -46,12 +46,12 @@ export function BlogShareButton({ title }: BlogShareButtonProps) {
       {copied ? (
         <>
           <Check className="w-3.5 h-3.5 text-emerald-600" />
-          <span className="text-emerald-700 font-semibold">Link Copied</span>
+          <span className="text-emerald-700 font-semibold">پیوند کپی شد</span>
         </>
       ) : (
         <>
           <Share2 className="w-3.5 h-3.5 text-shaad-800" />
-          <span>Share Article</span>
+          <span>اشتراک‌گذاری مقاله</span>
         </>
       )}
     </button>

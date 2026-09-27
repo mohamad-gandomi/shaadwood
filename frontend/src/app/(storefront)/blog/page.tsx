@@ -5,18 +5,18 @@ import { BlogFeaturedCard } from '@/components/storefront/blog/blog-featured-car
 import { BlogCard } from '@/components/storefront/blog/blog-card';
 
 export const metadata: Metadata = {
-  title: 'Studio Journal & Essays | Shaadwood Handcrafted Living',
+  title: 'ژورنال استودیو و جستارهای چوب | استودیو درودگری شادوود',
   description:
-    'Essays on solid hardwood joinery, natural plant-oil preservation, and Japanese-Scandinavian interior aesthetics from Shaadwood Studio.',
+    'جستارهایی پیرامون اتصالات دیرین چوب طبیعی، پوشش‌های روغنی گیاهی و فلسفه طراحی مینیمال ژاپنی-اسکاندیناوی در کارگاه شادوود.',
   alternates: {
     canonical: 'https://shaadwood.com/blog',
   },
   openGraph: {
-    title: 'Studio Journal & Woodcraft Essays | Shaadwood',
+    title: 'ژورنال تخصصی چوب و سبک زندگی آرام | شادوود',
     description:
-      'Explore craftsmanship essays, solid timber joinery guides, and slow-living interior aesthetics from Shaadwood Studio.',
+      'روایت‌های کارگاه نجاری، راهنمای نگهداری چوب کهنسال و فلسفه طراحی ماندگار.',
     url: 'https://shaadwood.com/blog',
-    siteName: 'Shaadwood Woodcraft Studio',
+    siteName: 'استودیو درودگری شادوود',
     type: 'website',
   },
 };
@@ -65,26 +65,28 @@ export default async function BlogPage({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 space-y-12">
         {posts.length === 0 ? (
           <div className="py-20 text-center space-y-3">
-            <h3 className="font-serif text-xl font-bold text-foreground">No Essays Found</h3>
+            <h3 className="font-serif text-xl font-bold text-foreground">مقاله‌ای یافت نشد</h3>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-              There are currently no published essays in this category. Check back soon for new workshop dispatches.
+              در حال حاضر در این دسته‌بندی یادداشتی ثبت نشده است. به‌زودی گزیده‌های جدید کارگاه اضافه خواهد شد.
             </p>
           </div>
         ) : (
           <>
             {/* Top Featured Essay */}
             {featuredPost && (
-              <section aria-label="Featured Story">
+              <section aria-label="مقاله برگزیده">
                 <BlogFeaturedCard post={featuredPost} />
               </section>
             )}
 
             {/* Remaining Articles Grid */}
             {gridPosts.length > 0 && (
-              <section aria-label="Recent Articles" className="space-y-6">
+              <section aria-label="تازه‌ترین مقالات" className="space-y-6">
                 <div className="flex items-center justify-between border-b border-border/60 pb-3">
-                  <h2 className="font-serif font-bold text-xl text-foreground">Recent Articles</h2>
-                  <span className="text-xs font-mono text-muted-foreground">{gridPosts.length} Stories</span>
+                  <h2 className="font-serif font-bold text-xl text-foreground">تازه‌ترین مقالات</h2>
+                  <span className="text-xs font-sans text-muted-foreground">
+                    {new Intl.NumberFormat('fa-IR').format(gridPosts.length)} مقاله
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

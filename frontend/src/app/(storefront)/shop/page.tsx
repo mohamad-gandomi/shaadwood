@@ -5,12 +5,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useCart } from '@/context/cart-context';
-import { Product, Category } from '@/types';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Product } from '@/types';
 import { ShopHeader } from '@/components/storefront/shop/shop-header';
 import { ShopFilterSidebar } from '@/components/storefront/shop/shop-filter-sidebar';
 import { ShopActiveFilters } from '@/components/storefront/shop/shop-active-filters';
 import { ShopProductCard } from '@/components/storefront/shop/shop-product-card';
+import { ShopMobileFilterSheet } from '@/components/storefront/shop/shop-mobile-filter-sheet';
 import { TreePine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,44 +18,36 @@ function ShopCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Filters from URL
   const categorySlug = searchParams.get('categorySlug') || 'ALL';
   const searchQuery = searchParams.get('search') || '';
   const sortBy = searchParams.get('sortBy') || 'newest';
   const minPrice = searchParams.get('minPrice') || '';
   const maxPrice = searchParams.get('maxPrice') || '';
 
-  const [inStockOnly, setInStockOnly] = React.useState<boolean>(false);
-  const [mobileFilterOpen, setMobileFilterOpen] = React.useState<boolean>(false);
+  const [inStockOnly, setInStockOnly] = React.useState(false);
+  const [mobileFilterOpen, setMobileFilterOpen] = React.useState(false);
   const [addedId, setAddedId] = React.useState<string | null>(null);
 
   const { addItem } = useCart();
 
-  // Update query params helper
   const updateQueryParam = React.useCallback(
     (updates: Record<string, string | null>) => {
       const current = new URLSearchParams(Array.from(searchParams.entries()));
       Object.entries(updates).forEach(([key, val]) => {
-        if (!val || val === 'ALL') {
-          current.delete(key);
-        } else {
-          current.set(key, val);
-        }
+        if (!val || val === 'ALL') current.delete(key);
+        else current.set(key, val);
       });
-      const search = current.toString();
-      const query = search ? `?${search}` : '';
+      const query = current.toString() ? `?${current.toString()}` : '';
       router.push(`/shop${query}`, { scroll: false });
     },
     [router, searchParams]
   );
 
-  // Fetch Categories Tree from Backend
   const { data: categories = [] } = useQuery({
     queryKey: ['storefront-categories-catalog'],
     queryFn: () => api.getCategoriesTree(),
   });
 
-  // Find active category name for display
   const activeCategoryName = React.useMemo(() => {
     if (categorySlug === 'ALL') return undefined;
     for (const parent of categories) {
@@ -66,7 +58,6 @@ function ShopCatalogContent() {
     return categorySlug;
   }, [categories, categorySlug]);
 
-  // Fetch Products with Live Backend Filters
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['shop-products', categorySlug, searchQuery, sortBy, minPrice, maxPrice],
     queryFn: () =>
@@ -79,7 +70,6 @@ function ShopCatalogContent() {
       }),
   });
 
-  // Client-side in-stock filter
   const displayedProducts = React.useMemo(() => {
     if (!inStockOnly) return products;
     return products.filter((p) => !p.manageStock || p.stockQuantity > 0);
@@ -104,9 +94,8 @@ function ShopCatalogContent() {
   };
 
   return (
-    <div className="min-h-screen bg-zen-50/70 pt-8 pb-20">
+    <div className="min-h-screen bg-zen-50/70 pt-8 pb-20 text-right">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Header */}
         <ShopHeader
           totalCount={displayedProducts.length}
           sortBy={sortBy}
@@ -114,41 +103,25 @@ function ShopCatalogContent() {
           onOpenMobileFilters={() => setMobileFilterOpen(true)}
         />
 
-        {/* Active Filter Tags */}
         <ShopActiveFilters
-          categorySlug={categorySlug}
-          categoryName={activeCategoryName}
-          onClearCategory={() => updateQueryParam({ categorySlug: null })}
-          searchQuery={searchQuery}
-          onClearSearch={() => updateQueryParam({ search: null })}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          onClearPrice={() => updateQueryParam({ minPrice: null, maxPrice: null })}
-          inStockOnly={inStockOnly}
-          onClearInStock={() => setInStockOnly(false)}
-          onClearAll={handleResetFilters}
+          categorySlug={categorySlug} categoryName={activeCategoryName} onClearCategory={() => updateQueryParam({ categorySlug: null })}
+          searchQuery={searchQuery} onClearSearch={() => updateQueryParam({ search: null })}
+          minPrice={minPrice} maxPrice={maxPrice} onClearPrice={() => updateQueryParam({ minPrice: null, maxPrice: null })}
+          inStockOnly={inStockOnly} onClearInStock={() => setInStockOnly(false)} onClearAll={handleResetFilters}
         />
 
-        {/* Main Grid: Sidebar (3 cols) + Catalog Grid (9 cols) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Desktop Filter Sidebar */}
           <div className="hidden lg:block lg:col-span-3 sticky top-24">
             <ShopFilterSidebar
-              categories={categories}
-              selectedCategorySlug={categorySlug}
+              categories={categories} selectedCategorySlug={categorySlug}
               onSelectCategory={(slug) => updateQueryParam({ categorySlug: slug })}
-              searchQuery={searchQuery}
-              onSearchChange={(q) => updateQueryParam({ search: q })}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
+              searchQuery={searchQuery} onSearchChange={(q) => updateQueryParam({ search: q })}
+              minPrice={minPrice} maxPrice={maxPrice}
               onPriceChange={(min, max) => updateQueryParam({ minPrice: min || null, maxPrice: max || null })}
-              inStockOnly={inStockOnly}
-              onInStockChange={setInStockOnly}
-              onResetFilters={handleResetFilters}
+              inStockOnly={inStockOnly} onInStockChange={setInStockOnly} onResetFilters={handleResetFilters}
             />
           </div>
 
-          {/* Product Catalog Grid */}
           <div className="lg:col-span-9">
             {isLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -158,7 +131,6 @@ function ShopCatalogContent() {
                     <div className="h-4 bg-zen-200 rounded w-1/3" />
                     <div className="h-5 bg-zen-200 rounded w-3/4" />
                     <div className="h-4 bg-zen-100 rounded w-1/2" />
-                    <div className="h-9 bg-zen-200 rounded-xl mt-4" />
                   </div>
                 ))}
               </div>
@@ -168,18 +140,13 @@ function ShopCatalogContent() {
                   <TreePine className="w-7 h-7" />
                 </div>
                 <h3 className="font-serif text-xl font-bold text-foreground">
-                  No Studio Pieces Match Your Filters
+                  اثری منطبق با فیلترهای انتخابی یافت نشد
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-                  Try broadening your price range, searching for another keyword, or exploring another collection.
+                <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                  محدوده قیمت، عبارت جستجو یا دسته‌بندی انتخابی را تغییر دهید تا آثار بیشتری را مشاهده کنید.
                 </p>
-                <Button
-                  onClick={handleResetFilters}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full border-border/80 text-xs mt-2"
-                >
-                  Reset All Filters
+                <Button onClick={handleResetFilters} variant="outline" size="sm" className="rounded-full text-xs mt-2">
+                  پاک‌سازی تمام فیلترها
                 </Button>
               </div>
             ) : (
@@ -198,38 +165,14 @@ function ShopCatalogContent() {
         </div>
       </div>
 
-      {/* Mobile Filters Sheet */}
-      <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
-        <SheetContent side="left" className="w-[320px] sm:w-[380px] p-6 overflow-y-auto">
-          <SheetHeader className="pb-4 border-b border-border/60 text-left">
-            <SheetTitle className="font-serif text-lg">Filter Studio Pieces</SheetTitle>
-          </SheetHeader>
-          <div className="pt-6">
-            <ShopFilterSidebar
-              categories={categories}
-              selectedCategorySlug={categorySlug}
-              onSelectCategory={(slug) => {
-                updateQueryParam({ categorySlug: slug });
-                setMobileFilterOpen(false);
-              }}
-              searchQuery={searchQuery}
-              onSearchChange={(q) => updateQueryParam({ search: q })}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              onPriceChange={(min, max) => {
-                updateQueryParam({ minPrice: min || null, maxPrice: max || null });
-                setMobileFilterOpen(false);
-              }}
-              inStockOnly={inStockOnly}
-              onInStockChange={setInStockOnly}
-              onResetFilters={() => {
-                handleResetFilters();
-                setMobileFilterOpen(false);
-              }}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      <ShopMobileFilterSheet
+        open={mobileFilterOpen} onOpenChange={setMobileFilterOpen} categories={categories} categorySlug={categorySlug}
+        searchQuery={searchQuery} minPrice={minPrice} maxPrice={maxPrice} inStockOnly={inStockOnly}
+        onSelectCategory={(slug) => updateQueryParam({ categorySlug: slug })}
+        onSearchChange={(q) => updateQueryParam({ search: q })}
+        onPriceChange={(min, max) => updateQueryParam({ minPrice: min || null, maxPrice: max || null })}
+        onInStockChange={setInStockOnly} onResetFilters={handleResetFilters}
+      />
     </div>
   );
 }
@@ -241,7 +184,7 @@ export default function ShopPage() {
         <div className="min-h-screen bg-zen-50 flex items-center justify-center p-8">
           <div className="text-center space-y-3 animate-pulse">
             <div className="w-10 h-10 border-2 border-shaad-800 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="font-serif text-sm text-muted-foreground">Opening Studio Catalog...</p>
+            <p className="font-serif text-sm text-muted-foreground">در حال بازگشایی کاتالوگ آثار شادوود...</p>
           </div>
         </div>
       }

@@ -33,7 +33,6 @@ async function getRelatedPosts(currentId: string, categorySlug?: string | null):
       }
     }
 
-    // If fewer than 2 posts in the same category, supplement with latest stories
     if (list.length < 2) {
       const res = await fetch(`${API_BASE}/blog/posts?limit=4`, { cache: 'no-store' });
       if (res.ok) {
@@ -61,17 +60,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const post = await getPost(params.slug);
   if (!post) {
-    return { title: 'Essay Not Found | Shaadwood Studio Journal' };
+    return { title: 'مقاله یافت نشد | ژورنال استودیو شادوود' };
   }
 
   const canonicalUrl = `https://shaadwood.com/blog/${post.slug}`;
   const authorName = post.author
     ? `${post.author.firstName} ${post.author.lastName}`.trim()
-    : 'Shaadwood Artisan Studio';
+    : 'استودیو درودگری شادوود';
 
   return {
-    title: `${post.title} | Shaadwood Studio Journal`,
-    description: post.excerpt || 'Handcrafted furniture guides and woodwork essays from Shaadwood Studio.',
+    title: `${post.title} | ژورنال استودیو شادوود`,
+    description: post.excerpt || 'جستارها و راهنمای ساخت و نگهداری سازه‌های چوب طبیعی از کارگاه شادوود.',
     alternates: {
       canonical: canonicalUrl,
     },
@@ -80,10 +79,10 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt || undefined,
       url: canonicalUrl,
-      siteName: 'Shaadwood Woodcraft Studio',
+      siteName: 'استودیو درودگری شادوود',
       publishedTime: post.publishedAt || post.createdAt,
       authors: [authorName],
-      section: post.category?.name || 'Woodcraft',
+      section: post.category?.name || 'هنر چوب',
       images: post.featuredImage ? [{ url: post.featuredImage, alt: post.title }] : [],
     },
     twitter: {
@@ -108,9 +107,8 @@ export default async function BlogPostPage({
   const relatedPosts = await getRelatedPosts(post.id, post.category?.slug);
   const authorName = post.author
     ? `${post.author.firstName} ${post.author.lastName}`.trim()
-    : 'Shaadwood Artisan Studio';
+    : 'استودیو درودگری شادوود';
 
-  // Structured Data (schema.org/BlogPosting)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -125,7 +123,7 @@ export default async function BlogPostPage({
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Shaadwood Woodcraft Studio',
+      name: 'استودیو درودگری شادوود',
       logo: {
         '@type': 'ImageObject',
         url: 'https://shaadwood.com/logo.png',
@@ -139,7 +137,6 @@ export default async function BlogPostPage({
 
   return (
     <div className="min-h-screen bg-zen-50 pb-20">
-      {/* Injected JSON-LD Schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

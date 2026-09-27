@@ -1,27 +1,27 @@
 /**
- * Estimate reading time in minutes from markdown or plain text content.
- * Standard adult reading speed is approximately 200 words per minute.
+ * محاسبه زمان تقریبی مطالعه برحسب دقیقه برای متن‌های فارسی و مقالات.
  */
 export function calculateReadingTime(content?: string | null): string {
-  if (!content) return '1 min read';
+  if (!content) return '۱ دقیقه مطالعه';
   const cleanText = content.replace(/<\/?[^>]+(>|$)/g, '').replace(/[#*`_~\[\]]/g, '');
   const words = cleanText.trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.ceil(words / 200));
-  return `${minutes} min read`;
+  const farsiMinutes = new Intl.NumberFormat('fa-IR').format(minutes);
+  return `${farsiMinutes} دقیقه مطالعه`;
 }
 
 /**
- * Format ISO date string into editorial long date (e.g., September 26, 2026).
+ * تبدیل تاریخ میلادی به تقویم شمسی هجری خورشیدی برای بخش مقالات و ژورنال استودیو.
  */
 export function formatBlogDate(dateStr?: string | null): string {
   if (!dateStr) return '';
   try {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', {
+    return new Intl.DateTimeFormat('fa-IR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-    });
+    }).format(d);
   } catch {
     return dateStr;
   }

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ShoppingBag, ArrowRight } from 'lucide-react';
+import { ShoppingBag, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function CartEmptyState() {
@@ -14,21 +14,21 @@ export function CartEmptyState() {
 
       <div className="space-y-2">
         <h2 className="font-serif font-bold text-2xl text-foreground">
-          Your Studio Cart is Empty
+          سبد خرید شما در حال حاضر خالی است
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
-          You haven&apos;t selected any handcrafted timber pieces for your sanctuary yet. Explore our curated collections to discover heirloom furniture made to last generations.
+          هنوز اثری از دست‌ساخته‌های چوب طبیعی شادوود را برای خانه‌تان انتخاب نکرده‌اید. کاتالوگ آثار ما را برای کشف مبلمان اصیل و ماندگار مرور کنید.
         </p>
       </div>
 
       <Button
         asChild
         size="lg"
-        className="rounded-full bg-shaad-800 hover:bg-shaad-900 text-white font-semibold text-xs tracking-wider uppercase px-8 py-6 shadow-sm gap-2"
+        className="rounded-full bg-shaad-800 hover:bg-shaad-900 text-white font-semibold text-xs tracking-wide px-8 py-6 shadow-sm gap-2"
       >
         <Link href="/shop">
-          <span>Explore Studio Catalog</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>مشاهده کاتالوگ آثار</span>
+          <ArrowLeft className="w-4 h-4" />
         </Link>
       </Button>
     </div>

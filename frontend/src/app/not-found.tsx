@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, Compass, ShoppingBag } from 'lucide-react';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
@@ -13,14 +13,14 @@ export default function NotFound() {
 
         {/* 404 Header */}
         <div className="space-y-2">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-shaad-700 font-semibold block">
-            Error 404 &middot; Not Found
+          <span className="text-xs font-sans tracking-widest text-shaad-700 font-semibold block">
+            خطای ۴۰۴ &middot; برگ یافت نشد
           </span>
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground tracking-tight">
-            Archived or Nonexistent
+            اثری در این نشانی یافت نشد
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            The atelier room, catalog piece, or resource you are attempting to reach does not exist or has been relocated.
+            صفحه، اثر هنری یا نشانی که به دنبال آن بودید در کارگاه وجود ندارد یا به بخش دیگری منتقل شده است.
           </p>
         </div>
 
@@ -31,8 +31,8 @@ export default function NotFound() {
             className="w-full sm:w-auto h-11 px-6 rounded-xl bg-shaad-800 hover:bg-shaad-900 text-white font-medium text-xs shadow-sm cursor-pointer"
           >
             <Link href="/" className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              <span>Return to Atelier Home</span>
+              <ArrowRight className="w-4 h-4" />
+              <span>بازگشت به خانه</span>
             </Link>
           </Button>
 
@@ -43,14 +43,14 @@ export default function NotFound() {
           >
             <Link href="/shop" className="flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-shaad-800" />
-              <span>Explore Collection</span>
+              <span>مشاهده کاتالوگ آثار</span>
             </Link>
           </Button>
         </div>
 
         {/* Footnote */}
-        <p className="text-[11px] text-muted-foreground/70 font-serif pt-6">
-          Shaadwood Woodcraft Studio &middot; Handcrafted Solid Wood Heirloom Furniture
+        <p className="text-[11px] text-muted-foreground/70 font-sans pt-6">
+          استودیو درودگری شادوود &middot; سازه‌های ماندگار و دست‌ساز چوب کهنسال
         </p>
       </div>
     </div>

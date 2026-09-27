@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Product } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -15,22 +15,22 @@ export function ProductRelated({ products }: ProductRelatedProps) {
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="pt-16 border-t border-border/70 space-y-8">
+    <section className="pt-16 border-t border-border/70 space-y-8 text-right">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-widest text-shaad-700 font-semibold mb-1">
-            Complementary Craft
+            دست‌ساخته‌های مکمل
           </p>
           <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
-            Complete the Living Sanctuary
+            تکمیل هارمونی و چیدمان فضا
           </h2>
         </div>
         <Link
           href="/shop"
           className="text-xs font-semibold text-shaad-800 hover:text-shaad-900 inline-flex items-center gap-1.5 underline underline-offset-4"
         >
-          <span>View Entire Catalog</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <span>مشاهده کاتالوگ کامل آثار</span>
+          <ArrowLeft className="w-3.5 h-3.5" />
         </Link>
       </div>
 
@@ -46,7 +46,7 @@ export function ProductRelated({ products }: ProductRelatedProps) {
           return (
             <div
               key={p.id}
-              className="group bg-white rounded-2xl border border-border/60 overflow-hidden hover:shadow-md transition-all flex flex-col justify-between"
+              className="group bg-white rounded-2xl border border-border/60 overflow-hidden hover:shadow-md transition-all flex flex-col justify-between text-right"
             >
               <Link href={`/shop/${p.slug}`} className="block relative aspect-[4/3] bg-zen-100 overflow-hidden">
                 <img
@@ -77,7 +77,7 @@ export function ProductRelated({ products }: ProductRelatedProps) {
                 </div>
 
                 <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                  <span className="font-mono font-bold text-sm text-foreground">
+                  <span className="font-sans font-bold text-sm text-foreground">
                     {formatCurrency(price)}
                   </span>
                   <Button
@@ -87,8 +87,8 @@ export function ProductRelated({ products }: ProductRelatedProps) {
                     className="h-8 text-xs font-semibold text-shaad-800 hover:text-shaad-900 gap-1 px-2.5 rounded-full"
                   >
                     <Link href={`/shop/${p.slug}`}>
-                      <span>View Piece</span>
-                      <ArrowRight className="w-3 h-3" />
+                      <span>مشاهده اثر</span>
+                      <ArrowLeft className="w-3 h-3" />
                     </Link>
                   </Button>
                 </div>

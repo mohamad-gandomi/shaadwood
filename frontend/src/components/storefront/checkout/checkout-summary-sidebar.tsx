@@ -2,20 +2,17 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { ShieldCheck, Lock, Award, ArrowRight, Loader2, Tag, X } from 'lucide-react';
+import { ShieldCheck, Lock, ArrowLeft, Loader2, Tag, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CartItem } from '@/context/cart-context';
 import { ValidatedCoupon } from '@/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface CheckoutSummarySidebarProps {
   items: CartItem[];
-  subtotal: number;
-  shippingAmount: number;
+  subtotal: number; shippingAmount: number; taxAmount: number; grandTotal: number; discountAmount: number;
   coupon: ValidatedCoupon | null;
-  discountAmount: number;
-  taxAmount: number;
-  grandTotal: number;
   isSubmitting: boolean;
   onSubmit: () => void;
   couponCodeInput: string;
@@ -32,7 +29,6 @@ export function CheckoutSummarySidebar({
   shippingAmount,
   coupon,
   discountAmount,
-  taxAmount,
   grandTotal,
   isSubmitting,
   onSubmit,
@@ -44,28 +40,28 @@ export function CheckoutSummarySidebar({
   couponError,
 }: CheckoutSummarySidebarProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-right">
       <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-6">
         <div className="flex items-center justify-between border-b border-border/60 pb-4">
-          <h3 className="font-serif font-bold text-lg text-foreground">Order Summary</h3>
-          <span className="text-xs font-mono text-muted-foreground">
-            {items.reduce((acc, i) => acc + i.quantity, 0)} Selected Items
+          <h3 className="font-serif font-bold text-lg text-foreground">خلاصه سفارش</h3>
+          <span className="text-xs font-sans text-muted-foreground">
+            {items.reduce((acc, i) => acc + i.quantity, 0)} اثر انتخاب شده
           </span>
         </div>
 
         {/* Item mini-list */}
-        <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+        <div className="space-y-3 max-h-72 overflow-y-auto pl-1">
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-3 py-2 border-b border-border/40 last:border-0">
               <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-zen-100 border border-border/60 shrink-0">
                 {item.image ? (
                   <Image src={item.image} alt={item.name} fill className="object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground font-mono">
-                    Shaadwood
+                  <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground font-sans">
+                    شادوود
                   </div>
                 )}
-                <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-shaad-900/80 text-[10px] font-mono font-bold text-white leading-none">
+                <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded-md bg-shaad-900/80 text-[10px] font-sans font-bold text-white leading-none">
                   ×{item.quantity}
                 </span>
               </div>
@@ -75,8 +71,8 @@ export function CheckoutSummarySidebar({
                 {item.finish && (
                   <p className="text-[11px] text-muted-foreground truncate">{item.finish}</p>
                 )}
-                <span className="text-xs font-mono font-medium text-foreground block mt-0.5">
-                  ${(item.price * item.quantity).toFixed(2)}
+                <span className="text-xs font-sans font-medium text-foreground block mt-0.5">
+                  {formatCurrency(item.price * item.quantity)}
                 </span>
               </div>
             </div>
@@ -90,116 +86,109 @@ export function CheckoutSummarySidebar({
               <div className="flex items-center gap-2">
                 <Tag className="w-4 h-4 text-emerald-700" />
                 <div>
-                  <span className="text-xs font-mono font-bold text-emerald-900">{coupon.code}</span>
-                  <span className="text-[10px] text-emerald-700 block">
-                    Saved ${discountAmount.toFixed(2)}
+                  <span className="text-xs font-sans font-bold text-emerald-900">{coupon.code}</span>
+                  <span className="text-[10px] text-emerald-700 block font-sans">
+                    {formatCurrency(discountAmount)} تخفیف اعمال شد
                   </span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onRemoveCoupon}
-                className="text-xs text-muted-foreground hover:text-destructive p-1"
-                title="Remove discount"
+                className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-0.5"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
+                <span>حذف</span>
               </button>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <div className="flex gap-2">
                 <Input
                   value={couponCodeInput}
-                  onChange={(e) => onCouponInputChange(e.target.value)}
-                  placeholder="Studio voucher code"
-                  className="h-10 text-xs font-mono uppercase bg-zen-50 border-border/70"
+                  onChange={(e) => onCouponInputChange(e.target.value.toUpperCase())}
+                  placeholder="کد تخفیف..."
+                  className="h-9 text-xs font-sans bg-zen-50 border-border/70 text-right"
                 />
                 <Button
                   type="button"
+                  size="sm"
                   onClick={onApplyCoupon}
-                  disabled={!couponCodeInput.trim() || isValidatingCoupon}
-                  variant="outline"
-                  className="h-10 text-xs font-medium px-4 shrink-0 border-shaad-800 text-shaad-900 hover:bg-shaad-50"
+                  disabled={isValidatingCoupon || !couponCodeInput.trim()}
+                  className="h-9 px-3 text-xs bg-shaad-800 hover:bg-shaad-900 text-white shrink-0 font-medium"
                 >
-                  {isValidatingCoupon ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Apply'}
+                  {isValidatingCoupon ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'اعمال'}
                 </Button>
               </div>
-              {couponError && <p className="text-[11px] text-destructive">{couponError}</p>}
+              {couponError && <p className="text-[10px] text-destructive">{couponError}</p>}
             </div>
           )}
         </div>
 
-        {/* Pricing calculations */}
-        <div className="space-y-2.5 pt-2 border-t border-border/60 text-xs">
-          <div className="flex justify-between text-muted-foreground">
-            <span>Subtotal</span>
-            <span className="font-mono font-medium text-foreground">${subtotal.toFixed(2)}</span>
+        {/* Subtotal & Delivery Breakdown */}
+        <div className="pt-3 border-t border-border/60 space-y-2 text-xs">
+          <div className="flex items-center justify-between text-muted-foreground">
+            <span>مجموع اقلام</span>
+            <span className="font-sans font-medium text-foreground">{formatCurrency(subtotal)}</span>
           </div>
 
           {discountAmount > 0 && (
-            <div className="flex justify-between text-emerald-700 font-medium">
-              <span>Studio Discount</span>
-              <span className="font-mono">-${discountAmount.toFixed(2)}</span>
+            <div className="flex items-center justify-between text-emerald-700 font-medium">
+              <span>تخفیف اختصاصی</span>
+              <span className="font-sans">-{formatCurrency(discountAmount)}</span>
             </div>
           )}
 
-          <div className="flex justify-between text-muted-foreground">
-            <span>Delivery & Handling</span>
-            <span className="font-mono font-medium text-foreground">
-              {shippingAmount === 0 ? 'Complimentary' : `$${shippingAmount.toFixed(2)}`}
+          <div className="flex items-center justify-between text-muted-foreground">
+            <span>هزینه ارسال و تحویل</span>
+            <span className="font-sans font-medium text-foreground">
+              {shippingAmount === 0 ? (
+                <span className="text-emerald-700 font-semibold text-[11px]">رایگان</span>
+              ) : (
+                formatCurrency(shippingAmount)
+              )}
             </span>
           </div>
 
-          <div className="flex justify-between text-muted-foreground">
-            <span>Estimated Sales Tax (8%)</span>
-            <span className="font-mono font-medium text-foreground">${taxAmount.toFixed(2)}</span>
-          </div>
-
-          <div className="flex justify-between items-baseline pt-3 border-t border-border/80">
-            <span className="font-serif font-bold text-base text-foreground">Total Investment</span>
-            <span className="font-mono font-bold text-xl text-shaad-950">${grandTotal.toFixed(2)}</span>
+          <div className="pt-3 border-t border-border/60 flex items-baseline justify-between text-base font-bold text-foreground">
+            <span className="font-serif">مبلغ کل قابل پرداخت</span>
+            <span className="font-sans text-xl sm:text-2xl text-shaad-900 font-bold">
+              {formatCurrency(grandTotal)}
+            </span>
           </div>
         </div>
 
-        {/* Submit Order CTA */}
+        {/* Final Place Order Button */}
         <Button
           type="button"
           onClick={onSubmit}
-          disabled={isSubmitting || items.length === 0}
-          className="w-full h-13 rounded-2xl bg-shaad-800 hover:bg-shaad-900 text-white font-medium text-sm shadow-md transition-all flex items-center justify-center gap-2 group cursor-pointer"
+          disabled={isSubmitting}
+          size="lg"
+          className="w-full rounded-full bg-shaad-800 hover:bg-shaad-900 text-white font-semibold text-xs tracking-wide py-6 gap-2 shadow-md disabled:opacity-50"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Placing Studio Order...</span>
+              <span>در حال ثبت نهایی سفارش...</span>
             </>
           ) : (
             <>
-              <span>Confirm & Place Studio Order</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <Lock className="w-4 h-4" />
+              <span>پرداخت و ثبت نهایی سفارش</span>
+              <ArrowLeft className="w-4 h-4" />
             </>
           )}
         </Button>
-
-        <p className="text-[11px] text-center text-muted-foreground leading-relaxed">
-          By placing your order, you agree to Shaadwood&apos;s Bespoke Craftsmanship terms and White-Glove delivery guidelines.
-        </p>
       </div>
 
-      {/* Trust & Guarantee Highlights */}
-      <div className="p-5 rounded-3xl bg-zen-50/70 border border-border/60 space-y-3">
-        <div className="flex items-center gap-3 text-xs text-foreground">
-          <Award className="w-4 h-4 text-shaad-800 shrink-0" />
-          <span>100% Solid Certified Hardwood (Walnut, Oak, Ash)</span>
-        </div>
-        <div className="flex items-center gap-3 text-xs text-foreground">
+      <div className="p-4 rounded-2xl bg-zen-50 border border-border/60 space-y-2 text-xs">
+        <div className="flex items-center gap-2 font-semibold text-foreground">
           <ShieldCheck className="w-4 h-4 text-shaad-800 shrink-0" />
-          <span>10-Year Craftsmanship Structural Warranty</span>
+          <span>تضمین اصالت و ضمانت ۲۵ ساله شادوود</span>
         </div>
-        <div className="flex items-center gap-3 text-xs text-foreground">
-          <Lock className="w-4 h-4 text-shaad-800 shrink-0" />
-          <span>256-Bit SSL Secured Banking Redirection</span>
-        </div>
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          تمام سفارش‌ها شامل بسته‌بندی ایمن چندلایه چوب، بیمه باربری و خدمات پس از فروش اختصاصی کارگاه می‌باشند.
+        </p>
       </div>
     </div>
   );

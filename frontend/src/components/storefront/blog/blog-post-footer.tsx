@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Compass } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { BlogShareButton } from './blog-share-button';
 import { BlogCard } from './blog-card';
@@ -12,7 +12,7 @@ interface BlogPostFooterProps {
 export function BlogPostFooter({ post, relatedPosts }: BlogPostFooterProps) {
   const authorName = post.author
     ? `${post.author.firstName} ${post.author.lastName}`.trim()
-    : 'Shaadwood Artisan Studio';
+    : 'استودیو درودگری شادوود';
 
   return (
     <footer className="space-y-12 pt-8 border-t border-border/70">
@@ -20,10 +20,10 @@ export function BlogPostFooter({ post, relatedPosts }: BlogPostFooterProps) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-shaad-800 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-muted-foreground hover:text-shaad-800 transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to All Stories</span>
+          <ArrowRight className="w-4 h-4" />
+          <span>بازگشت به همه مقالات</span>
         </Link>
 
         <BlogShareButton title={post.title} />
@@ -32,38 +32,37 @@ export function BlogPostFooter({ post, relatedPosts }: BlogPostFooterProps) {
       {/* Author Bio Box */}
       <div className="p-6 sm:p-8 rounded-3xl bg-zen-100/70 border border-border/80 flex flex-col sm:flex-row items-start sm:items-center gap-5">
         <div className="w-14 h-14 rounded-2xl bg-shaad-900 text-white flex items-center justify-center font-serif text-xl font-bold shrink-0 shadow-xs">
-          {post.author?.firstName ? post.author.firstName[0] : 'S'}
+          {post.author?.firstName ? post.author.firstName[0] : 'ش'}
         </div>
         <div className="space-y-1.5 flex-1">
           <div className="flex items-center gap-2">
             <h4 className="font-serif font-bold text-base text-foreground">{authorName}</h4>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-shaad-200/60 text-shaad-900">
-              Master Craftsman
+            <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-shaad-200/60 text-shaad-900">
+              استادکار و درودگر ارشد
             </span>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Crafting solid wood heirloom furniture at the Shaadwood workshop. Dedicated to sustainable hardwood
-            forestry, traditional joinery resilience, and Japanese-Scandinavian quiet aesthetics.
+            خلق سازه‌های ماندگار از دل چوب طبیعی و کهنسال در کارگاه شادوود. متعهد به پاسداری از طبیعت، اتصالات اصیل نجاری و زیبایی‌شناسی آرام و بی‌پیرایه سبک ژاپنی-اسکاندیناوی.
           </p>
         </div>
       </div>
 
-      {/* Related Articles Section for SEO Depth and Internal Linking */}
+      {/* Related Articles Section */}
       {relatedPosts.length > 0 && (
-        <section aria-label="Related Articles" className="space-y-6 pt-4">
+        <section aria-label="مقالات مرتبط" className="space-y-6 pt-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-shaad-800 font-semibold block">
-                Explore More
+              <span className="text-[10px] font-sans tracking-wider text-shaad-800 font-semibold block">
+                جستارهای مرتبط
               </span>
-              <h3 className="font-serif font-bold text-xl text-foreground">Continue Reading</h3>
+              <h3 className="font-serif font-bold text-xl text-foreground">خواندنی‌های بیشتر</h3>
             </div>
             <Link
               href="/blog"
               className="text-xs font-medium text-shaad-800 hover:text-shaad-900 flex items-center gap-1"
             >
-              <span>View All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>مشاهده همه</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
             </Link>
           </div>
 

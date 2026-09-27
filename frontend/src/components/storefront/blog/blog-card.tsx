@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Clock, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { calculateReadingTime, formatBlogDate } from '@/lib/reading-time';
 
@@ -25,8 +25,8 @@ export function BlogCard({ post }: BlogCardProps) {
             className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
           />
           {post.category && (
-            <div className="absolute top-3 left-3">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold bg-white/95 text-shaad-900 border border-white/80 shadow-2xs">
+            <div className="absolute top-3 right-3">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-sans tracking-wider font-semibold bg-white/95 text-shaad-900 border border-white/80 shadow-2xs">
                 {post.category.name}
               </span>
             </div>
@@ -35,13 +35,13 @@ export function BlogCard({ post }: BlogCardProps) {
 
         {/* Content */}
         <div className="p-5 sm:p-6 space-y-3">
-          <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground font-mono">
-            <span className="flex items-center gap-1">
+          <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground font-sans">
+            <span className="flex items-center gap-1.5">
               <Calendar className="w-3 h-3 text-shaad-700" />
               <time dateTime={post.publishedAt || post.createdAt}>{formattedDate}</time>
             </span>
             <span>&middot;</span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1.5">
               <Clock className="w-3 h-3 text-shaad-700" />
               <span>{readingTime}</span>
             </span>
@@ -67,8 +67,8 @@ export function BlogCard({ post }: BlogCardProps) {
           href={`/blog/${post.slug}`}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-shaad-800 group-hover:text-shaad-900 transition-colors"
         >
-          <span>Read Article</span>
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          <span>مطالعه مقاله</span>
+          <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
         </Link>
       </div>
     </article>

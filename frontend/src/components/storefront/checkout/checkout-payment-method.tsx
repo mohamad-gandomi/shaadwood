@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { CreditCard, Landmark, CheckCircle2, ShieldCheck, Wallet, Banknote } from 'lucide-react';
+import { CreditCard, Landmark, CheckCircle2, ShieldCheck, Banknote } from 'lucide-react';
 import { PaymentGatewayOption } from '@/types';
 
 interface CheckoutPaymentMethodProps {
@@ -19,9 +19,6 @@ export function CheckoutPaymentMethod({
     if (type === 'IRANIAN_SHAPARAK') {
       return <CreditCard className="w-4 h-4 text-amber-700" />;
     }
-    if (type === 'INTERNATIONAL_CARD') {
-      return <CreditCard className="w-4 h-4 text-blue-700" />;
-    }
     if (id === 'BANK_TRANSFER') {
       return <Landmark className="w-4 h-4 text-emerald-700" />;
     }
@@ -32,20 +29,14 @@ export function CheckoutPaymentMethod({
     switch (type) {
       case 'IRANIAN_SHAPARAK':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider bg-amber-50 text-amber-800 border border-amber-200">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
             شتاب / شاپرک
-          </span>
-        );
-      case 'INTERNATIONAL_CARD':
-        return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider bg-blue-50 text-blue-800 border border-blue-200">
-            Visa / Master / Stripe
           </span>
         );
       case 'OFFLINE':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider bg-stone-100 text-stone-700 border border-stone-200">
-            Offline / Wire
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-stone-100 text-stone-700 border border-stone-200">
+            حواله بانکی / کارت به کارت
           </span>
         );
       default:
@@ -54,19 +45,19 @@ export function CheckoutPaymentMethod({
   };
 
   return (
-    <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-4">
+    <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-4 text-right">
       <div className="flex items-center justify-between border-b border-border/60 pb-3">
         <div className="flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-shaad-800 text-white text-xs font-mono font-bold flex items-center justify-center">
-            4
+          <span className="w-6 h-6 rounded-full bg-shaad-800 text-white text-xs font-sans font-bold flex items-center justify-center">
+            ۴
           </span>
           <h3 className="font-serif font-bold text-base text-foreground">
-            Payment & Settlement Gateway
+            شیوه پرداخت و تسویه حساب
           </h3>
         </div>
-        <span className="text-[11px] text-muted-foreground font-mono flex items-center gap-1">
+        <span className="text-[11px] text-muted-foreground font-sans flex items-center gap-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-          Encrypted 256-Bit
+          اتصال امن به درگاه شاپرک
         </span>
       </div>
 
@@ -105,25 +96,9 @@ export function CheckoutPaymentMethod({
                   {getGatewayBadge(gw.type)}
                 </div>
 
-                <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {gw.description}
                 </p>
-
-                {gw.currencies && gw.currencies.length > 0 && (
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="text-[10px] text-muted-foreground font-mono">Accepted:</span>
-                    <div className="flex items-center gap-1">
-                      {gw.currencies.map((c) => (
-                        <span
-                          key={c}
-                          className="px-1.5 py-0.5 rounded text-[9px] font-mono font-medium bg-muted/60 text-muted-foreground"
-                        >
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           );

@@ -12,19 +12,18 @@ export function BlogMasthead({ categories, activeCategorySlug }: BlogMastheadPro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Editorial Subtitle & Main Title */}
         <div className="max-w-3xl space-y-3">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-shaad-800 font-semibold block">
-            Studio Journal & Essays
+          <span className="text-xs font-sans tracking-wider text-shaad-800 font-semibold block">
+            ژورنال و مقالات استودیو
           </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground tracking-tight leading-[1.15]">
-            Woodcraft, Material Philosophy &amp; Slow Living
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground tracking-tight leading-[1.25]">
+            هنر چوب، اصالت متریال و زیست آرام
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground font-light leading-relaxed">
-            Essays on heirloom timber joinery, organic plant-oil preservation, and Japanese-Scandinavian
-            interior balance from the craftsmen at Shaadwood Atelier.
+            روایت‌هایی پیرامون ساخت اتصالات دیرین چوب طبیعی، پوشش‌های گیاهی ارگانیک و توازن معماری آرام ژاپنی-اسکاندیناوی از درودگران کارگاه شادوود.
           </p>
         </div>
 
-        {/* Category Navigation Pills - Crawler Friendly Links */}
+        {/* Category Navigation Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none pt-2">
           <Link
             href="/blog"
@@ -34,7 +33,7 @@ export function BlogMasthead({ categories, activeCategorySlug }: BlogMastheadPro
                 : 'bg-white text-muted-foreground border-border/80 hover:border-shaad-700 hover:text-foreground'
             }`}
           >
-            All Stories
+            همه مقالات
           </Link>
           {categories.map((cat) => {
             const isActive = activeCategorySlug === cat.slug;

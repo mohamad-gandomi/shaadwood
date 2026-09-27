@@ -23,7 +23,6 @@ function OtpPageContent() {
   const [countdown, setCountdown] = React.useState(0);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Countdown timer effect
   React.useEffect(() => {
     if (countdown <= 0) return;
     const timer = setInterval(() => {
@@ -32,11 +31,10 @@ function OtpPageContent() {
     return () => clearInterval(timer);
   }, [countdown]);
 
-  // Request SMS OTP code
   const handleSendOtp = async (isResend = false) => {
     const cleanPhone = phone.trim();
     if (!cleanPhone || cleanPhone.length < 10) {
-      setError('Please enter a valid mobile number (e.g. 09123456789)');
+      setError('شماره تلفن همراه معتبر ۱۱ رقمی وارد نمایید (مثال: ۰۹۱۲۳۴۵۶۷۸۹)');
       return;
     }
 
@@ -55,12 +53,12 @@ function OtpPageContent() {
       setStep('VERIFY');
 
       if (isResend) {
-        toast.success('A new verification code has been dispatched via SMS');
+        toast.success('کد تأیید جدید از طریق پیامک ارسال شد');
       } else {
-        toast.success(`Verification code dispatched to ${res.phone}`);
+        toast.success(`کد تأیید ورود به شماره ${res.phone} ارسال شد`);
       }
     } catch (err: any) {
-      const msg = err.message || 'Unable to send verification SMS. Please try again.';
+      const msg = err.message || 'خطا در ارسال پیامک تأیید. لطفاً مجدداً تلاش فرمایید.';
       setError(msg);
       toast.error(msg);
     } finally {
@@ -69,11 +67,10 @@ function OtpPageContent() {
     }
   };
 
-  // Verify entered code
   const handleVerifyOtp = async () => {
     const fullCode = code.join('').trim();
     if (fullCode.length !== 5) {
-      setError('Please enter the complete 5-digit verification code');
+      setError('لطفاً کد ۵ رقمی را به‌طور کامل وارد فرمایید');
       return;
     }
 
@@ -84,19 +81,18 @@ function OtpPageContent() {
       const res = await api.verifyOtp(phone.trim(), fullCode);
       const name = res.user.firstName ? ` ${res.user.firstName}` : '';
       if (res.isNewUser) {
-        toast.success(`Welcome to Shaadwood Atelier,${name}!`);
+        toast.success(`به استودیو شادوود خوش آمدید${name}!`);
       } else {
-        toast.success(`Welcome back,${name}!`);
+        toast.success(`خوش آمدید${name}!`);
       }
 
-      // Smooth transition to target: Admin directly to dashboard, customer to redirect target
       if (res.user.role === 'ADMIN' && (!searchParams.get('redirect') || searchParams.get('redirect') === '/shop')) {
         router.push('/admin');
       } else {
         router.push(redirectUrl);
       }
     } catch (err: any) {
-      const msg = err.message || 'Invalid or expired verification code';
+      const msg = err.message || 'کد واردشده نامعتبر یا منقضی شده است';
       setError(msg);
       toast.error(msg);
     } finally {
@@ -150,9 +146,8 @@ function OtpPageContent() {
           </CardContent>
         </Card>
 
-        {/* Isolated Standalone Disclaimer */}
-        <p className="text-center text-[11px] text-muted-foreground/70">
-          Shaadwood Handcrafted Living &copy; {new Date().getFullYear()} &middot; Privacy Guaranteed
+        <p className="text-center text-[11px] text-muted-foreground/70 font-sans">
+          استودیو درودگری و مبلمان شادوود &copy; {new Date().getFullYear()} &middot; امنیت و حریم خصوصی تضمین‌شده
         </p>
       </div>
     </div>

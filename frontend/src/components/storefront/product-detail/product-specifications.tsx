@@ -9,71 +9,59 @@ interface ProductSpecificationsProps {
 }
 
 export function ProductSpecifications({ product }: ProductSpecificationsProps) {
-  // Combine default fields (dimensions & weight) with dynamic repeater specifications
   const specsList = React.useMemo(() => {
     const list: Array<{ label: string; value: string }> = [];
 
-    // 1. Always prioritize Dimensions from default product field
     if (product.dimensions) {
-      list.push({ label: 'Craft Dimensions', value: product.dimensions });
+      list.push({ label: 'ابعاد اثر', value: product.dimensions });
     }
 
-    // 2. Always prioritize Net Weight from default product field
     if (product.weight) {
-      list.push({ label: 'Net Weight', value: `${product.weight} kg` });
+      list.push({ label: 'وزن خالص', value: `${product.weight} کیلوگرم` });
     }
 
-    // 3. Custom specifications from repeater (skip duplicate dimensions/weight)
     if (product.specifications && Array.isArray(product.specifications) && product.specifications.length > 0) {
       for (const item of product.specifications) {
         if (!item || !item.label || !item.value) continue;
-        const isDim = /dimension/i.test(item.label);
-        const isWeight = /weight/i.test(item.label);
-
-        // If product has default dimensions, avoid duplicate dimensions row
+        const isDim = /dimension/i.test(item.label) || /ابعاد/i.test(item.label);
+        const isWeight = /weight/i.test(item.label) || /وزن/i.test(item.label);
         if (isDim && product.dimensions) continue;
-
-        // If product has default weight, avoid duplicate weight row
         if (isWeight && product.weight) continue;
-
         list.push(item);
       }
       return list;
     }
 
-    // 4. Fallback default specs if no custom repeater specs are configured
     list.push(
-      { label: 'Timber Specie', value: 'Certified Sustainably Harvested Hardwood (Oak / Walnut / Ash)' },
-      { label: 'Joinery Technique', value: 'Traditional Mortise & Tenon with Dowel Reinforcements' },
-      { label: 'Surface Treatment', value: 'Hand-Rubbed Organic Linseed & Beeswax Matte Oil' },
-      { label: 'Hardware', value: 'Solid Antiqued Cast Brass, Concealed Soft-Close Hinges' },
-      { label: 'Environmental Standard', value: 'Zero VOC, Non-Toxic Natural Sealants & Dyes' },
-      { label: 'Warranty & Care', value: '10-Year Master Craftsman Structural Warranty' }
+      { label: 'گونه چوب', value: 'چوب طبیعی ماسیو دارای شناسنامه پایداری (گردو / بلوط / راش)' },
+      { label: 'فنون و اتصالات', value: 'اتصالات کهن فاق و زبانه با تقویت پین‌های چوب سخت' },
+      { label: 'پوشش و پرداخت سطح', value: 'روغن‌های ارگانیک گیاهی و موم طبیعی با پرداخت دستی مات' },
+      { label: 'یراق‌آلات', value: 'برنج ریخته‌گری کهنه‌کاری‌شده، لولاهای آرام‌بند مخفی' },
+      { label: 'استاندارد زیست‌محیطی', value: 'فاقد مواد فرار شیمیایی (Zero VOC)، مواد کاملاً طبیعی و ایمن' },
+      { label: 'ضمانت و پشتیبانی', value: 'ضمانت ۲۵ ساله اصالت ساختار چوب آتلیه نجاری شادوود' }
     );
 
     return list;
   }, [product.specifications, product.dimensions, product.weight]);
 
   return (
-    <section className="pt-16 pb-6 border-t border-border/70">
+    <section className="pt-16 pb-6 border-t border-border/70 text-right">
       <div className="space-y-8">
-        {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-shaad-800 text-xs font-semibold uppercase tracking-widest mb-1.5">
               <TreePine className="w-3.5 h-3.5" />
-              <span>Artisanal Specifications</span>
+              <span>مشخصات فنی و نجاری اثر</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
-              Meticulous Craftsmanship & Materiality
+              دقت در ساختار، پیوند با طبیعت متریال
             </h2>
           </div>
-          <p className="text-xs text-muted-foreground font-light max-w-sm">
-            Each piece is individually registered with its timber provenance and master craftsman hallmark.
+          <p className="text-xs text-muted-foreground font-light max-w-sm leading-relaxed">
+            هر اثر به صورت اختصاصی با شناسنامه چوب و امضای استادکار آتلیه شادوود عرضه می‌شود.
           </p>
         </div>
 
-        {/* Dynamic Specifications Repeater Table / Grid */}
         <div className="bg-white rounded-3xl border border-border/70 overflow-hidden shadow-2xs">
           <div className="divide-y divide-border/60">
             {specsList.map((item, idx) => (
@@ -85,7 +73,7 @@ export function ProductSpecifications({ product }: ProductSpecificationsProps) {
                   <CheckCircle2 className="w-3.5 h-3.5 text-shaad-700 shrink-0" />
                   <span>{item.label}</span>
                 </div>
-                <div className="md:col-span-8 text-xs sm:text-sm font-medium text-foreground">
+                <div className="md:col-span-8 text-xs sm:text-sm font-medium text-foreground leading-relaxed">
                   {item.value}
                 </div>
               </div>
@@ -93,20 +81,13 @@ export function ProductSpecifications({ product }: ProductSpecificationsProps) {
           </div>
         </div>
 
-        {/* Editorial Woodworking Standards Box */}
-        <div className="bg-shaad-900 text-white rounded-3xl p-6 sm:p-8 space-y-4">
+        <div className="bg-shaad-900 text-white rounded-3xl p-6 sm:p-8 space-y-3">
           <div className="flex items-center gap-2 text-shaad-300 text-xs uppercase tracking-widest font-semibold">
             <Sparkles className="w-4 h-4 text-shaad-400" />
-            <span>The Shaadwood Architectural Standard</span>
+            <span>استانداردهای مهندسی چوب شادوود</span>
           </div>
-          <h3 className="font-serif text-xl sm:text-2xl font-bold leading-snug">
-            Living Wood Finished to Breathe with Your Space
-          </h3>
-          <p className="text-xs sm:text-sm text-zen-200/90 font-light leading-relaxed max-w-3xl">
-            We reject high-gloss synthetic plastic polyurethanes that smother natural grain. Our
-            master woodworkers treat every timber surface with non-toxic, micro-porous natural oils
-            formulated from flaxseed and carnauba wax. This allows the living grain to respond
-            harmoniously to atmospheric changes and cultivate an extraordinary, rich patina over generations.
+          <p className="text-xs sm:text-sm text-zen-200 font-light leading-relaxed max-w-3xl">
+            هیچ‌یک از سازه‌های شادوود از ام‌دی‌اف، نئوپان یا روکش‌های صنعتی لایه‌ای ساخته نمی‌شوند. تمامی اجزا با اتصالات مکانیکی چوب به چوب به یکدیگر متصل شده‌اند تا با تغییرات دما و رطوبت فصول سال هماهنگ بوده و برای دهه‌ها زیبایی و کیفیت اولیه خود را حفظ کنند.
           </p>
         </div>
       </div>
