@@ -37,21 +37,32 @@ export function StorefrontNavbar() {
     setCurrentUser(null);
   };
 
-  // Concise essential desktop links - exactly 3 to prevent any logo collision
-  const desktopNavLinks = [
-    { label: 'Catalog', href: '/shop' },
+  // Balanced desktop links covering products (left) and studio/editorial (right)
+  const desktopLeftLinks = [
+    { label: 'Shop', href: '/shop' },
     { label: 'Living', href: '/shop?categorySlug=living-room' },
-    { label: 'Journal', href: '/blog' },
+    { label: 'Dining', href: '/shop?categorySlug=dining-room' },
+    { label: 'Bedroom', href: '/shop?categorySlug=bedroom' },
   ];
 
-  // Mobile drawer links
+  const desktopRightLinks = [
+    { label: 'Journal', href: '/blog' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+  ];
+
+  // Mobile drawer links covering all storefront pages
   const mobileNavLinks = [
     { label: 'Full Studio Catalog', href: '/shop' },
-    { label: 'Living Collection', href: '/shop?categorySlug=living-room' },
-    { label: 'Dining Room', href: '/shop?categorySlug=dining-room' },
+    { label: 'Living Room Collection', href: '/shop?categorySlug=living-room' },
+    { label: 'Dining Tables & Benches', href: '/shop?categorySlug=dining-room' },
     { label: 'Bedroom Sanctuary', href: '/shop?categorySlug=bedroom' },
-    { label: 'Signature Pieces', href: '/#collections' },
-    { label: 'Studio Journal', href: '/blog' },
+    { label: 'Coffee Tables & Accents', href: '/shop?categorySlug=coffee-tables' },
+    { label: 'Studio Journal & Essays', href: '/blog' },
+    { label: 'About Our Atelier', href: '/about' },
+    { label: 'Workshop & Contact Info', href: '/contact' },
+    { label: 'My Orders & Profile', href: '/account' },
+    { label: 'Shopping Cart', href: '/cart' },
   ];
 
   return (
@@ -161,13 +172,13 @@ export function StorefrontNavbar() {
             </SheetContent>
           </Sheet>
 
-          {/* Desktop Nav Links - exactly 3 to ensure zero overlap */}
-          <nav className="hidden lg:flex items-center gap-7">
-            {desktopNavLinks.map((link) => (
+          {/* Desktop Nav Links Left: Shop, Living, Dining, Bedroom */}
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
+            {desktopLeftLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-xs tracking-[0.18em] uppercase font-medium text-foreground/75 hover:text-shaad-800 transition-colors relative py-1 group"
+                className="text-xs tracking-[0.16em] uppercase font-medium text-foreground/75 hover:text-shaad-800 transition-colors relative py-1 group shrink-0"
               >
                 <span>{link.label}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-shaad-800 transition-all duration-200 group-hover:w-full" />
@@ -188,14 +199,22 @@ export function StorefrontNavbar() {
           </Link>
         </div>
 
-        {/* Right Section: Story Link + Dynamic User Account + Cart Trigger */}
-        <div className="flex-1 flex items-center justify-end gap-1 md:gap-1 min-w-0">
-          <Link
-            href="#craft"
-            className="hidden xl:inline-block text-xs tracking-[0.18em] uppercase font-medium text-foreground/75 hover:text-shaad-800 transition-colors mr-2"
-          >
-            Craft & Story
-          </Link>
+        {/* Right Section: Journal, About, Contact + Dynamic User Account + Cart Trigger */}
+        <div className="flex-1 flex items-center justify-end gap-5 xl:gap-7 min-w-0">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
+            {desktopRightLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-xs tracking-[0.16em] uppercase font-medium text-foreground/75 hover:text-shaad-800 transition-colors relative py-1 group shrink-0"
+              >
+                <span>{link.label}</span>
+                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-shaad-800 transition-all duration-200 group-hover:w-full" />
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-1 md:gap-1.5 shrink-0">
 
           {/* User Account / Auth Button */}
           {currentUser ? (
@@ -272,6 +291,7 @@ export function StorefrontNavbar() {
           </button>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
   );
 }
