@@ -14,9 +14,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <AdminAuthGuard>
-      <div className="flex min-h-screen bg-background text-foreground">
+      <div className="flex min-h-screen bg-background text-foreground font-sans" dir="rtl">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
+        <div className="flex-1 flex flex-col min-w-0 lg:pr-64">
           <main className="flex-1 pb-12">{children}</main>
         </div>
       </div>

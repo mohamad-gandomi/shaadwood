@@ -5,18 +5,18 @@ import { NavContent } from './nav-content';
 
 export function Sidebar() {
   return (
-    <aside className="w-64 border-r border-border/70 bg-card/80 backdrop-blur-sm hidden lg:flex flex-col fixed inset-y-0 left-0 z-30">
+    <aside className="w-64 border-l border-border/70 bg-card/80 backdrop-blur-sm hidden lg:flex flex-col fixed inset-y-0 right-0 z-30 font-sans" dir="rtl">
       {/* Brand Header */}
       <div className="h-16 flex items-center px-6 border-b border-border/60 gap-3 shrink-0">
-        <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-xs">
+        <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-xs shrink-0">
           <Armchair className="w-5 h-5 text-wood-100" />
         </div>
         <div>
-          <span className="font-bold text-base tracking-tight block text-foreground">
-            Shaadwood
+          <span className="font-bold text-base tracking-tight block text-foreground font-serif">
+            شادوود
           </span>
-          <span className="text-[11px] text-muted-foreground uppercase font-medium tracking-wider block -mt-0.5">
-            Furniture Admin
+          <span className="text-[11px] text-muted-foreground font-medium tracking-wide block -mt-0.5">
+            پنل مدیریت کارگاه
           </span>
         </div>
       </div>
