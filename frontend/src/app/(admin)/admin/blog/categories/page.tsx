@@ -264,7 +264,7 @@ export default function BlogCategoriesPage() {
           <div className="space-y-1">
             <div className="flex items-center gap-2 mb-1">
               <Link
-                href="/blog"
+                href="/admin/blog"
                 className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 font-medium transition-colors group"
               >
                 <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
@@ -478,7 +478,7 @@ export default function BlogCategoriesPage() {
                       {/* Right: Badges & Action Buttons */}
                       <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 pt-1 sm:pt-0">
                         <Link
-                          href={`/blog?categoryId=${root.id}`}
+                          href={`/admin/blog?categoryId=${root.id}`}
                           className="hover:opacity-80 transition-opacity"
                           title="View articles in this topic"
                         >
@@ -593,7 +593,7 @@ export default function BlogCategoriesPage() {
 
                               <div className="flex items-center gap-2 self-end xs:self-center shrink-0">
                                 <Link
-                                  href={`/blog?categoryId=${sub.id}`}
+                                  href={`/admin/blog?categoryId=${sub.id}`}
                                   className="hover:opacity-80 transition-opacity"
                                   title="View articles in this topic"
                                 >

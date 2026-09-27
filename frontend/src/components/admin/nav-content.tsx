@@ -88,12 +88,12 @@ export const mediaNavItems: NavItem[] = [
 export const blogNavItems: NavItem[] = [
   {
     title: 'Blog Articles',
-    href: '/blog',
+    href: '/admin/blog',
     icon: BookOpen,
   },
   {
     title: 'Blog Categories',
-    href: '/blog/categories',
+    href: '/admin/blog/categories',
     icon: BookmarkCheck,
   },
 ];
@@ -158,9 +158,9 @@ export function NavContent({ onItemClick }: NavContentProps) {
             pathname === item.href.split('?')[0] &&
             typeof window !== 'undefined' &&
             window.location.search.includes('action=upload');
-        } else if (item.href === '/blog') {
-          // Highlight Blog Articles on /blog, /blog/new, /blog/[id], but NOT on /blog/categories
-          isActive = pathname === '/blog' || (pathname.startsWith('/blog/') && !pathname.startsWith('/blog/categories'));
+        } else if (item.href === '/admin/blog') {
+          // Highlight Blog Articles on /admin/blog, /admin/blog/new, /admin/blog/[id], but NOT on /admin/blog/categories
+          isActive = pathname === '/admin/blog' || (pathname.startsWith('/admin/blog/') && !pathname.startsWith('/admin/blog/categories'));
         } else {
           isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
         }

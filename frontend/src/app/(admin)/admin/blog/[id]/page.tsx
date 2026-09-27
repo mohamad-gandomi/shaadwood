@@ -127,7 +127,7 @@ export default function BlogDetailPage() {
     onSuccess: () => {
       toast.success('Article deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
-      router.push('/blog');
+      router.push('/admin/blog');
     },
     onError: (err: Error) => {
       toast.error(err.message || 'Failed to delete article');
@@ -189,7 +189,7 @@ export default function BlogDetailPage() {
         <Header title="Blog & Editorial Content" />
         <div className="px-4 sm:px-8 max-w-7xl mx-auto py-16 text-center space-y-4">
           <p className="text-destructive font-semibold">Article not found or could not be loaded.</p>
-          <Button onClick={() => router.push('/blog')} variant="outline">
+          <Button onClick={() => router.push('/admin/blog')} variant="outline">
             Return to Blog List
           </Button>
         </div>
@@ -207,7 +207,7 @@ export default function BlogDetailPage() {
           {/* Top row: Back link + Action Buttons */}
           <div className="flex items-center justify-between gap-2">
             <Link
-              href="/blog"
+              href="/admin/blog"
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
@@ -525,7 +525,7 @@ export default function BlogDetailPage() {
                     <div className="pt-1 text-[11px] text-muted-foreground flex items-center justify-between">
                       <span>Need new topics?</span>
                       <Link
-                        href="/blog/categories"
+                        href="/admin/blog/categories"
                         className="text-primary hover:underline font-medium inline-flex items-center gap-1"
                       >
                         <span>Manage Categories</span>

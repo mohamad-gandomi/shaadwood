@@ -76,9 +76,9 @@ export default function NewBlogPage() {
       toast.success(status === 'PUBLISHED' ? 'Article published successfully' : 'Draft saved successfully');
       queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
       if (newPost?.id) {
-        router.push(`/blog/${newPost.id}`);
+        router.push(`/admin/blog/${newPost.id}`);
       } else {
-        router.push('/blog');
+        router.push('/admin/blog');
       }
     },
     onError: (err: Error) => {
@@ -134,7 +134,7 @@ export default function NewBlogPage() {
           {/* Top row: Back link + Action Buttons */}
           <div className="flex items-center justify-between gap-2">
             <Link
-              href="/blog"
+              href="/admin/blog"
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
@@ -146,7 +146,7 @@ export default function NewBlogPage() {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/blog')}
+                onClick={() => router.push('/admin/blog')}
                 className="text-xs h-8 sm:h-9 font-medium"
               >
                 Cancel
@@ -455,7 +455,7 @@ export default function NewBlogPage() {
                     <div className="pt-1 text-[11px] text-muted-foreground flex items-center justify-between">
                       <span>Need new topics?</span>
                       <Link
-                        href="/blog/categories"
+                        href="/admin/blog/categories"
                         className="text-primary hover:underline font-medium inline-flex items-center gap-1"
                       >
                         <span>Manage Categories</span>

@@ -237,7 +237,7 @@ export default function BlogPage() {
 
           {/* Primary Action Button */}
           <Button
-            onClick={() => router.push('/blog/new')}
+            onClick={() => router.push('/admin/blog/new')}
             className="gap-2 shrink-0 h-9 font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4" />
@@ -266,7 +266,7 @@ export default function BlogPage() {
               return (
                 <div
                   key={post.id}
-                  onClick={() => router.push(`/blog/${post.id}`)}
+                  onClick={() => router.push(`/admin/blog/${post.id}`)}
                   className="p-4 rounded-xl border border-border bg-card shadow-xs hover:border-primary/50 transition-all cursor-pointer space-y-3"
                 >
                   {/* Card Header: Featured Image/Icon + Title + Category */}
@@ -326,7 +326,7 @@ export default function BlogPage() {
                         className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                         onClick={(e) => {
                           e.stopPropagation();
-                          router.push(`/blog/${post.id}`);
+                          router.push(`/admin/blog/${post.id}`);
                         }}
                         title="Edit article"
                       >
@@ -384,7 +384,7 @@ export default function BlogPage() {
                   filteredPosts.map((post) => (
                     <TableRow
                       key={post.id}
-                      onClick={() => router.push(`/blog/${post.id}`)}
+                      onClick={() => router.push(`/admin/blog/${post.id}`)}
                       className="cursor-pointer hover:bg-muted/50 transition-colors group"
                     >
                       {/* Article Info: Thumbnail + Title + Excerpt + Slug */}
@@ -463,7 +463,7 @@ export default function BlogPage() {
                             className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.push(`/blog/${post.id}`);
+                              router.push(`/admin/blog/${post.id}`);
                             }}
                             title="Edit article"
                           >

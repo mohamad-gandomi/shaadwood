@@ -174,6 +174,7 @@ export interface BlogPost {
   category?: BlogCategory | null;
   publishedAt?: string | null;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface MediaItem {

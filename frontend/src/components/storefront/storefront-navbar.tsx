@@ -41,7 +41,7 @@ export function StorefrontNavbar() {
   const desktopNavLinks = [
     { label: 'Catalog', href: '/shop' },
     { label: 'Living', href: '/shop?categorySlug=living-room' },
-    { label: 'Dining', href: '/shop?categorySlug=dining-room' },
+    { label: 'Journal', href: '/blog' },
   ];
 
   // Mobile drawer links
@@ -51,7 +51,7 @@ export function StorefrontNavbar() {
     { label: 'Dining Room', href: '/shop?categorySlug=dining-room' },
     { label: 'Bedroom Sanctuary', href: '/shop?categorySlug=bedroom' },
     { label: 'Signature Pieces', href: '/#collections' },
-    { label: 'Studio Journal', href: '/#articles' },
+    { label: 'Studio Journal', href: '/blog' },
   ];
 
   return (
