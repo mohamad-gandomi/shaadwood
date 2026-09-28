@@ -69,11 +69,17 @@ export function OrderSuccessItems({
         <div className="flex items-center justify-between text-muted-foreground">
           <span>هزینه ارسال اختصاصی</span>
           <span className="font-sans">
-            {shippingAmount === 0 ? 'رایگان' : formatCurrency(shippingAmount)}
+            {shippingAmount === 0 ? (
+              <span className="text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded font-semibold text-[10px]">
+                هماهنگی تلفنی (پس‌کرایه)
+              </span>
+            ) : (
+              formatCurrency(shippingAmount)
+            )}
           </span>
         </div>
         <div className="pt-2 border-t border-border/50 flex items-center justify-between font-bold text-sm text-foreground">
-          <span>مبلغ کل پرداخت‌شده</span>
+          <span>مبلغ کل سفارش</span>
           <span className="font-sans text-base text-shaad-900">{formatCurrency(total)}</span>
         </div>
       </div>

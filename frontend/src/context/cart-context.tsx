@@ -95,20 +95,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       setDiscountAmount(disc);
       try {
-        localStorage.setItem(
-          COUPON_STORAGE_KEY,
-          JSON.stringify({ coupon: appliedCoupon, discountAmount: disc }),
-        );
-      } catch {
-        // Ignore storage error
-      }
+        localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify({ coupon: appliedCoupon, discountAmount: disc }));
+      } catch {}
     } else if (!appliedCoupon || totalPrice === 0) {
       setDiscountAmount(0);
-      try {
-        localStorage.removeItem(COUPON_STORAGE_KEY);
-      } catch {
-        // Ignore storage error
-      }
+      try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch {}
     }
   }, [totalPrice, appliedCoupon]);
 
@@ -125,8 +116,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return [...prev, { ...item, quantity: qty }];
       });
 
-      toast.success(`${item.name} added to your collection`, {
-        description: item.finish ? `Finish: ${item.finish}` : 'Handcrafted solid wood furniture',
+      toast.success(`«${item.name}» به سبد خرید شما اضافه شد`, {
+        description: item.finish ? `پوشش چوب: ${item.finish}` : 'دست‌ساز اصیل چوب طبیعی کارگاه شادوود',
       });
       setIsDrawerOpen(true);
     },
@@ -134,8 +125,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const removeItem = React.useCallback((id: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
-    toast.info('Item removed from cart');
+    setItems((prev) => {
+      const target = prev.find((i) => i.id === id);
+      if (target) toast.info(`«${target.name}» از سبد خرید حذف شد`);
+      return prev.filter((i) => i.id !== id);
+    });
   }, []);
 
   const updateQuantity = React.useCallback((id: string, delta: number) => {
@@ -156,53 +150,31 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setAppliedCoupon(coupon);
     setDiscountAmount(discount);
     try {
-      localStorage.setItem(
-        COUPON_STORAGE_KEY,
-        JSON.stringify({ coupon, discountAmount: discount }),
-      );
-    } catch {
-      // Ignore storage error
-    }
+      localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify({ coupon, discountAmount: discount }));
+    } catch {}
   }, []);
 
   const removeCoupon = React.useCallback(() => {
     setAppliedCoupon(null);
     setDiscountAmount(0);
-    try {
-      localStorage.removeItem(COUPON_STORAGE_KEY);
-    } catch {
-      // Ignore storage error
-    }
+    try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch {}
   }, []);
 
   const clearCart = React.useCallback(() => {
-    setItems([]);
-    setAppliedCoupon(null);
-    setDiscountAmount(0);
+    setItems([]); setAppliedCoupon(null); setDiscountAmount(0);
     try {
       localStorage.removeItem(CART_STORAGE_KEY);
       localStorage.removeItem(COUPON_STORAGE_KEY);
-    } catch {
-      // Ignore storage error
-    }
+      toast.info('سبد خرید شما تخلیه شد');
+    } catch {}
   }, []);
 
   return (
     <CartContext.Provider
       value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        totalCount,
-        totalPrice,
-        isDrawerOpen,
-        setIsDrawerOpen,
-        appliedCoupon,
-        discountAmount,
-        applyCoupon,
-        removeCoupon,
+        items, addItem, removeItem, updateQuantity, clearCart,
+        totalCount, totalPrice, isDrawerOpen, setIsDrawerOpen,
+        appliedCoupon, discountAmount, applyCoupon, removeCoupon,
       }}
     >
       {children}

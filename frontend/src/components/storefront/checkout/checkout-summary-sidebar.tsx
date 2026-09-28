@@ -143,7 +143,9 @@ export function CheckoutSummarySidebar({
             <span>هزینه ارسال و تحویل</span>
             <span className="font-sans font-medium text-foreground">
               {shippingAmount === 0 ? (
-                <span className="text-emerald-700 font-semibold text-[11px]">رایگان</span>
+                <span className="text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded font-semibold text-[10px]">
+                  هماهنگی تلفنی (پس‌کرایه)
+                </span>
               ) : (
                 formatCurrency(shippingAmount)
               )}

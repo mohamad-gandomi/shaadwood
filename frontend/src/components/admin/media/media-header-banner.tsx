@@ -29,11 +29,11 @@ export function MediaHeaderBanner({
   return (
     <div className="p-4 sm:p-5 rounded-xl border border-border bg-card shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-sans" dir="rtl">
       <div className="space-y-1 text-right">
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+        <div className="flex-col md:flex items-center gap-2">
+          <h1 className="text-xl pb-2 sm:text-2xl font-bold text-foreground tracking-tight">
             کتابخانه پرونده‌های چندرسانه‌ای
           </h1>
-          <Badge variant="wood" className="text-xs font-sans">
+          <Badge variant="wood" className=" mb-2 text-xs font-sans">
             ذخیره‌سازی پایگاه‌داده
           </Badge>
         </div>

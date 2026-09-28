@@ -16,7 +16,10 @@ export function CheckoutPaymentMethod({
   onSelect,
 }: CheckoutPaymentMethodProps) {
   const getGatewayIcon = (type: string, id: string) => {
-    if (type === 'IRANIAN_SHAPARAK') {
+    if (id === 'MELLAT') {
+      return <CreditCard className="w-4 h-4 text-rose-700" />;
+    }
+    if (id === 'ZARINPAL') {
       return <CreditCard className="w-4 h-4 text-amber-700" />;
     }
     if (id === 'BANK_TRANSFER') {
@@ -25,23 +28,29 @@ export function CheckoutPaymentMethod({
     return <Banknote className="w-4 h-4 text-shaad-800" />;
   };
 
-  const getGatewayBadge = (type: string) => {
-    switch (type) {
-      case 'IRANIAN_SHAPARAK':
-        return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
-            شتاب / شاپرک
-          </span>
-        );
-      case 'OFFLINE':
-        return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-stone-100 text-stone-700 border border-stone-200">
-            حواله بانکی / کارت به کارت
-          </span>
-        );
-      default:
-        return null;
+  const getGatewayBadge = (id: string, type: string) => {
+    if (id === 'MELLAT') {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-800 border border-rose-200">
+          درگاه مستقیم ملت
+        </span>
+      );
     }
+    if (id === 'ZARINPAL') {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+          زرین‌پال شاپرک
+        </span>
+      );
+    }
+    if (id === 'BANK_TRANSFER') {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          واریز به حساب / شبا
+        </span>
+      );
+    }
+    return null;
   };
 
   return (
@@ -93,12 +102,21 @@ export function CheckoutPaymentMethod({
                     </span>
                     <span className="font-medium text-sm text-foreground">{gw.name}</span>
                   </div>
-                  {getGatewayBadge(gw.type)}
+                  {getGatewayBadge(gw.id, gw.type)}
                 </div>
 
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {gw.description}
                 </p>
+
+                {isSelected && gw.id === 'BANK_TRANSFER' && (
+                  <div className="mt-3 p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 text-[11px] text-amber-900 leading-relaxed font-sans">
+                    <p className="font-semibold text-amber-950 mb-0.5">راهنمای تسویه از طریق حواله مستقیم بانکی:</p>
+                    <p>
+                      پس از ثبت سفارش، اطلاعات شماره شبا و شماره کارت کارگاه شادوود برای شما نمایش داده شده و پیامک خواهد شد.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           );

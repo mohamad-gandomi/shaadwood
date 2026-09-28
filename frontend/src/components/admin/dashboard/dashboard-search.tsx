@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { getOrderStatusBadge } from '@/components/admin/orders/orders-status-badge';
 import { formatCurrency, cn } from '@/lib/utils';
 import { Order, Product, Coupon } from '@/types';
 
@@ -136,7 +137,7 @@ export function DashboardSearch(props: DashboardSearchProps) {
                           </div>
                           <div className="flex items-center gap-3 shrink-0">
                             <span className="font-bold text-foreground font-sans">{formatCurrency(ord.totalAmount)}</span>
-                            <Badge variant="outline" className="text-[10px]">{ord.status}</Badge>
+                            {getOrderStatusBadge(ord.status as any)}
                             <ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" />
                           </div>
                         </Link>

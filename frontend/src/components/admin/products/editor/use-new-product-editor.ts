@@ -67,7 +67,12 @@ export function useNewProductEditor() {
       featured: formData.featured,
       status: formData.status,
       categoryId: formData.categoryId || null,
-      images: formData.images.length > 0 ? formData.images : undefined,
+      images: formData.images.length > 0 ? formData.images.map((img, i) => ({
+        url: img.url,
+        altText: img.altText || null,
+        isPrimary: Boolean(img.isPrimary),
+        displayOrder: img.displayOrder !== undefined ? img.displayOrder : i,
+      })) : undefined,
     });
   };
 

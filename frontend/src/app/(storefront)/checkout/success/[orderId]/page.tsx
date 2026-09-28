@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import {
-  CheckCircle2, Printer, ChevronLeft, ShieldCheck, MapPin, PackageCheck, ArrowRight,
+  CheckCircle2, Printer, ChevronLeft, ShieldCheck, MapPin, PackageCheck, ArrowRight, Landmark,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Order } from '@/types';
@@ -120,6 +120,32 @@ export default function OrderSuccessPage() {
           shippingAmount={Number(order.shippingAmount || 0)}
           total={Number(order.totalAmount || 0)}
         />
+
+        {order.paymentMethod === 'BANK_TRANSFER' && (
+          <div className="p-6 rounded-3xl bg-amber-50/70 border border-amber-200/90 shadow-2xs space-y-3 font-sans">
+            <div className="flex items-center gap-2 font-serif font-bold text-base text-amber-950 border-b border-amber-200/80 pb-3">
+              <Landmark className="w-4 h-4 text-amber-800" />
+              <span>اطلاعات حساب جهت حواله بانکی / کارت به کارت</span>
+            </div>
+            <div className="text-xs space-y-2 leading-relaxed text-amber-900">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span>شماره شبا (بانک ملت):</span>
+                <span className="font-sans font-bold dir-ltr select-all">IR82 0120 0000 0000 1234 5678 90</span>
+              </div>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span>شماره کارت:</span>
+                <span className="font-sans font-bold dir-ltr select-all">۶۱۰۴-۳۳۷۸-۹۰۱۲-۳۴۵۶</span>
+              </div>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span>به نام:</span>
+                <span className="font-bold">آتلیه تخصصی دکوراسیون چوب شادوود</span>
+              </div>
+              <p className="text-[11px] text-amber-800/90 pt-1 border-t border-amber-200/60">
+                لطفاً پس از واریز، شماره پیگیری یا تصویر رسید را به همراه شماره سفارش ({order.orderNumber}) جهت تأیید و آغاز فرایند ساخت به پشتیبانی کارگاه اعلام فرمایید.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Shipping Address Information */}
         <div className="p-6 rounded-3xl bg-white border border-border/70 shadow-2xs space-y-3">

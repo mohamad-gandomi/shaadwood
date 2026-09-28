@@ -66,7 +66,13 @@ export function CheckoutShippingMethod({
                   </div>
                   <span className="font-sans font-bold text-sm text-foreground">
                     {method.price === 0 ? (
-                      <span className="text-emerald-700">رایگان</span>
+                      /تلفن|پس‌کرایه|استعلام|هماهنگی/i.test(method.name + ' ' + (method.description || '')) ? (
+                        <span className="text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded text-xs font-sans">
+                          استعلام تلفنی (پس‌کرایه)
+                        </span>
+                      ) : (
+                        <span className="text-emerald-700">رایگان</span>
+                      )
                     ) : (
                       formatCurrency(method.price)
                     )}
@@ -83,7 +89,7 @@ export function CheckoutShippingMethod({
                     {method.estimatedDays}
                   </span>
                   <span className="flex items-center gap-1">
-                    {method.id === 'local-workshop-pickup' ? (
+                    {method.type === 'LOCAL_PICKUP' || method.id === 'local-workshop-pickup' ? (
                       <Store className="w-3.5 h-3.5 text-shaad-700" />
                     ) : (
                       <Truck className="w-3.5 h-3.5 text-shaad-700" />

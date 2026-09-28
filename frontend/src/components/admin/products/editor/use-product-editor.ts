@@ -33,32 +33,37 @@ export function useProductEditor(productId: string, product?: Product) {
     specifications: [] as SpecificationItem[],
   });
 
-  const generateSlug = (t: string) => t.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+  const generateSlug = (t: string) =>
+    t.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
 
   React.useEffect(() => {
-    if (product) {
-      setFormData({
-        name: product.name || '',
-        slug: product.slug || '',
-        sku: product.sku || '',
-        productType: product.productType || 'SIMPLE',
-        basePrice: product.basePrice ? String(product.basePrice) : '',
-        salePrice: product.salePrice ? String(product.salePrice) : '',
-        stockQuantity: product.stockQuantity || 0,
-        manageStock: product.manageStock ?? true,
-        description: product.description || '',
-        shortDescription: product.shortDescription || '',
-        dimensions: product.dimensions || '',
-        weight: product.weight ? String(product.weight) : '',
-        featured: product.featured || false,
-        status: product.status || 'PUBLISHED',
-        categoryId: product.categoryId || '',
-        images: product.images || [],
-        specifications: (product.specifications as SpecificationItem[]) || [],
-      });
-      if (product.attributes) {
-        setSelectedAttrIds(product.attributes.map((a: any) => a.attributeId || a.id));
-      }
+    if (!product) return;
+    setFormData({
+      name: product.name || '',
+      slug: product.slug || '',
+      sku: product.sku || '',
+      productType: product.productType || 'SIMPLE',
+      basePrice: product.basePrice ? String(product.basePrice) : '',
+      salePrice: product.salePrice ? String(product.salePrice) : '',
+      stockQuantity: product.stockQuantity || 0,
+      manageStock: product.manageStock ?? true,
+      description: product.description || '',
+      shortDescription: product.shortDescription || '',
+      dimensions: product.dimensions || '',
+      weight: product.weight ? String(product.weight) : '',
+      featured: product.featured || false,
+      status: product.status || 'PUBLISHED',
+      categoryId: product.categoryId || '',
+      images: (product.images || []).map((img, i) => ({
+        url: img.url,
+        altText: img.altText || '',
+        isPrimary: Boolean(img.isPrimary),
+        displayOrder: img.displayOrder !== undefined ? img.displayOrder : i,
+      })),
+      specifications: (product.specifications as SpecificationItem[]) || [],
+    });
+    if (product.attributes) {
+      setSelectedAttrIds(product.attributes.map((a: any) => a.attributeId || a.id));
     }
   }, [product]);
 
@@ -84,37 +89,25 @@ export function useProductEditor(productId: string, product?: Product) {
 
   const saveAttrMutation = useMutation({
     mutationFn: (ids: string[]) => api.updateProduct(productId, { attributes: ids.map((id) => ({ attributeId: id, isVariation: true })) }),
-    onSuccess: () => {
-      toast.success('ویژگی‌های متغیر اثر به‌روزرسانی شدند');
-      queryClient.invalidateQueries({ queryKey: ['product', productId] });
-    },
+    onSuccess: () => { toast.success('ویژگی‌های متغیر اثر به‌روزرسانی شدند'); queryClient.invalidateQueries({ queryKey: ['product', productId] }); },
     onError: (err: Error) => toast.error(err.message || 'خطا در ذخیره ویژگی‌ها'),
   });
 
   const addVarMutation = useMutation({
     mutationFn: (data: any) => api.addVariant(productId, data),
-    onSuccess: () => {
-      toast.success('تنوع جدید ایجاد شد');
-      queryClient.invalidateQueries({ queryKey: ['product', productId] });
-    },
+    onSuccess: () => { toast.success('تنوع جدید ایجاد شد'); queryClient.invalidateQueries({ queryKey: ['product', productId] }); },
     onError: (err: Error) => toast.error(err.message || 'خطا در ایجاد تنوع'),
   });
 
   const updateVarMutation = useMutation({
     mutationFn: ({ variantId, data }: { variantId: string; data: any }) => api.updateVariant(variantId, data),
-    onSuccess: () => {
-      toast.success('تنوع به‌روزرسانی شد');
-      queryClient.invalidateQueries({ queryKey: ['product', productId] });
-    },
+    onSuccess: () => { toast.success('تنوع به‌روزرسانی شد'); queryClient.invalidateQueries({ queryKey: ['product', productId] }); },
     onError: (err: Error) => toast.error(err.message || 'خطا در ویرایش تنوع'),
   });
 
   const deleteVarMutation = useMutation({
     mutationFn: (variantId: string) => api.deleteVariant(variantId),
-    onSuccess: () => {
-      toast.success('تنوع حذف شد');
-      queryClient.invalidateQueries({ queryKey: ['product', productId] });
-    },
+    onSuccess: () => { toast.success('تنوع حذف شد'); queryClient.invalidateQueries({ queryKey: ['product', productId] }); },
     onError: (err: Error) => toast.error(err.message || 'خطا در حذف تنوع'),
   });
 
@@ -135,8 +128,13 @@ export function useProductEditor(productId: string, product?: Product) {
       featured: formData.featured,
       status: formData.status,
       categoryId: formData.categoryId || null,
-      images: formData.images,
-      specifications: formData.specifications,
+      images: formData.images.map((img, i) => ({
+        url: img.url,
+        altText: img.altText || null,
+        isPrimary: Boolean(img.isPrimary),
+        displayOrder: img.displayOrder !== undefined ? img.displayOrder : i,
+      })),
+      specifications: (formData.specifications || []).map((s) => ({ label: s.label, value: s.value })),
     });
   };
 
@@ -183,26 +181,12 @@ export function useProductEditor(productId: string, product?: Product) {
   };
 
   const onToggleAttribute = (id: string) => {
-    setSelectedAttrIds((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+    setSelectedAttrIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   return {
-    formData,
-    setFormData,
-    selectedAttrIds,
-    setSelectedAttrIds,
-    generateSlug,
-    handleSave,
-    handleSelectMedia,
-    onAddImageByUrl,
-    onSetPrimaryImage,
-    onRemoveImage,
-    onToggleAttribute,
-    updateMutation,
-    deleteMutation,
-    saveAttrMutation,
-    addVarMutation,
-    updateVarMutation,
-    deleteVarMutation,
+    formData, setFormData, selectedAttrIds, setSelectedAttrIds, generateSlug, handleSave,
+    handleSelectMedia, onAddImageByUrl, onSetPrimaryImage, onRemoveImage, onToggleAttribute,
+    updateMutation, deleteMutation, saveAttrMutation, addVarMutation, updateVarMutation, deleteVarMutation,
   };
 }

@@ -6,7 +6,7 @@ import { Eye, Trash2, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Order } from '@/types';
-import { getOrderStatusBadge } from './orders-status-badge';
+import { getOrderStatusBadge, formatPaymentMethod } from './orders-status-badge';
 
 interface OrdersMobileListProps {
   orders: Order[];
@@ -87,7 +87,7 @@ export function OrdersMobileList({ orders, isLoading, onDeleteClick }: OrdersMob
                   {formatCurrency(order.totalAmount)}
                 </div>
                 <div className="text-[10px] text-muted-foreground font-sans">
-                  {order.paymentStatus === 'PAID' ? 'پرداخت شده' : 'در انتظار پرداخت'}
+                  {formatPaymentMethod(order.paymentMethod)} &middot; {order.paymentStatus === 'PAID' ? 'پرداخت شده' : 'در انتظار پرداخت'}
                 </div>
               </div>
             </div>

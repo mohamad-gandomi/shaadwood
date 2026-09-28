@@ -15,6 +15,24 @@ import { ProductStatus, ProductType } from '@prisma/client';
 import { CreateVariantDto } from './create-variant.dto';
 
 export class ProductImageDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  productId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  createdAt?: any;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  updatedAt?: any;
+
   @ApiProperty({ example: 'https://images.unsplash.com/photo-1567538096630' })
   @IsString()
   @IsNotEmpty()

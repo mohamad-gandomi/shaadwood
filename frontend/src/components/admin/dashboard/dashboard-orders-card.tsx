@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { ShoppingBag, ArrowLeft, Truck } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getOrderStatusBadge, formatPaymentMethod } from '@/components/admin/orders/orders-status-badge';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Order } from '@/types';
 
@@ -14,21 +14,6 @@ interface DashboardOrdersCardProps {
   statsLoading: boolean;
   displayedOrders: Order[];
   activeFilter: 'all' | 'pending' | 'low_stock' | 'coupons';
-}
-
-function getStatusBadge(status: string) {
-  switch (status) {
-    case 'DELIVERED':
-      return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-300 text-[10px]">تحویل شده</Badge>;
-    case 'PROCESSING':
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 text-[10px]">در حال پردازش</Badge>;
-    case 'SHIPPED':
-      return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300 text-[10px]">ارسال شده</Badge>;
-    case 'CANCELLED':
-      return <Badge variant="outline" className="bg-zinc-100 text-zinc-600 border-zinc-300 text-[10px]">لغو شده</Badge>;
-    default:
-      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 text-[10px]">در انتظار پرداخت</Badge>;
-  }
 }
 
 export function DashboardOrdersCard({ statsLoading, displayedOrders, activeFilter }: DashboardOrdersCardProps) {
@@ -63,7 +48,7 @@ export function DashboardOrdersCard({ statsLoading, displayedOrders, activeFilte
               <TableHead className="text-right">مشتری</TableHead>
               <TableHead className="text-right">روش و ناوگان ارسال</TableHead>
               <TableHead className="text-left">مبلغ کل</TableHead>
-              <TableHead className="text-center">وضعیت</TableHead>
+              <TableHead className="text-center whitespace-nowrap">وضعیت سفارش</TableHead>
               <TableHead className="text-left pl-4">عملیات</TableHead>
             </TableRow>
           </TableHeader>
@@ -98,14 +83,14 @@ export function DashboardOrdersCard({ statsLoading, displayedOrders, activeFilte
                       <span>{ord.shippingCarrier || ord.shippingMethod || 'ارسال اختصاصی کارگاه'}</span>
                     </div>
                     <div className="text-[11px] text-muted-foreground">
-                      {ord.paymentMethod?.toUpperCase().includes('ZARINPAL') ? 'زرین‌پال (شاپرک)' : ord.paymentMethod || 'پرداخت آنلاین'}
+                      {formatPaymentMethod(ord.paymentMethod)}
                     </div>
                   </TableCell>
                   <TableCell className="text-left font-bold text-foreground text-xs font-sans">
                     {formatCurrency(ord.totalAmount)}
                   </TableCell>
-                  <TableCell className="text-center">
-                    {getStatusBadge(ord.status)}
+                  <TableCell className="text-center whitespace-nowrap">
+                    {getOrderStatusBadge(ord.status as any)}
                   </TableCell>
                   <TableCell className="text-left pl-4">
                     <Link href={`/orders/${ord.id}`}>
@@ -130,9 +115,11 @@ export function DashboardOrdersCard({ statsLoading, displayedOrders, activeFilte
         ) : (
           displayedOrders.slice(0, 5).map((ord) => (
             <Link key={ord.id} href={`/orders/${ord.id}`} className="block p-4 hover:bg-accent/40 transition-colors space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span className="font-sans text-xs font-bold text-primary">{ord.orderNumber}</span>
-                {getStatusBadge(ord.status)}
+                <div className="shrink-0 whitespace-nowrap">
+                  {getOrderStatusBadge(ord.status as any)}
+                </div>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-foreground">{ord.customerName}</span>

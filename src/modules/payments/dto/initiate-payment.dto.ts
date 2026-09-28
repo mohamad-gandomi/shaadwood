@@ -7,7 +7,7 @@ export class InitiatePaymentDto {
   @IsNotEmpty()
   orderId: string;
 
-  @ApiProperty({ example: 'ZARINPAL', description: 'Selected gateway: ZARINPAL, STRIPE, MELLAT, SAMAN_SEP' })
+  @ApiProperty({ example: 'ZARINPAL', description: 'Selected gateway: BANK_TRANSFER, MELLAT, ZARINPAL' })
   @IsString()
   @IsNotEmpty()
   gateway: string;

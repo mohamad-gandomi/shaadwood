@@ -25,7 +25,7 @@ export class PaymentsController {
 
   @Public()
   @Get('gateways')
-  @ApiOperation({ summary: 'Public: List available payment gateways (Zarinpal, Stripe, Saman, Mellat)' })
+  @ApiOperation({ summary: 'Public: List available payment gateways (Bank Transfer, Mellat, Zarinpal)' })
   getGateways() {
     return this.paymentsService.getAvailableGateways();
   }

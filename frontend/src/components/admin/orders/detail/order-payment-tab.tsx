@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Order, PaymentStatus, TransactionStatus } from '@/types';
+import { formatPaymentMethod } from '../orders-status-badge';
 
 interface OrderPaymentTabProps {
   order: Order;
@@ -148,7 +149,7 @@ export function OrderPaymentTab(props: OrderPaymentTabProps) {
               <div className="p-3 rounded-xl bg-muted/40 border border-border/60 space-y-1.5">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">درگاه / شیوه:</span>
-                  <span className="font-semibold text-foreground">{order.paymentMethod || 'درگاه بانکی شاپرک'}</span>
+                  <span className="font-semibold text-foreground">{formatPaymentMethod(order.paymentMethod)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">مبلغ پرداختی:</span>

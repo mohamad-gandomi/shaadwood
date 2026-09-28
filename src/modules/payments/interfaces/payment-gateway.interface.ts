@@ -43,3 +43,14 @@ export interface PaymentGateway {
   initializePayment(options: PaymentInitiationOptions): Promise<PaymentInitiationResult>;
   verifyPayment(options: PaymentVerificationOptions): Promise<PaymentVerificationResult>;
 }
+
+export interface GatewayMetadata {
+  id: string;
+  name: string;
+  type: 'IRANIAN_SHAPARAK' | 'INTERNATIONAL_CARD' | 'OFFLINE';
+  description: string;
+  currencies: string[];
+  logo?: string;
+  isActive: boolean;
+}
+

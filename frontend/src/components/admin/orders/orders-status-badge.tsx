@@ -66,20 +66,25 @@ export function getOrderStatusBadge(status: OrderStatus) {
   }
 }
 
+export function formatPaymentMethod(method?: string): string {
+  if (!method) return 'پرداخت آنلاین';
+  const upper = method.toUpperCase();
+  if (upper.includes('MELLAT')) return 'به‌پرداخت ملت (شاپرک)';
+  if (upper.includes('ZARINPAL')) return 'زرین‌پال (شاپرک)';
+  if (upper.includes('BANK_TRANSFER') || upper.includes('حواله')) return 'حواله مستقیم بانکی';
+  return method;
+}
+
 export function getOrderPaymentBadge(status: string, method?: string) {
   const isPaid = status === 'PAID';
   const isRefunded = status === 'REFUNDED';
-  const isZarinpal =
-    method?.toUpperCase().includes('ZARINPAL') ||
-    method?.toUpperCase().includes('MELLAT') ||
-    method?.toUpperCase().includes('SAMAN');
 
   return (
     <div className="space-y-0.5 font-sans whitespace-nowrap">
       <div className="flex items-center gap-1.5 text-xs">
         <CreditCard className="w-3 h-3 text-muted-foreground shrink-0" />
         <span className="font-medium text-foreground">
-          {isZarinpal ? 'زرین‌پال / شاپرک' : method || 'درگاه آنلاین'}
+          {formatPaymentMethod(method)}
         </span>
       </div>
       <span

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from '@/lib/utils';
 import { Order } from '@/types';
-import { getOrderStatusBadge } from '../orders-status-badge';
+import { getOrderStatusBadge, formatPaymentMethod } from '../orders-status-badge';
 
 interface OrderDetailHeaderProps {
   order: Order;
@@ -18,11 +18,6 @@ interface OrderDetailHeaderProps {
 
 export function OrderDetailHeader(props: OrderDetailHeaderProps) {
   const { order, onSave, onDelete, isSaving } = props;
-
-  const isIranianGateway =
-    order.paymentMethod?.toUpperCase().includes('ZARINPAL') ||
-    order.paymentMethod?.toUpperCase().includes('MELLAT') ||
-    order.paymentMethod?.toUpperCase().includes('SAMAN');
 
   return (
     <div className="p-3.5 sm:p-5 rounded-xl border border-border bg-card shadow-xs space-y-3 font-sans" dir="rtl">
@@ -87,7 +82,7 @@ export function OrderDetailHeader(props: OrderDetailHeaderProps) {
           <span className="font-sans">{formatDate(order.createdAt)}</span>
           <span>•</span>
           <span className="font-semibold text-foreground">
-            {isIranianGateway ? 'زرین‌پال / شاپرک' : order.paymentMethod || 'درگاه آنلاین'}
+            {formatPaymentMethod(order.paymentMethod)}
           </span>
         </div>
       </div>
