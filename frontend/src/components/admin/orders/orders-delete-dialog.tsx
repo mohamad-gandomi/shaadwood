@@ -39,7 +39,7 @@ export function OrdersDeleteDialog(props: OrdersDeleteDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="gap-2 sm:gap-0 flex-row-reverse justify-start">
+        <DialogFooter className="gap-2.5 sm:gap-3 flex-row-reverse justify-start">
           <HoldToDeleteButton
             onTrigger={() => {
               if (order) {

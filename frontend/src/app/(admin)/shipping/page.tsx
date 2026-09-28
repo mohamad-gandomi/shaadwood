@@ -9,6 +9,7 @@ import { Header } from '@/components/admin/header';
 import { Button } from '@/components/ui/button';
 import { ShippingMethodOption } from '@/types';
 import { ShippingMethodModal } from '@/components/admin/shipping/shipping-method-modal';
+import { ShippingMethodDeleteModal } from '@/components/admin/shipping/shipping-method-delete-modal';
 import { ShippingMethodsTable } from '@/components/admin/shipping/shipping-methods-table';
 
 export default function ShippingAdminPage() {
@@ -16,6 +17,7 @@ export default function ShippingAdminPage() {
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [editingMethod, setEditingMethod] = React.useState<ShippingMethodOption | null>(null);
+  const [deletingMethod, setDeletingMethod] = React.useState<ShippingMethodOption | null>(null);
 
   const { data: methods = [], isLoading } = useQuery({
     queryKey: ['admin-shipping-methods'],
@@ -56,7 +58,8 @@ export default function ShippingAdminPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-shipping-methods'] });
       queryClient.invalidateQueries({ queryKey: ['shipping-methods'] });
-      toast.success('روش ارسال حذف شد');
+      toast.success('روش ارسال با موفقیت حذف شد');
+      setDeletingMethod(null);
     },
     onError: (err: any) => {
       toast.error(err.message || 'خطا در حذف روش ارسال');
@@ -75,10 +78,9 @@ export default function ShippingAdminPage() {
     }
   };
 
-  const handleDelete = (id: string, methodName: string) => {
-    if (confirm(`آیا از حذف روش ارسال «${methodName}» اطمینان دارید؟`)) {
-      deleteMutation.mutate(id);
-    }
+  const handleDeleteRequest = (id: string, methodName: string) => {
+    const found = methods.find((m) => m.id === id) || { id, name: methodName } as ShippingMethodOption;
+    setDeletingMethod(found);
   };
 
   return (
@@ -106,7 +108,7 @@ export default function ShippingAdminPage() {
           methods={methods}
           isLoading={isLoading}
           onEdit={(m) => { setEditingMethod(m); setIsModalOpen(true); }}
-          onDelete={handleDelete}
+          onDelete={handleDeleteRequest}
           onToggleActive={(id, active) => updateMutation.mutate({ id, data: { isActive: active } })}
           onSetDefault={(id) => updateMutation.mutate({ id, data: { isDefault: true } })}
         />
@@ -118,6 +120,14 @@ export default function ShippingAdminPage() {
         editingMethod={editingMethod}
         onSubmit={handleSubmitModal}
         isPending={createMutation.isPending || updateMutation.isPending}
+      />
+
+      <ShippingMethodDeleteModal
+        isOpen={Boolean(deletingMethod)}
+        method={deletingMethod}
+        onClose={() => setDeletingMethod(null)}
+        onConfirm={() => deletingMethod && deleteMutation.mutate(deletingMethod.id)}
+        isPending={deleteMutation.isPending}
       />
     </div>
   );

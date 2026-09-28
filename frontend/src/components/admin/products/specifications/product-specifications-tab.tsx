@@ -42,7 +42,7 @@ export function ProductSpecificationsTab({
     const updated = [...specifications];
     const temp = updated[index - 1];
     updated[index - 1] = updated[index];
-    updated[index - 1] = temp;
+    updated[index] = temp;
     onChange(updated);
   };
 
@@ -51,7 +51,7 @@ export function ProductSpecificationsTab({
     const updated = [...specifications];
     const temp = updated[index + 1];
     updated[index + 1] = updated[index];
-    updated[index + 1] = temp;
+    updated[index] = temp;
     onChange(updated);
   };
 

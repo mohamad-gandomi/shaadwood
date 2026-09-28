@@ -79,8 +79,12 @@ export function ProductsTable({
                             </span>
                           )}
                         </div>
-                        <div className="text-xs font-sans text-muted-foreground dir-ltr text-right">
-                          {product.sku || 'بدون شناسه کالا'}
+                        <div className="text-xs font-sans text-muted-foreground text-right">
+                          {product.sku ? (
+                            <span className="dir-ltr font-sans">{product.sku}</span>
+                          ) : (
+                            <span>بدون شناسه کالا</span>
+                          )}
                         </div>
                       </div>
                     </div>

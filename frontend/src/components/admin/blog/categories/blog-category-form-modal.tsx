@@ -171,7 +171,7 @@ export function BlogCategoryFormModal({
 
           <BlogCategoryImageField image={image} onChange={setImage} />
 
-          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2">
+          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3">
             <Button type="button" variant="outline" size="sm" onClick={onClose} className="font-sans">
               انصراف
             </Button>

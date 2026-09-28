@@ -39,7 +39,7 @@ export function OrdersTable({ orders, isLoading, onDeleteClick }: OrdersTablePro
               <TableHead className="text-right">باربری و ارسال</TableHead>
               <TableHead className="text-right">وضعیت پرداخت</TableHead>
               <TableHead className="text-left">مبلغ کل</TableHead>
-              <TableHead className="text-center">وضعیت سفارش</TableHead>
+              <TableHead className="text-center min-w-[140px] whitespace-nowrap">وضعیت سفارش</TableHead>
               <TableHead className="text-left pl-4">عملیات</TableHead>
             </TableRow>
           </TableHeader>
@@ -116,7 +116,7 @@ export function OrdersTable({ orders, isLoading, onDeleteClick }: OrdersTablePro
                     {formatCurrency(order.totalAmount)}
                   </TableCell>
 
-                  <TableCell className="text-center">
+                  <TableCell className="text-center min-w-[140px] whitespace-nowrap">
                     {getOrderStatusBadge(order.status)}
                   </TableCell>
 

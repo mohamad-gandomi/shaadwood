@@ -60,7 +60,11 @@ export function ProductsMobileList({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground font-sans">
-                  <span className="dir-ltr">{product.sku || 'بدون شناسه'}</span>
+                  {product.sku ? (
+                    <span className="dir-ltr font-sans">{product.sku}</span>
+                  ) : (
+                    <span>بدون شناسه</span>
+                  )}
                   <span>•</span>
                   <span>{product.category?.name || 'عمومی'}</span>
                 </div>
@@ -95,7 +99,7 @@ export function ProductsMobileList({
                 )}
               </div>
 
-              <div className="text-left font-sans" dir="ltr">
+              <div className="text-left font-sans">
                 {isOnSale ? (
                   <div className="flex items-baseline gap-1.5 justify-end">
                     <span className="font-bold text-emerald-700 text-sm">

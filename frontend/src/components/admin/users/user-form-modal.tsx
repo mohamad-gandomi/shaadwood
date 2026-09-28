@@ -177,7 +177,7 @@ export function UserFormModal({
             </div>
           </div>
 
-          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:gap-0 w-full min-w-0">
+          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 w-full min-w-0">
             <Button type="button" variant="outline" className="w-full sm:w-auto font-sans" onClick={onClose}>
               انصراف
             </Button>

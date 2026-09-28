@@ -45,29 +45,6 @@ export function ProductEditorHeader({
         </Link>
 
         <div className="flex items-center gap-2">
-          {onDelete && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onDelete}
-              className="text-xs h-8 sm:h-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-destructive/20 font-sans"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">حذف محصول</span>
-            </Button>
-          )}
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => router.push('/products')}
-            className="text-xs h-8 sm:h-9 font-medium font-sans"
-          >
-            انصراف
-          </Button>
-
           <Button
             type="button"
             size="sm"
@@ -84,6 +61,30 @@ export function ProductEditorHeader({
                 : 'ذخیره تغییرات محصول'}
             </span>
           </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => router.push('/products')}
+            className="text-xs h-8 sm:h-9 font-medium font-sans"
+          >
+            انصراف
+          </Button>
+
+          {onDelete && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onDelete}
+              className="text-xs h-8 sm:h-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-destructive/20 font-sans"
+              title="حذف اثر چوبی"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">حذف محصول</span>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -108,17 +109,22 @@ export function ProductEditorHeader({
         </div>
 
         <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground font-sans shrink-0">
-          {sku && <span className="dir-ltr">کد: {sku}</span>}
+          {sku && (
+            <span className="inline-flex items-center gap-1">
+              <span>کد:</span>
+              <span className="dir-ltr font-sans">{sku}</span>
+            </span>
+          )}
           {slug && (
             <>
               <span>•</span>
               <Link
                 href={`/shop/${slug}`}
                 target="_blank"
-                className="inline-flex items-center gap-1 hover:text-primary transition-colors dir-ltr"
+                className="inline-flex items-center gap-1 hover:text-primary transition-colors"
               >
-                <span>/{slug}</span>
-                <ExternalLink className="w-3 h-3" />
+                <span className="dir-ltr font-sans">/{slug}</span>
+                <ExternalLink className="w-3 h-3 shrink-0" />
               </Link>
             </>
           )}

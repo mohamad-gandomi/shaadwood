@@ -42,16 +42,12 @@ export function AttributeTermModal({
   React.useEffect(() => {
     if (isOpen) {
       if (mode === 'EDIT' && term) {
-        setName(term.name);
-        setSlug(term.value || '');
-        setColorHex(term.colorHex || '#5C4033');
+        setName(term.name); setSlug(term.value || ''); setColorHex(term.colorHex || '#5C4033');
         if (term.image || selectedImageUrl) setTermMode('IMAGE');
         else if (term.colorHex) setTermMode('COLOR');
         else setTermMode('TEXT');
       } else {
-        setName('');
-        setSlug('');
-        setColorHex('#5C4033');
+        setName(''); setSlug(''); setColorHex('#5C4033');
         const defaultMode = (attribute?.displayType || 'TEXT').toUpperCase();
         if (defaultMode === 'IMAGE') setTermMode('IMAGE');
         else if (defaultMode === 'COLOR') setTermMode('COLOR');
@@ -188,7 +184,7 @@ export function AttributeTermModal({
             </div>
           </div>
 
-          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:gap-0 w-full min-w-0">
+          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 w-full min-w-0">
             <Button type="button" variant="outline" className="w-full sm:w-auto font-sans" onClick={onClose}>
               انصراف
             </Button>

@@ -104,7 +104,7 @@ export function CouponFormModal(props: CouponFormModalProps) {
             isActive={isActive} setIsActive={setIsActive}
           />
 
-          <DialogFooter className="pt-2 flex-row-reverse justify-start gap-2">
+          <DialogFooter className="pt-2 flex-row-reverse justify-start gap-2.5 sm:gap-3">
             <Button type="submit" disabled={isPending} className="h-9 text-xs">
               {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : editingCoupon ? 'ذخیره تغییرات' : 'ثبت کد تخفیف'}
             </Button>

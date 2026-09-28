@@ -52,21 +52,23 @@ export default function NewProductPage() {
           onSave={handleSave}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-muted/80 p-1 rounded-xl">
-            <TabsTrigger value="overview" className="gap-2 text-xs font-semibold rounded-lg font-sans">
-              <Info className="w-3.5 h-3.5" />
-              <span>مشخصات پایه</span>
-            </TabsTrigger>
-            <TabsTrigger value="pricing" className="gap-2 text-xs font-semibold rounded-lg font-sans">
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>قیمت‌گذاری و انبار</span>
-            </TabsTrigger>
-            <TabsTrigger value="media" className="gap-2 text-xs font-semibold rounded-lg font-sans">
-              <ImageIcon className="w-3.5 h-3.5" />
-              <span>گالری تصاویر ({formData.images.length})</span>
-            </TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir="rtl">
+          <div className="w-full overflow-x-auto pb-1 no-scrollbar" dir="rtl">
+            <TabsList className="inline-flex sm:flex w-max sm:w-full items-center justify-start gap-1 sm:gap-1.5 p-1 sm:p-1.5 bg-muted/80 rounded-xl border border-border" dir="rtl">
+              <TabsTrigger value="overview" className="gap-2 py-2 px-3 sm:px-3.5 text-xs font-semibold rounded-lg font-sans shrink-0 whitespace-nowrap">
+                <Info className="w-3.5 h-3.5 shrink-0" />
+                <span>مشخصات پایه</span>
+              </TabsTrigger>
+              <TabsTrigger value="pricing" className="gap-2 py-2 px-3 sm:px-3.5 text-xs font-semibold rounded-lg font-sans shrink-0 whitespace-nowrap">
+                <DollarSign className="w-3.5 h-3.5 shrink-0" />
+                <span>قیمت‌گذاری و انبار</span>
+              </TabsTrigger>
+              <TabsTrigger value="media" className="gap-2 py-2 px-3 sm:px-3.5 text-xs font-semibold rounded-lg font-sans shrink-0 whitespace-nowrap">
+                <ImageIcon className="w-3.5 h-3.5 shrink-0" />
+                <span>گالری تصاویر ({formData.images.length})</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="overview" className="space-y-6 m-0">
             <ProductOverviewTab

@@ -141,7 +141,7 @@ export function UserAddressModal({
             </label>
           </div>
 
-          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2 sm:gap-0 w-full min-w-0">
+          <DialogFooter className="pt-2 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 w-full min-w-0">
             <Button type="button" variant="outline" className="w-full sm:w-auto font-sans" onClick={onClose}>انصراف</Button>
             <Button type="submit" disabled={isPending} className="w-full sm:w-auto font-semibold font-sans">
               {isPending ? 'در حال ذخیره...' : mode === 'CREATE' ? 'ثبت نشانی' : 'ذخیره تغییرات'}

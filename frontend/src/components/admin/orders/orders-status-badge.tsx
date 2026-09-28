@@ -17,42 +17,52 @@ export function getOrderStatusBadge(status: OrderStatus) {
   switch (status) {
     case 'PENDING':
       return (
-        <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 flex items-center gap-1 font-sans text-[10px]">
-          <Clock className="w-3 h-3" /> در انتظار بررسی
+        <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 font-sans text-xs px-2.5 py-0.5">
+          <Clock className="w-3.5 h-3.5 shrink-0" />
+          <span>در انتظار بررسی</span>
         </Badge>
       );
     case 'PROCESSING':
       return (
-        <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-300 flex items-center gap-1 font-sans text-[10px]">
-          <Package className="w-3 h-3" /> در حال ساخت
+        <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-300 inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 font-sans text-xs px-2.5 py-0.5">
+          <Package className="w-3.5 h-3.5 shrink-0" />
+          <span>در حال ساخت</span>
         </Badge>
       );
     case 'SHIPPED':
       return (
-        <Badge variant="outline" className="bg-purple-50 text-purple-800 border-purple-300 flex items-center gap-1 font-sans text-[10px]">
-          <Truck className="w-3 h-3" /> ارسال به باربری
+        <Badge variant="outline" className="bg-purple-50 text-purple-800 border-purple-300 inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 font-sans text-xs px-2.5 py-0.5">
+          <Truck className="w-3.5 h-3.5 shrink-0" />
+          <span>ارسال به باربری</span>
         </Badge>
       );
     case 'DELIVERED':
       return (
-        <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-300 flex items-center gap-1 font-sans text-[10px]">
-          <CheckCircle2 className="w-3 h-3" /> تحویل داده شده
+        <Badge variant="outline" className="bg-emerald-50 text-emerald-800 border-emerald-300 inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 font-sans text-xs px-2.5 py-0.5">
+          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+          <span>تحویل داده شده</span>
         </Badge>
       );
     case 'CANCELLED':
       return (
-        <Badge variant="outline" className="bg-zinc-100 text-zinc-700 border-zinc-300 flex items-center gap-1 font-sans text-[10px]">
-          <XCircle className="w-3 h-3" /> لغو شده
+        <Badge variant="outline" className="bg-zinc-100 text-zinc-700 border-zinc-300 inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 font-sans text-xs px-2.5 py-0.5">
+          <XCircle className="w-3.5 h-3.5 shrink-0" />
+          <span>لغو شده</span>
         </Badge>
       );
     case 'REFUNDED':
       return (
-        <Badge variant="outline" className="bg-rose-50 text-rose-800 border-rose-300 flex items-center gap-1 font-sans text-[10px]">
-          <RotateCcw className="w-3 h-3" /> مسترد شده
+        <Badge variant="outline" className="bg-rose-50 text-rose-800 border-rose-300 inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 font-sans text-xs px-2.5 py-0.5">
+          <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+          <span>مسترد شده</span>
         </Badge>
       );
     default:
-      return <Badge variant="outline" className="font-sans text-[10px]">{status}</Badge>;
+      return (
+        <Badge variant="outline" className="font-sans text-xs whitespace-nowrap shrink-0 inline-flex items-center">
+          {status}
+        </Badge>
+      );
   }
 }
 
@@ -65,9 +75,9 @@ export function getOrderPaymentBadge(status: string, method?: string) {
     method?.toUpperCase().includes('SAMAN');
 
   return (
-    <div className="space-y-0.5 font-sans">
+    <div className="space-y-0.5 font-sans whitespace-nowrap">
       <div className="flex items-center gap-1.5 text-xs">
-        <CreditCard className="w-3 h-3 text-muted-foreground" />
+        <CreditCard className="w-3 h-3 text-muted-foreground shrink-0" />
         <span className="font-medium text-foreground">
           {isZarinpal ? 'زرین‌پال / شاپرک' : method || 'درگاه آنلاین'}
         </span>
@@ -78,7 +88,7 @@ export function getOrderPaymentBadge(status: string, method?: string) {
         }`}
       >
         <span
-          className={`w-1.5 h-1.5 rounded-full ${
+          className={`w-1.5 h-1.5 rounded-full shrink-0 ${
             isPaid ? 'bg-emerald-500' : isRefunded ? 'bg-rose-500' : 'bg-amber-500'
           }`}
         />

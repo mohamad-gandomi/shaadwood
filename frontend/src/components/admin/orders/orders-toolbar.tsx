@@ -21,50 +21,57 @@ const statusTabs = [
   { id: 'CANCELLED', label: 'لغو شده' },
 ];
 
-export function OrdersToolbar(props: OrdersToolbarProps) {
-  const {
-    searchTerm,
-    setSearchTerm,
-    selectedStatus,
-    setSelectedStatus,
-    totalOrdersCount,
-  } = props;
-
+export function OrdersToolbar({
+  searchTerm,
+  setSearchTerm,
+  selectedStatus,
+  setSelectedStatus,
+  totalOrdersCount,
+}: OrdersToolbarProps) {
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 font-sans" dir="rtl">
-      <div className="flex items-center gap-3 flex-1 max-w-2xl">
-        {/* Search input with right-placed icon for RTL */}
-        <div className="relative flex-1">
-          <Search className="w-4 h-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2" />
+    <div className="flex flex-col gap-3 font-sans" dir="rtl">
+      {/* Top Row: Search Input (Full width & Prominent on mobile) + Counter on desktop */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="relative flex-1 sm:max-w-lg">
+          <Search className="w-4.5 h-4.5 text-muted-foreground absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <Input
-            placeholder="جستجو با شماره سفارش، نام مشتری، کد رهگیری، ایمیل..."
-            className="pr-9 pl-3 bg-card h-9 text-xs text-right"
+            placeholder="جستجوی شماره سفارش، خریدار، کد رهگیری..."
+            className="pr-10 pl-3.5 bg-card h-11 sm:h-10 text-sm sm:text-xs text-right rounded-xl border-border/80 shadow-2xs font-sans"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        {/* Status Filter Buttons */}
-        <div className="flex items-center rounded-lg border border-border bg-card p-1 text-xs shrink-0 h-9 box-border overflow-x-auto">
+        <div className="text-xs text-muted-foreground font-medium hidden sm:flex items-center gap-1.5 shrink-0">
+          <span>نمایش</span>
+          <strong className="text-foreground font-semibold">{totalOrdersCount}</strong>
+          <span>سفارش</span>
+        </div>
+      </div>
+
+      {/* Bottom Row: Status Filter Tabs (Scrollable on mobile) */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="w-full overflow-x-auto py-1 -my-1 flex items-center gap-1.5 p-1 bg-muted/60 dark:bg-muted/40 rounded-xl border border-border/60">
           {statusTabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setSelectedStatus(tab.id)}
-              className={`h-full px-2.5 sm:px-3 rounded-md font-medium transition-colors flex items-center justify-center whitespace-nowrap ${
+              className={`h-9 px-3 sm:px-3.5 rounded-lg text-xs font-medium transition-all duration-150 flex items-center justify-center whitespace-nowrap shrink-0 ${
                 selectedStatus === tab.id
-                  ? 'bg-primary text-primary-foreground shadow-xs'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-primary text-primary-foreground shadow-xs font-semibold'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-card/70'
               }`}
             >
               {tab.label}
             </button>
           ))}
         </div>
-      </div>
 
-      <div className="text-xs text-muted-foreground self-center sm:self-auto font-medium">
-        نمایش <strong className="text-foreground">{totalOrdersCount}</strong> سفارش
+        {/* Counter on mobile */}
+        <div className="text-xs text-muted-foreground font-medium sm:hidden shrink-0 whitespace-nowrap px-1">
+          <strong className="text-foreground">{totalOrdersCount}</strong> سفارش
+        </div>
       </div>
     </div>
   );

@@ -112,23 +112,23 @@ export default function OrderDetailPage() {
           isSaving={isSaving}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full h-auto p-1.5 bg-muted/80 rounded-xl border border-border gap-1">
-            <TabsTrigger value="overview" className="gap-2 py-2 text-xs font-semibold rounded-lg">
-              <Package className="w-3.5 h-3.5 shrink-0" />
-              <span>اقلام و خلاصه سفارش</span>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir="rtl">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full h-auto p-1.5 bg-muted/80 rounded-xl border border-border gap-1" dir="ltr">
+            <TabsTrigger value="timeline" className="gap-2 py-2 text-xs font-semibold rounded-lg font-sans">
+              <Clock className="w-3.5 h-3.5 shrink-0" />
+              <span>مراحل کارگاه و یادداشت</span>
             </TabsTrigger>
-            <TabsTrigger value="shipping" className="gap-2 py-2 text-xs font-semibold rounded-lg">
-              <Truck className="w-3.5 h-3.5 shrink-0" />
-              <span>ناوگان و باربری</span>
-            </TabsTrigger>
-            <TabsTrigger value="payments" className="gap-2 py-2 text-xs font-semibold rounded-lg">
+            <TabsTrigger value="payments" className="gap-2 py-2 text-xs font-semibold rounded-lg font-sans">
               <CreditCard className="w-3.5 h-3.5 shrink-0" />
               <span>وضعیت پرداخت و تراکنش</span>
             </TabsTrigger>
-            <TabsTrigger value="timeline" className="gap-2 py-2 text-xs font-semibold rounded-lg">
-              <Clock className="w-3.5 h-3.5 shrink-0" />
-              <span>مراحل کارگاه و یادداشت</span>
+            <TabsTrigger value="shipping" className="gap-2 py-2 text-xs font-semibold rounded-lg font-sans">
+              <Truck className="w-3.5 h-3.5 shrink-0" />
+              <span>ناوگان و باربری</span>
+            </TabsTrigger>
+            <TabsTrigger value="overview" className="gap-2 py-2 text-xs font-semibold rounded-lg font-sans">
+              <Package className="w-3.5 h-3.5 shrink-0" />
+              <span>اقلام و خلاصه سفارش</span>
             </TabsTrigger>
           </TabsList>
 

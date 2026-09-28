@@ -133,7 +133,7 @@ export function AddressDialog({ isOpen, onClose, addressToEdit, onSave }: Addres
             </label>
           </div>
 
-          <div className="flex justify-end gap-2 pt-4 border-t border-border/60">
+          <div className="flex justify-end gap-2.5 pt-4 border-t border-border/60">
             <Button type="button" variant="outline" onClick={onClose} className="rounded-xl text-xs">
               انصراف
             </Button>

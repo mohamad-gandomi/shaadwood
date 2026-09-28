@@ -54,13 +54,8 @@ export function ProductVariantModal({
       setWeight(variant.weight ? String(variant.weight) : '');
       setIsActive(variant.isActive);
     } else {
-      setSku('');
-      setPrice('');
-      setSalePrice('');
-      setStockQuantity(10);
-      setDimensions('');
-      setWeight('');
-      setIsActive(true);
+      setSku(''); setPrice(''); setSalePrice(''); setStockQuantity(10);
+      setDimensions(''); setWeight(''); setIsActive(true);
       const initial: Record<string, string> = {};
       productAttributes.forEach((attr) => {
         if (attr.values && attr.values.length > 0) initial[attr.id] = attr.values[0].id;
@@ -185,7 +180,7 @@ export function ProductVariantModal({
             </label>
           </div>
 
-          <DialogFooter className="pt-3 flex flex-col-reverse sm:flex-row gap-2">
+          <DialogFooter className="pt-3 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3">
             <Button type="button" variant="outline" size="sm" onClick={onClose} className="font-sans">
               انصراف
             </Button>

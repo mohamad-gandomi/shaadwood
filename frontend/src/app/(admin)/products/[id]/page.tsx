@@ -36,22 +36,9 @@ export default function ProductDetailPage() {
   const { data: globalAttributes = [] } = useQuery<Attribute[]>({ queryKey: ['attributes'], queryFn: () => api.getAttributes() });
 
   const {
-    formData,
-    setFormData,
-    selectedAttrIds,
-    generateSlug,
-    handleSave,
-    handleSelectMedia,
-    onAddImageByUrl,
-    onSetPrimaryImage,
-    onRemoveImage,
-    onToggleAttribute,
-    updateMutation,
-    deleteMutation,
-    saveAttrMutation,
-    addVarMutation,
-    updateVarMutation,
-    deleteVarMutation,
+    formData, setFormData, selectedAttrIds, generateSlug, handleSave, handleSelectMedia,
+    onAddImageByUrl, onSetPrimaryImage, onRemoveImage, onToggleAttribute,
+    updateMutation, deleteMutation, saveAttrMutation, addVarMutation, updateVarMutation, deleteVarMutation,
   } = useProductEditor(productId, product);
 
   const variants = product?.variants || [];
@@ -90,7 +77,7 @@ export default function ProductDetailPage() {
           onDelete={() => setIsDeleteDialogOpen(true)}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir="rtl">
           <ProductEditorTabsNav
             specCount={formData.specifications.length}
             variantCount={variants.length}

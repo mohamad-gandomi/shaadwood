@@ -35,31 +35,19 @@ export function ProductVariationsList({
     <div className="space-y-6 font-sans text-right" dir="rtl">
       {/* Variation Metrics */}
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
-        <Card className="bg-wood-50/60 dark:bg-wood-950/30 border-wood-200">
-          <CardContent className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1 text-right">
-            <div className="text-[10px] sm:text-xs font-medium text-wood-800 dark:text-wood-300 truncate">تنوع‌ها</div>
-            <div className="text-sm sm:text-2xl font-bold text-foreground font-sans">{variants.length}</div>
-            <div className="text-[9px] sm:text-[11px] text-muted-foreground hidden sm:block">پیکربندی در کاتالوگ</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-wood-50/60 dark:bg-wood-950/30 border-wood-200">
-          <CardContent className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1 text-right">
-            <div className="text-[10px] sm:text-xs font-medium text-wood-800 dark:text-wood-300 truncate">کل موجودی متغیرها</div>
-            <div className="text-sm sm:text-2xl font-bold text-foreground font-sans">{totalVariantStock}</div>
-            <div className="text-[9px] sm:text-[11px] text-muted-foreground hidden sm:block">مجموع موجودی انبار</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-wood-50/60 dark:bg-wood-950/30 border-wood-200">
-          <CardContent className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1 text-right">
-            <div className="text-[10px] sm:text-xs font-medium text-wood-800 dark:text-wood-300 truncate">بازه قیمتی</div>
-            <div className="text-[11px] sm:text-xl font-bold text-emerald-700 dark:text-emerald-400 truncate font-sans">
-              {formatCurrency(minVariantPrice)} تا {formatCurrency(maxVariantPrice)}
-            </div>
-            <div className="text-[9px] sm:text-[11px] text-muted-foreground hidden sm:block">پوشش‌های فعال</div>
-          </CardContent>
-        </Card>
+        {[
+          { label: 'تنوع‌ها', val: variants.length, sub: 'پیکربندی در کاتالوگ', cls: 'text-sm sm:text-2xl text-foreground' },
+          { label: 'کل موجودی متغیرها', val: totalVariantStock, sub: 'مجموع موجودی انبار', cls: 'text-sm sm:text-2xl text-foreground' },
+          { label: 'بازه قیمتی', val: `${formatCurrency(minVariantPrice)} تا ${formatCurrency(maxVariantPrice)}`, sub: 'پوشش‌های فعال', cls: 'text-[11px] sm:text-xl text-emerald-700 dark:text-emerald-400' },
+        ].map((m, i) => (
+          <Card key={i} className="bg-wood-50/60 dark:bg-wood-950/30 border-wood-200">
+            <CardContent className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1 text-right">
+              <div className="text-[10px] sm:text-xs font-medium text-wood-800 dark:text-wood-300 truncate">{m.label}</div>
+              <div className={`font-bold font-sans truncate ${m.cls}`}>{m.val}</div>
+              <div className="text-[9px] sm:text-[11px] text-muted-foreground hidden sm:block">{m.sub}</div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Variations Table Card */}

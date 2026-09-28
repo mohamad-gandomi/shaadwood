@@ -172,7 +172,7 @@ export function ShippingMethodModal(props: ShippingMethodModalProps) {
             </label>
           </div>
 
-          <DialogFooter className="pt-2 flex-row-reverse justify-start gap-2">
+          <DialogFooter className="pt-2 flex-row-reverse justify-start gap-2.5 sm:gap-3">
             <Button type="submit" disabled={isPending} className="h-9 text-xs">
               {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : editingMethod ? 'ذخیره تغییرات' : 'ثبت روش ارسال'}
             </Button>
