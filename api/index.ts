@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register';
 import type { Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
 import { createShaadwoodApp } from '../src/app.factory';
