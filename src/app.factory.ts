@@ -13,9 +13,11 @@ export async function createShaadwoodApp(): Promise<NestExpressApplication> {
   const configService = app.get(ConfigService);
   const apiPrefix = configService.get<string>('apiPrefix', 'api/v1');
   const corsOrigin = configService.get<string | string[]>('corsOrigin', '*');
+  const configuredOrigins = corsOrigin === '*' ? [] : (Array.isArray(corsOrigin) ? corsOrigin : corsOrigin.split(',').map((origin) => origin.trim()).filter(Boolean));
+  const isAllowedOrigin = (origin?: string) => !origin || configuredOrigins.includes(origin) || /^https:\/\/shaadwood(?:[-.][a-z0-9-]+)*\.vercel\.app$/i.test(origin);
 
   app.enableCors({
-    origin: corsOrigin === '*' ? true : corsOrigin,
+    origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
