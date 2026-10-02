@@ -1,18 +1,30 @@
-import 'tsconfig-paths/register';
 import type { Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
-import { createShaadwoodApp } from '../src/app.factory';
+import { register } from 'tsconfig-paths';
 
-// Keep the NestJS runtime import explicit so Vercel selects the NestJS builder.
 void NestFactory;
 
-let appPromise: ReturnType<typeof createShaadwoodApp> | undefined;
+// The Vercel function bundle retains the compiled src/ files, but not the
+// TypeScript compiler's alias resolver. Register the alias before loading Nest.
+register({
+  baseUrl: process.cwd(),
+  paths: { '@/*': ['src/*'] },
+});
+
+type AppFactory = typeof import('../src/app.factory').createShaadwoodApp;
+
+let createShaadwoodApp: AppFactory | undefined;
+let appPromise: ReturnType<AppFactory> | undefined;
 
 export default async function handler(req: Request, res: Response) {
   try {
+    createShaadwoodApp ??= require('../src/app.factory')
+      .createShaadwoodApp as AppFactory;
     appPromise ??= createShaadwoodApp();
+
     const app = await appPromise;
     const server = app.getHttpAdapter().getInstance();
+
     return server(req, res);
   } catch (error) {
     console.error('Shaadwood API bootstrap failed:', error);
