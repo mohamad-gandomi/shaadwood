@@ -1,24 +1,25 @@
 import type { Request, Response } from 'express';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { register } from 'tsconfig-paths';
 
 void NestFactory;
 
-// The Vercel function bundle retains the compiled src/ files, but not the
-// TypeScript compiler's alias resolver. Register the alias before loading Nest.
+// The complete Nest application is compiled by `nest build` into dist/.
+// Resolve the project's @/* imports against that compiled output.
 register({
   baseUrl: process.cwd(),
-  paths: { '@/*': ['src/*'] },
+  paths: { '@/*': ['dist/*'] },
 });
 
-type AppFactory = typeof import('../src/app.factory').createShaadwoodApp;
+type AppFactory = () => Promise<NestExpressApplication>;
 
 let createShaadwoodApp: AppFactory | undefined;
 let appPromise: ReturnType<AppFactory> | undefined;
 
 export default async function handler(req: Request, res: Response) {
   try {
-    createShaadwoodApp ??= require('../src/app.factory')
+    createShaadwoodApp ??= require('../dist/app.factory')
       .createShaadwoodApp as AppFactory;
     appPromise ??= createShaadwoodApp();
 
