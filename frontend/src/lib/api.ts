@@ -17,7 +17,7 @@ import {
   PaymentGatewayOption,
 } from '@/types';
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://shaadwood-pr8d-git-demo-90fe36-mgandomi1995-gmailcoms-projects.vercel.app/api/v1';
 
 export interface UploadMediaOptions {
   altText?: string;
