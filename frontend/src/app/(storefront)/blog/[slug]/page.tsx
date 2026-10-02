@@ -5,7 +5,7 @@ import { BlogPostHeader } from '@/components/storefront/blog/blog-post-header';
 import { BlogPostContent } from '@/components/storefront/blog/blog-post-content';
 import { BlogPostFooter } from '@/components/storefront/blog/blog-post-footer';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://shaadwood-pr8d-git-demo-90fe36-mgandomi1995-gmailcoms-projects.vercel.app/api/v1';
 
 async function getPost(slug: string): Promise<BlogPost | null> {
   try {
