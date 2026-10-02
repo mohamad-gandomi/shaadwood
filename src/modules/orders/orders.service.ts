@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma.service';
-import { CouponsService } from '@/modules/coupons/coupons.service';
-import { ShippingService } from '@/modules/shipping/shipping.service';
+import { PrismaService } from '../../database/prisma.service';
+import { CouponsService } from '../coupons/coupons.service';
+import { ShippingService } from '../shipping/shipping.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { FilterOrdersDto } from './dto/filter-orders.dto';

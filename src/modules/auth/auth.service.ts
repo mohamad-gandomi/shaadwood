@@ -7,13 +7,13 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { SendOtpDto, VerifyOtpDto } from './dto/otp.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { KavenegarService } from './kavenegar.service';
-import { Role } from '@/common/enums/role.enum';
+import { Role } from '../../common/enums/role.enum';
 
 @Injectable()
 export class AuthService {

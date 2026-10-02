@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { ZarinpalProvider } from './providers/zarinpal.provider';
 import { MellatProvider } from './providers/mellat.provider';
 import { PaymentGateway, GatewayMetadata } from './interfaces/payment-gateway.interface';

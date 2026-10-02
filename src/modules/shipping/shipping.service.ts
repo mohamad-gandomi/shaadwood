@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateShippingMethodDto, UpdateShippingMethodDto } from './dto/shipping.dto';
 
 export interface ShippingMethodOption {

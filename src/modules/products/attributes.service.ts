@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import slugify from 'slugify';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateAttributeDto, UpdateAttributeDto } from './dto/create-attribute.dto';
 import { CreateAttributeValueDto, UpdateAttributeValueDto } from './dto/create-attribute-value.dto';
 

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import slugify from 'slugify';
 import { Prisma, PostStatus } from '@prisma/client';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateBlogPostDto, UpdateBlogPostDto } from './dto/create-blog-post.dto';
 import { CreateBlogCategoryDto } from './dto/create-blog-category.dto';
 import { UpdateBlogCategoryDto } from './dto/update-blog-category.dto';

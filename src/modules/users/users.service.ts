@@ -5,13 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationDto } from '@/common/dto/pagination.dto';
-import { Role } from '@/common/enums/role.enum';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { Role } from '../../common/enums/role.enum';
 
 @Injectable()
 export class UsersService {

@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { OrderStatus, PaymentStatus } from '@prisma/client';
-import { PaginationDto } from '@/common/dto/pagination.dto';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
 
 export class FilterOrdersDto extends PaginationDto {
   @ApiPropertyOptional({ enum: OrderStatus })

@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as sharpModule from 'sharp';
 const sharp = (sharpModule as any).default || sharpModule;
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '@/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { QueryMediaDto, UpdateMediaDto } from './dto/upload.dto';
 
 export interface UploadProcessingOptions {

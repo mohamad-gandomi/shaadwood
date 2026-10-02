@@ -4,9 +4,9 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as path from 'path';
-import { AppModule } from '@/app.module';
-import { AllExceptionsFilter } from '@/common/filters/http-exception.filter';
-import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
+import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 export async function createShaadwoodApp(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
