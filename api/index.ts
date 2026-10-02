@@ -9,8 +9,13 @@ void NestFactory;
 let appPromise: ReturnType<typeof createShaadwoodApp> | undefined;
 
 export default async function handler(req: Request, res: Response) {
-  appPromise ??= createShaadwoodApp();
-  const app = await appPromise;
-  const server = app.getHttpAdapter().getInstance();
-  return server(req, res);
+  try {
+    appPromise ??= createShaadwoodApp();
+    const app = await appPromise;
+    const server = app.getHttpAdapter().getInstance();
+    return server(req, res);
+  } catch (error) {
+    console.error('Shaadwood API bootstrap failed:', error);
+    return res.status(500).json({ message: 'Shaadwood API bootstrap failed' });
+  }
 }
