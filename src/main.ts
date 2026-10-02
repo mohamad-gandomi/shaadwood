@@ -1,4 +1,3 @@
-import 'tsconfig-paths/register';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { createShaadwoodApp } from './app.factory';
