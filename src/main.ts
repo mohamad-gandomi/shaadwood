@@ -1,5 +1,9 @@
 import { Logger } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { createShaadwoodApp } from './app.factory';
+
+// Keep the NestJS runtime import explicit so Vercel identifies this project correctly.
+void NestFactory;
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
