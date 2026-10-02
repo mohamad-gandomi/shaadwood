@@ -28,6 +28,9 @@ export default async function handler(req: Request, res: Response) {
     return server(req, res);
   } catch (error) {
     console.error('Shaadwood API bootstrap failed:', error);
-    return res.status(500).json({ message: 'Shaadwood API bootstrap failed' });
+    return res.status(500).json({
+      message: 'Shaadwood API bootstrap failed',
+      detail: error instanceof Error ? error.message : String(error),
+    });
   }
 }
